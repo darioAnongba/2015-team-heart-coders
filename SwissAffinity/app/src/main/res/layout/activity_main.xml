@@ -1,63 +1,30 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    tools:context="ch.epfl.sweng.swissaffinity.MainActivity"
-    android:padding="16dp">
+    android:orientation="vertical"
+    tools:context="ch.epfl.sweng.swissaffinity.MainActivity">
+
+    <ImageView
+        android:id="@+id/mainLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/logo" />
 
     <TextView
         android:id="@+id/mainWelcomeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="Welcome username!"
+        android:padding="5dp"
+        android:text="@string/welcomeUser_text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/mainMyEventsText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/mainWelcomeText"
-        android:text="My events:" />
+    <ExpandableListView
+        android:id="@+id/mainEventListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:choiceMode="singleChoice" />
 
-    <ScrollView
-        android:id="@+id/mainMyEventsScrollView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/mainMyEventsText"
-        android:fillViewport="false">
-
-        <ListView
-            android:id="@+id/mainMyEventsListView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:choiceMode="singleChoice" />
-    </ScrollView>
-
-    <TextView
-        android:id="@+id/mainUpComingEventsText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/mainMyEventsScrollView"
-        android:text="Upcoming events:" />
-
-    <ScrollView
-        android:id="@+id/mainUpcomingEventsScrollView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/mainUpComingEventsText"
-        android:fillViewport="false">
-
-        <ListView
-            android:id="@+id/mainUpcomingEventsListView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:choiceMode="singleChoice" />
-    </ScrollView>
-</RelativeLayout>
+</LinearLayout>
