@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/add"
     android:layout_width="match_parent"
     android:layout_height="80dp"
     android:padding="10dp">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/rowEventImage"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentTop="true"
-        android:src="@android:drawable/ic_menu_report_image"
-        android:contentDescription="event logo" />
+        android:contentDescription="event logo"
+        android:src="@android:drawable/ic_menu_mapmode" />
 
     <TextView
         android:id="@+id/rowEventName"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/imageView"
+        android:layout_toEndOf="@+id/rowEventImage"
+        android:padding="5dp"
         android:text="Event Name"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -27,10 +25,11 @@
         android:id="@+id/rowEventDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/rowEventImage"
+        android:layout_alignEnd="@+id/rowEventName"
         android:layout_alignStart="@+id/rowEventName"
         android:layout_below="@+id/rowEventName"
+        android:padding="5dp"
         android:text="Event Details"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_alignBottom="@+id/imageView"
-        android:layout_alignEnd="@+id/rowEventName" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 </RelativeLayout>
