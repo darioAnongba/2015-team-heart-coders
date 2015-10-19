@@ -1,108 +1,122 @@
 package ch.epfl.sweng.swissaffinity;
 
-import android.app.Activity;
-import android.util.SparseArray;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.CheckedTextView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class ExpandableListAdapter extends BaseExpandableListAdapter {
+public class ExpandableListAdapter<A, B> extends BaseExpandableListAdapter {
 
-    private final SparseArray<Group> groups;
-    public LayoutInflater inflater;
-    public Activity activity;
+    private final Context mContext;
+    private final List<A> mGroups;
+    private final Map<A, List<B>> mData;
 
-    public ExpandableListAdapter(Activity act, SparseArray<Group> groups) {
-        activity = act;
-        this.groups = groups;
-        inflater = act.getLayoutInflater();
+    public ExpandableListAdapter(Context context) {
+        mContext = context;
+        mData = new HashMap<>();
+        mGroups = new ArrayList<>();
+    }
+
+    public boolean addGroup(A group) {
+        boolean added = false;
+        if (!mData.containsKey(group)) {
+            mData.put(group, new ArrayList<B>());
+            added = mGroups.add(group);
+        }
+        return added;
+    }
+
+    public boolean addChild(A group, B child) {
+        addGroup(group);
+        return mData.get(group).add(child);
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosition) {
-        return groups.get(groupPosition).children.get(childPosition);
+    public Object getChild(int groupPosition, int childPosititon) {
+        return mData.get(mGroups.get(groupPosition)).get(childPosititon);
     }
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        return 0;
+        return childPosition;
     }
 
     @Override
-    public View getChildView(int groupPosition, final int childPosition,
-                             boolean isLastChild, View convertView, ViewGroup parent) {
-        final String children = (String) getChild(groupPosition, childPosition);
-        TextView text = null;
+    public View getChildView(int groupPosition,
+                             final int childPosition,
+                             boolean isLastChild,
+                             View convertView,
+                             ViewGroup parent) {
+
+        final String childText = (String) getChild(groupPosition, childPosition);
+
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.row_main, null);
+            LayoutInflater inflater =
+                    (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.list_item, null);
         }
-        text = (TextView) convertView.findViewById(R.id.rowEventName);
-        text.setText(children);
-        convertView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(activity, children,
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+
+        TextView textView = (TextView) convertView.findViewById(R.id.rowEventName);
+
+        textView.setText(childText);
+
         return convertView;
     }
 
     @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return true;
+    }
+
+    @Override
     public int getChildrenCount(int groupPosition) {
-        return groups.get(groupPosition).children.size();
+        return mData.get(mGroups.get(groupPosition)).size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return groups.get(groupPosition);
+        return mGroups.get(groupPosition);
     }
 
     @Override
     public int getGroupCount() {
-        return groups.size();
-    }
-
-    @Override
-    public void onGroupCollapsed(int groupPosition) {
-        super.onGroupCollapsed(groupPosition);
-    }
-
-    @Override
-    public void onGroupExpanded(int groupPosition) {
-        super.onGroupExpanded(groupPosition);
+        return mGroups.size();
     }
 
     @Override
     public long getGroupId(int groupPosition) {
-        return 0;
+        return groupPosition;
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded,
-                             View convertView, ViewGroup parent) {
+    public View getGroupView(int groupPosition,
+                             boolean isExpanded,
+                             View convertView,
+                             ViewGroup parent) {
+
+        String headerTitle = (String) getGroup(groupPosition);
+
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.group_main, null);
+            LayoutInflater infalInflater =
+                    (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = infalInflater.inflate(R.layout.list_group, null);
         }
-        Group group = (Group) getGroup(groupPosition);
-        ((CheckedTextView) convertView).setText(group.string);
-        ((CheckedTextView) convertView).setChecked(isExpanded);
+
+        TextView textView = (TextView) convertView.findViewById(R.id.groupEvents);
+        textView.setText(headerTitle);
+
         return convertView;
     }
 
     @Override
     public boolean hasStableIds() {
-        return false;
-    }
-
-    @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
         return false;
     }
 }
