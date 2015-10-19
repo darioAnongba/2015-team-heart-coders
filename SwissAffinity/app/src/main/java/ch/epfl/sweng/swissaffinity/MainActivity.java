@@ -1,24 +1,32 @@
 package ch.epfl.sweng.swissaffinity;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
+import android.util.SparseArray;
+import android.widget.ExpandableListView;
 
-/**
- * The Main activity of the app.
- */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
+    // more efficient than HashMap for mapping integers to objects
+    SparseArray<Group> groups = new SparseArray<Group>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        createData();
+        ExpandableListView listView = (ExpandableListView) findViewById(R.id.mainEventListView);
+        ExpandableListAdapter adapter = new ExpandableListAdapter(this, groups);
+        listView.setAdapter(adapter);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public void createData() {
+        for (int j = 0; j < 5; j++) {
+            Group group = new Group("Test " + j);
+            for (int i = 0; i < 5; i++) {
+                group.children.add("Sub Item" + i);
+            }
+            groups.append(j, group);
+        }
     }
 
 }
