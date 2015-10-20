@@ -1,28 +1,32 @@
     <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
         android:title="@string/pref_header_general"
-        android:persistent="false">
+        android:persistent="true">
 
         <!-- NOTE: EditTextPreference accepts EditText attributes. -->
         <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
-        <ListPreference
+        <MultiSelectListPreference
+            android:dialogTitle="Event Types"
             android:key="example_list"
+            android:summary=""
             android:title="@string/event_type_preferences"
-            android:defaultValue="-1"
             android:entries="@array/event_type_example_list"
-            android:entryValues="@array/event_type_example_list_values"
-            android:negativeButtonText="@null"
-            android:positiveButtonText="@null" />
+            android:entryValues="@array/location_example_list_values"
+            android:defaultValue="@array/empty_array"
+            />
+
 
         <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
              dismiss it. -->
         <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
-        <ListPreference
+        <MultiSelectListPreference
+            android:dialogTitle="Event Places"
             android:key="example_list2"
+            android:summary=""
             android:title="@string/event_place_preferences"
-            android:defaultValue="-1"
             android:entries="@array/location_example_list"
             android:entryValues="@array/location_example_list_values"
-            android:negativeButtonText="@null"
-            android:positiveButtonText="@null" />
+            android:defaultValue="@array/empty_array"
+            />
+
     </PreferenceScreen>
 
