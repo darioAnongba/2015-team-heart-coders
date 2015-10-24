@@ -27,10 +27,5 @@
         android:layout_height="match_parent"
         android:choiceMode="singleChoice" />
 
-<<<<<<< HEAD
 </LinearLayout>
-=======
-    <include layout="@layout/content_main" />
 
-</android.support.design.widget.CoordinatorLayout>
->>>>>>> origin/furkan-dev
