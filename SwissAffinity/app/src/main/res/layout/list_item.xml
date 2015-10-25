@@ -9,27 +9,29 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:contentDescription="event logo"
-        android:src="@android:drawable/ic_menu_mapmode" />
+        android:src="@android:drawable/ic_menu_mapmode"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/rowEventName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/rowEventImage"
-        android:padding="5dp"
         android:text="Event Name"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:layout_alignParentLeft="false"
+        android:layout_toRightOf="@+id/rowEventImage" />
 
     <TextView
         android:id="@+id/rowEventDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/rowEventImage"
-        android:layout_alignEnd="@+id/rowEventName"
-        android:layout_alignStart="@+id/rowEventName"
-        android:layout_below="@+id/rowEventName"
-        android:padding="5dp"
         android:text="Event Details"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:paddingLeft="5dp"
+        android:layout_below="@+id/rowEventName"
+        android:layout_toRightOf="@+id/rowEventImage" />
 </RelativeLayout>

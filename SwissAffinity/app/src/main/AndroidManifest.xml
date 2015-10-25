@@ -6,7 +6,6 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light">
 
         <activity
@@ -33,7 +32,7 @@
                 android:value="ch.epfl.sweng.swissaffinity.MainActivity" />
         </activity>
         <activity
-            android:name=".Event"
+            android:name=".EventActivity"
             android:label="@string/title_activity_event">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
