@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,6 +55,8 @@ public class ExpandableListAdapter<A, B> extends BaseExpandableListAdapter {
                              View convertView,
                              ViewGroup parent) {
 
+        // TODO: change it to reflect event display.
+
         final String childText = (String) getChild(groupPosition, childPosition);
 
         if (convertView == null) {
@@ -65,7 +66,6 @@ public class ExpandableListAdapter<A, B> extends BaseExpandableListAdapter {
         }
 
         TextView textView = (TextView) convertView.findViewById(R.id.rowEventName);
-
         textView.setText(childText);
 
         return convertView;
@@ -101,6 +101,8 @@ public class ExpandableListAdapter<A, B> extends BaseExpandableListAdapter {
                              boolean isExpanded,
                              View convertView,
                              ViewGroup parent) {
+
+        // TODO: change it to reflect group display (ev. hard code for 2 groups.)
 
         String headerTitle = (String) getGroup(groupPosition);
 
