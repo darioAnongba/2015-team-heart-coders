@@ -56,7 +56,7 @@ public class SpeedDatingTest extends TestCase {
         dateBeginning.set(2015, 10, 19);
         this.dateEnd = Calendar.getInstance();
         animators=new ArrayList<>();
-        createdBy = new Contributor();
+        createdBy = new Contributor(0,"","","",Calendar.getInstance(),Calendar.getInstance(),"","","","",null,null,null);
         dateEnd.set(2015, 10, 20);
         int basePrice=15;
         Event.State state = Event.State.CANCELLED;
@@ -180,7 +180,7 @@ public class SpeedDatingTest extends TestCase {
 
 
     public void testSetCreatedBy() throws Exception {
-        Contributor newCreatedBy = new Contributor();
+        Contributor newCreatedBy =new Contributor(0,"","","",Calendar.getInstance(),Calendar.getInstance(),"","","","",null,null,null);
         event.setCreatedBy(newCreatedBy);
         assertEquals("CreatedBy",newCreatedBy,event.getCreatedBy());
     }
