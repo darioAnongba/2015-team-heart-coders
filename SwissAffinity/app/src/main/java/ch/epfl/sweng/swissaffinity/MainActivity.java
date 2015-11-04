@@ -18,8 +18,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static boolean USER_REGISTERED = false;
 
-    private final static List<String> HEADERS = Arrays.asList("My Events :", "Upcoming Events :");
-
     private ExpandableListAdapter<String, String> mListAdapter;
 
     @Override
@@ -61,10 +59,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createData() {
+        String myEvents = getResources().getString(R.string.my_events);
+        String upcomingEvents = getResources().getString(R.string.upcoming_events);
+        List<String> HEADERS = Arrays.asList("My Events :", "Upcoming Events :");
         mListAdapter = new ExpandableListAdapter<String, String>(this);
-        mListAdapter.addChild(HEADERS.get(0), "No event yet...");
-        mListAdapter.addChild(HEADERS.get(1), "Test 00");
-        mListAdapter.addChild(HEADERS.get(1), "Test 01");
+        mListAdapter.addChild(myEvents, "No event yet...");
+        mListAdapter.addChild(upcomingEvents, "Test 00");
+        mListAdapter.addChild(upcomingEvents, "Test 01");
         ExpandableListView listView = (ExpandableListView) findViewById(R.id.mainEventListView);
         listView.setAdapter(mListAdapter);
         listView.setOnChildClickListener(new OnChildClickListener() {
