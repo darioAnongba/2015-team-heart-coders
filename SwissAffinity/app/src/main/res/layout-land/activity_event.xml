@@ -23,7 +23,8 @@
         android:layout_alignEnd="@+id/eventNameTextView"
         android:layout_below="@+id/eventNameTextView"
         android:contentDescription="picture of the event"
-        android:contextClickable="false" />
+        android:contextClickable="false"
+        android:src="@drawable/couple" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -50,7 +51,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Location"
         android:id="@+id/eventLocation"
-        android:layout_below="@+id/eventPicture"
+        android:layout_below="@+id/eventDate"
         android:layout_alignStart="@+id/eventDate" />
 
     <ImageView
@@ -60,7 +61,8 @@
         android:layout_below="@+id/eventLocation"
         android:layout_alignStart="@+id/eventLocation"
         android:layout_marginTop="30dp"
-        android:layout_alignEnd="@+id/eventTime" />
+        android:layout_alignEnd="@+id/eventTime"
+        android:src="@drawable/swiss" />
 
     <TextView
         android:layout_width="wrap_content"
