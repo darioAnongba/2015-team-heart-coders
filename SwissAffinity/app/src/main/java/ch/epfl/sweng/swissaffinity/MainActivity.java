@@ -1,20 +1,24 @@
 package ch.epfl.sweng.swissaffinity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.TextView;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
-    private final static List<String> HEADERS =
-            Arrays.asList(new String[]{"My Events :", "Upcoming Events :"});
+    public static boolean USER_REGISTERED = false;
+
+    private final static List<String> HEADERS = Arrays.asList("My Events :", "Upcoming Events :");
 
     private ExpandableListAdapter<String, String> mListAdapter;
 
@@ -23,38 +27,55 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        createData();
-
-        ExpandableListView listView = (ExpandableListView) findViewById(R.id.mainEventListView);
-        listView.setAdapter(mListAdapter);
-        listView.expandGroup(0);
+        if (!USER_REGISTERED) {
+            login();
+        } else {
+            createData();
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_main, menu);
-        return true;
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_about:
-                Intent intent = new Intent(this, AboutActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, AboutActivity.class));
+                return true;
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
                 return true;
         }
-        return super.onMenuItemSelected(featureId, item);
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void login() {
+        TextView textView = (TextView) findViewById(R.id.mainWelcomeText);
+        textView.setText(R.string.welcome_not_registered_text);
+        ((Button) findViewById(R.id.mainLoginButton)).setVisibility(View.VISIBLE);
+        ((Button) findViewById(R.id.mainRegisterButton)).setVisibility(View.VISIBLE);
     }
 
     private void createData() {
         mListAdapter = new ExpandableListAdapter<String, String>(this);
-
-        for (int i = 1; i < 3; i++) {
-            for (String header : HEADERS) {
-                mListAdapter.addChild(header, "Test" + i);
+        mListAdapter.addChild(HEADERS.get(0), "No event yet...");
+        mListAdapter.addChild(HEADERS.get(1), "Test 00");
+        mListAdapter.addChild(HEADERS.get(1), "Test 01");
+        ExpandableListView listView = (ExpandableListView) findViewById(R.id.mainEventListView);
+        listView.setAdapter(mListAdapter);
+        listView.setOnChildClickListener(new OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                startActivity(new Intent(getApplicationContext(), EventActivity.class));
+                //Toast.makeText(getBaseContext(), "Clicked!", Toast.LENGTH_SHORT).show();
+                return true;
             }
-        }
+        });
+        listView.expandGroup(0);
     }
+
 }

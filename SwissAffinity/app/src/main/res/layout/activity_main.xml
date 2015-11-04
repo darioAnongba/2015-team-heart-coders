@@ -18,8 +18,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:text="@string/welcomeUser_text"
+        android:text="@string/welcome_registered_text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:id="@+id/mainRegisterButton"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:id="@+id/mainLoginButton"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
 
     <ExpandableListView
         android:id="@+id/mainEventListView"
@@ -28,3 +44,4 @@
         android:choiceMode="singleChoice" />
 
 </LinearLayout>
+
