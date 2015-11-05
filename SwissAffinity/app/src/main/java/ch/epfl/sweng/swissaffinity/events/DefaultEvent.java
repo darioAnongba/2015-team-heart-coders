@@ -29,7 +29,7 @@ public class DefaultEvent extends AbstractEvent {
      * @param createdAt   the Calendar date for the creation of the event
      */
     public DefaultEvent(int id,
-                        ch.epfl.sweng.swissaffinity.utilities.Location location,
+                        Location location,
                         String name,
                         int maxPeople,
                         Calendar dateStart,
@@ -38,7 +38,7 @@ public class DefaultEvent extends AbstractEvent {
                         Collection<Contributor> animators,
                         AbstractEvent.State status,
                         String description,
-                        URL imageURl,
+                        String imageURl,
                         Calendar createdAt) {
         super(id, location, name, maxPeople, dateStart, dateEnd, basePrice, animators, status, description, imageURl, createdAt, null);
     }
