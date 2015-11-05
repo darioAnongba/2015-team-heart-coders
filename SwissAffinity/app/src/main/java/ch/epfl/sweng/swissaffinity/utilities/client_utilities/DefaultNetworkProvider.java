@@ -9,22 +9,28 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by Joel on 10/26/2015.
+ * The class that get the HTTP connection from the server URL.
  */
 public class DefaultNetworkProvider implements NetworkProvider {
     public final static int HTTP_SUCCESS_START = 200;
     public final static int HTTP_SUCCESS_END = 299;
-    /**
-     * Default implementation handling basic GET and PUT requests.
-     */
+
     @Override
     public HttpURLConnection getConnection(URL url) throws IOException {
         return (HttpURLConnection) url.openConnection();
     }
-    public String yieldGETContent(String url) throws IOException{
 
-        URL oUrl = new URL(url);
-        HttpURLConnection conn = this.getConnection(oUrl);
+    /**
+     * Get the content of a HTTP GET request to the provided server URL.
+     *
+     * @param serverURL the server address
+     * @return the content of the request
+     * @throws IOException if no success with the request.
+     */
+    public String getContent(String serverURL) throws IOException {
+
+        URL url = new URL(serverURL);
+        HttpURLConnection conn = getConnection(url);
         conn.setRequestMethod("GET");
         conn.setDoInput(true);
         conn.connect();
@@ -34,28 +40,32 @@ public class DefaultNetworkProvider implements NetworkProvider {
         }
 
         return fetchContent(conn);
-
     }
-    public void yieldPUTContent(String url) throws IOException{
+
+    public void yieldPUTContent(String serverURL) throws IOException {
+        //TODO: implement this part
         throw new IOException("Not yet implemented");
     }
 
+    /**
+     * make a String out of the GET request to the server
+     */
     private String fetchContent(HttpURLConnection conn) throws IOException {
-        StringBuilder out = new StringBuilder();
+
+        StringBuilder stringBuilder = new StringBuilder();
         BufferedReader reader = null;
 
         try {
-            reader = new BufferedReader(new InputStreamReader(
-                    conn.getInputStream()));
+            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
-                out.append(line + "\n");
+                stringBuilder.append(line).append("\n");
             }
 
-            String result = out.toString();
-            Log.d("HTTPFetchContent", "Fetched string of length "
-                    + result.length());
-            return result;
+            Log.d("HTTPFetchContent", "Fetched string of length " + stringBuilder.length());
+
+            return stringBuilder.toString();
+
         } finally {
             if (reader != null) {
                 reader.close();

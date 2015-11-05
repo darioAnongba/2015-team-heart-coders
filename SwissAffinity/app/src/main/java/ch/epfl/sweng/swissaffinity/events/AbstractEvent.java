@@ -4,36 +4,37 @@ package ch.epfl.sweng.swissaffinity.events;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
 
-import ch.epfl.sweng.swissaffinity.users.*;
+import ch.epfl.sweng.swissaffinity.users.Contributor;
 
 /**
  * Tbe Abstract Class to represent an event in general
  */
-
-public abstract class Event {
+public abstract class AbstractEvent {
+    public enum State {
+        PENDING,
+        CONFIRMED,
+        CANCELLED
+    }
 
     private int id;
-    private Location location;
+    private ch.epfl.sweng.swissaffinity.utilities.Location location;
     private String name;
     private int maxPeople;
-    private Calendar dateBeginning;
-    private Calendar dateEnd;
+    private Date dateBeginning;
+    private Date dateEnd;
     private int basePrice;
-    private ArrayList<Contributor> animators;
-
-    protected enum State {PENDING, CONFIRMED, CANCELLED}
-
-    ;
+    private Collection<Contributor> animators;
     private State state;
     private String description;
     private URL imageEventURl;
-    private Calendar createdAt;
+    private Date createdAt;
     private Contributor createdBy;
 
-
     /**
-     * The constructor of the Event
+     * The constructor of the AbstractEvent
      *
      * @param id            the number that represent the event
      * @param location      the location of the event ( by a name of a city)
@@ -49,19 +50,19 @@ public abstract class Event {
      * @param createdAt     the Calendar date for the creation of the event
      * @param createdBy     the Contributor that has created the event
      */
-    public Event(int id,
-                 Location location,
-                 String name,
-                 int maxPeople,
-                 Calendar dateBeginning,
-                 Calendar dateEnd,
-                 int basePrice,
-                 ArrayList<Contributor> animators,
-                 State state,
-                 String description,
-                 URL imageEventURl,
-                 Calendar createdAt,
-                 Contributor createdBy) {
+    public AbstractEvent(int id,
+                         Location location,
+                         String name,
+                         int maxPeople,
+                         Calendar dateBeginning,
+                         Calendar dateEnd,
+                         int basePrice,
+                         Collection<Contributor> animators,
+                         State state,
+                         String description,
+                         URL imageEventURl,
+                         Calendar createdAt,
+                         Contributor createdBy) {
 
         this.id = id;
         this.location = location;
@@ -237,7 +238,7 @@ public abstract class Event {
      *
      * @return The contributors of the event
      */
-    public ArrayList<Contributor> getAnimators() {
+    public Collection<Contributor> getAnimators() {
         return animators;
     }
 

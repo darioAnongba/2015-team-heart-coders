@@ -1,19 +1,19 @@
 package ch.epfl.sweng.swissaffinity.events;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 
 import ch.epfl.sweng.swissaffinity.users.Contributor;
 
 /**
  * Created by Joel on 10/28/2015.
  * A placeholder for default event constructor.
- * Event Cannot be instantiated, and server api is not finished.
+ * AbstractEvent Cannot be instantiated, and server api is not finished.
  */
-public class DefaultEvent extends Event {
+public class DefaultEvent extends AbstractEvent {
     /**
-     * The constructor of the Event
+     * The constructor of the AbstractEvent
      *
      * @param id          the number that represent the event
      * @param location    the location of the event ( by a name of a city)
@@ -29,14 +29,14 @@ public class DefaultEvent extends Event {
      * @param createdAt   the Calendar date for the creation of the event
      */
     public DefaultEvent(int id,
-                        Location location,
+                        ch.epfl.sweng.swissaffinity.utilities.Location location,
                         String name,
                         int maxPeople,
                         Calendar dateStart,
                         Calendar dateEnd,
                         int basePrice,
-                        ArrayList<Contributor> animators,
-                        Event.State status,
+                        Collection<Contributor> animators,
+                        AbstractEvent.State status,
                         String description,
                         URL imageURl,
                         Calendar createdAt) {
