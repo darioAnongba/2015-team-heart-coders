@@ -1,4 +1,5 @@
-package ch.epfl.sweng.swissaffinity.utilities.client_utilities;
+package ch.epfl.sweng.swissaffinity.utilities.network;
+
 
 import android.util.Log;
 
@@ -27,10 +28,14 @@ public class DefaultNetworkProvider implements NetworkProvider {
      * @return the content of the request
      * @throws IOException if no success with the request.
      */
+    @Override
     public String getContent(String serverURL) throws IOException {
 
         URL url = new URL(serverURL);
+
         HttpURLConnection conn = getConnection(url);
+        conn.setReadTimeout(10000 /* milliseconds */);
+        conn.setConnectTimeout(15000 /* milliseconds */);
         conn.setRequestMethod("GET");
         conn.setDoInput(true);
         conn.connect();

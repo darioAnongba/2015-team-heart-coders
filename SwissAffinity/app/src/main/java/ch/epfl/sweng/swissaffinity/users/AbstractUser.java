@@ -7,7 +7,7 @@ import ch.epfl.sweng.swissaffinity.utils.Address;
 /**
  * Class that represents a basic user of the app.
  */
-public abstract class BaseUser {
+public abstract class AbstractUser {
     private int id;
 
     private String username;
@@ -23,17 +23,17 @@ public abstract class BaseUser {
     private String homePhone;
     private Address address;
 
-    public BaseUser(int id,
-                    String username,
-                    String email,
-                    String password,
-                    Calendar lastLogin,
-                    Calendar createdAt,
-                    String lastName,
-                    String firstName,
-                    String mobilePhone,
-                    String homePhone,
-                    Address address) {
+    public AbstractUser(int id,
+                        String username,
+                        String email,
+                        String password,
+                        Calendar lastLogin,
+                        Calendar createdAt,
+                        String lastName,
+                        String firstName,
+                        String mobilePhone,
+                        String homePhone,
+                        Address address) {
         this.id = id;
         this.username = username;
         this.email = email;

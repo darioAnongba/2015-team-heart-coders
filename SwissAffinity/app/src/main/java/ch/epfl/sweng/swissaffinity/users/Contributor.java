@@ -8,7 +8,7 @@ import ch.epfl.sweng.swissaffinity.utils.Address;
 /**
  * Class representing a contributor user
  */
-public final class Contributor extends BaseUser {
+public final class Contributor extends AbstractUser {
     public enum Roles {
         SUPER_ADMIN, ADMIN, CONTRIBUTOR
     }

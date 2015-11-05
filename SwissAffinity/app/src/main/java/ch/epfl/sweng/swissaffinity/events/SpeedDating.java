@@ -9,7 +9,7 @@ import ch.epfl.sweng.swissaffinity.users.Contributor;
 /**
  * The class to represent the speedDating which extends Event
  */
-public class SpeedDating extends Event {
+public class SpeedDating extends AbstractEvent {
 
     private int menSits;
     private int womenSits;
@@ -53,7 +53,7 @@ public class SpeedDating extends Event {
                        ArrayList<Contributor> animators,
                        State state,
                        String description,
-                       URL imageEventURl,
+                       String imageEventURl,
                        Calendar createdAt,
                        Contributor createdBy,
                        int menSits,
