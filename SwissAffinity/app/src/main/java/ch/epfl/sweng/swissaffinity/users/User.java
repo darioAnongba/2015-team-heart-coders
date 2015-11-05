@@ -15,7 +15,7 @@ import ch.epfl.sweng.swissaffinity.utils.Location;
  *
  * Created by dario on 17.10.2015.
  */
-public final class User extends BaseUser {
+public final class User extends AbstractUser {
     public enum Gender {MALE, FEMALE}
     public enum Relationship {DIVORCED, SINGLE, MARRIED}
     public enum Status {LOCKED, BANNED, CONFIRMED, PENDING}

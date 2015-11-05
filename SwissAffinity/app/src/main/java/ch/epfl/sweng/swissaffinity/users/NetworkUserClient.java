@@ -35,7 +35,7 @@ public class NetworkUserClient implements Client<User> {
         try {
             final String contentStr = mNetworkProvider.yieldGETContent(url);
             //TODO polymorphism should save the day
-            //Parser<BaseUser> parser = new AbstractParserFactory<>((BaseUser)new User())
+            //Parser<AbstractUser> parser = new AbstractParserFactory<>((AbstractUser)new User())
             //        .makeParser();
             //return (User)parser.parse(new JSONObject(contentStr));
             return null;
