@@ -32,7 +32,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String SERVER_URL = "http://www.beecreative.ch/api/";
     private EventClient mEventClient;
 
-    public static boolean USER_REGISTERED = true;
+    public static String email;
+    public static String userName;
+    public static boolean USER_REGISTERED = false;
 
     private EventExpandableListAdapter mListAdapter;
 
@@ -51,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setEventClient(new NetworkEventClient(SERVER_URL, new DefaultNetworkProvider()));
         mListAdapter = new EventExpandableListAdapter(this);
+       TextView view =(TextView) findViewById(R.id.mainWelcomeText);
+        view.setText(userName + email);
         if (!USER_REGISTERED) {
             login();
         } else {
@@ -82,6 +86,15 @@ public class MainActivity extends AppCompatActivity {
         textView.setText(R.string.welcome_not_registered_text);
         ((Button) findViewById(R.id.mainLoginButton)).setVisibility(View.VISIBLE);
         ((Button) findViewById(R.id.mainRegisterButton)).setVisibility(View.VISIBLE);
+        final Button button = (Button) findViewById(R.id.mainLoginButton);
+        button.setOnClickListener(new View.OnClickListener() {
+                                      public void onClick(View v) {
+                                          Intent myIntent = new Intent(MainActivity.this, FacebookActivity.class);
+                                          MainActivity.this.startActivity(myIntent);
+                                      }
+                                  }
+
+        );
     }
 
     private void createData() {

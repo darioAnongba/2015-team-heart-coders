@@ -10,6 +10,8 @@
     <string name="event_name">Event Name</string>
     <string name="my_events">My events :</string>
     <string name="upcoming_events">Upcoming events :</string>
+    <string name="facebook_app_id">539583159528191</string>
+    <string name="title_activity_facebook">FacebookActivity</string>
 
     <!-- Strings related to Settings -->
 
