@@ -2,9 +2,9 @@ package ch.epfl.sweng.swissaffinity.users;
 
 import java.net.URL;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.utils.Address;
@@ -15,20 +15,32 @@ import ch.epfl.sweng.swissaffinity.utils.Location;
  *
  * Created by dario on 17.10.2015.
  */
-public final class User extends AbstractUser {
+public final class User {
     public enum Gender {MALE, FEMALE}
-    public enum Relationship {DIVORCED, SINGLE, MARRIED}
-    public enum Status {LOCKED, BANNED, CONFIRMED, PENDING}
+
+    private int id;
+    private int facebookId;
+
+    private String username;
+    private String email;
+    private String lastName;
+    private String firstName;
+    private String mobilePhone;
+    private String homePhone;
+    private Address address;
+    private String profession;
+
+    private boolean locked;
+    private boolean enabled;
 
     private Gender gender;
-    private Calendar birthDate;
-    private String profession;
-    private URL profilePicture;
-    private Relationship relationship;
-    private Status status;
 
-    private Set<Location> areasOfInterest;
-    private Set<Event> eventsAttended;
+    private Calendar birthDate;
+
+    private URL profilePicture;
+
+    private Collection<Location> areasOfInterest;
+    private Collection<Event> eventsAttended;
 
     /**
      * Create a new client User
@@ -37,51 +49,204 @@ public final class User extends AbstractUser {
      * @param birthDate the birth date
      * @param profession the job
      * @param profilePicture the profile picture link on the server
-     * @param relationship the relationship status
-     * @param status the status of the account
      */
     public User(int id,
+                int facebookId,
                 String username,
                 String email,
-                String password,
-                Calendar lastLogin,
-                Calendar createdAt,
                 String lastName,
                 String firstName,
                 String mobilePhone,
                 String homePhone,
                 Address address,
+                boolean locked,
+                boolean enabled,
                 Gender gender,
                 Calendar birthDate,
-
                 String profession,
                 URL profilePicture,
-                Relationship relationship,
-                Status status,
                 List<Location> areasOfInterest,
                 List<Event> eventsAttended) {
-        super(
-                id,
-                username,
-                email,
-                password,
-                lastLogin,
-                createdAt,
-                lastName,
-                firstName,
-                mobilePhone,
-                homePhone,
-                address);
+
+        this.id = id;
+        this.facebookId = facebookId;
+        this.username = username;
+        this.email = email;
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.mobilePhone = mobilePhone;
+        this.homePhone = homePhone;
+        this.address = address;
+        this.locked = locked;
+        this.enabled = enabled;
         this.gender = gender;
         this.birthDate = birthDate;
         this.profession = profession;
         this.profilePicture = profilePicture;
-        this.relationship = relationship;
-        this.status = status;
         this.areasOfInterest = new HashSet<>(areasOfInterest);
         this.eventsAttended = new HashSet<>(eventsAttended);
     }
 
+    /**
+     * Get Id
+     *
+     * @return id
+     */
+    public int getId() {
+
+        return id;
+    }
+
+    /**
+     * Get FacebookId
+     *
+     * @return id
+     */
+    public int getFacebookId() {
+        return facebookId;
+    }
+
+    /**
+     * Get Username
+     *
+     * @return username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * Set username
+     *
+     * @param username the username of the User
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * Get email
+     *
+     * @return email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * Set email
+     *
+     * @param email The email
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * Get last name
+     *
+     * @return last name
+     */
+    public String getLastName() {
+        return lastName;
+    }
+
+    /**
+     * Set last name
+     *
+     * @param lastName The last name
+     */
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    /**
+     * Get first name
+     *
+     * @return the first name
+     */
+    public String getFirstName() {
+        return firstName;
+    }
+
+    /**
+     * Set first name
+     *
+     * @param firstName The first name
+     */
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    /**
+     * Get mobile phone
+     *
+     * @return mobile phone
+     */
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    /**
+     * Set mobile phone
+     *
+     * @param mobilePhone The mobile phone
+     */
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    /**
+     * Get home phone
+     *
+     * @return The home phone
+     */
+    public String getHomePhone() {
+        return homePhone;
+    }
+
+    /**
+     * Set home phone
+     *
+     * @param homePhone The home phone
+     */
+    public void setHomePhone(String homePhone) {
+        this.homePhone = homePhone;
+    }
+
+    /**
+     * Get address
+     *
+     * @return address
+     */
+    public Address getAddress() {
+        return address;
+    }
+
+    /**
+     * Set address
+     *
+     * @param address The address
+     */
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    /**
+     * Get locked
+     * @return locked
+     */
+    public boolean getLocked() {
+        return locked;
+    }
+
+    /**
+     * Get locked
+     * @return enabled
+     */
+    public boolean getEnabled() {
+        return enabled;
+    }
     /**
      * Get gender
      * @return gender
@@ -147,51 +312,19 @@ public final class User extends AbstractUser {
     }
 
     /**
-     * Get relationship status
-     * @return relationship status
-     */
-    public Relationship getRelationship() {
-        return relationship;
-    }
-
-    /**
-     * Set relationship status
-     * @param relationship the relationship status
-     */
-    public void setRelationship(Relationship relationship) {
-        this.relationship = relationship;
-    }
-
-    /**
-     * Get status
-     * @return status of the account
-     */
-    public Status getStatus() {
-        return status;
-    }
-
-    /**
-     * Set status
-     * @param status The status
-     */
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    /**
      * Get areas of interest
      * @return areas of interest
      */
-    public Set<Location> getAreasOfInterest() {
+    public Collection<Location> getAreasOfInterest() {
         return areasOfInterest;
     }
 
     /**
      * Set areas of interest
      *
-     * @param areasOfInterest the areas of intereat
+     * @param areasOfInterest the areas of interest
      */
-    public void setAreasOfInterest(Set<Location> areasOfInterest) {
+    public void setAreasOfInterest(Collection<Location> areasOfInterest) {
         this.areasOfInterest = areasOfInterest;
     }
 
@@ -199,7 +332,7 @@ public final class User extends AbstractUser {
      * Get the events the user attended
      * @return the events attended
      */
-    public Set<Event> getEventsAttended() {
+    public Collection<Event> getEventsAttended() {
         return eventsAttended;
     }
 
@@ -207,7 +340,7 @@ public final class User extends AbstractUser {
      * Set the events attended
      * @param eventsAttended The events attended
      */
-    public void setEventsAttended(Set<Event> eventsAttended) {
+    public void setEventsAttended(Collection<Event> eventsAttended) {
         this.eventsAttended = eventsAttended;
     }
 }
