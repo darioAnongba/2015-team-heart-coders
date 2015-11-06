@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 import ch.epfl.sweng.swissaffinity.events.DefaultEvent;
 import ch.epfl.sweng.swissaffinity.events.Event;
-import ch.epfl.sweng.swissaffinity.events.Location;
+import ch.epfl.sweng.swissaffinity.utilities.Location;
 
 import static ch.epfl.sweng.swissaffinity.utilities.CalendarParser.fromDateString;
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.BASE_PRICE;

@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
-import ch.epfl.sweng.swissaffinity.events.Location;
+import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.users.UserClientException;
 import ch.epfl.sweng.swissaffinity.utilities.Address;

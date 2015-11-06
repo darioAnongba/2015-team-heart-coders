@@ -8,7 +8,7 @@ import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.utilities.Address;
-import ch.epfl.sweng.swissaffinity.events.Location;
+import ch.epfl.sweng.swissaffinity.utilities.Location;
 
 /**
  * Class that represents a client User

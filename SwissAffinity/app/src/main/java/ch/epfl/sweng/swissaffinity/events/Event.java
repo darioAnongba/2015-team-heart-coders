@@ -1,11 +1,14 @@
 package ch.epfl.sweng.swissaffinity.events;
 
+import java.io.Serializable;
 import java.util.Calendar;
+
+import ch.epfl.sweng.swissaffinity.utilities.Location;
 
 /**
  * Event interface.
  */
-public interface Event {
+public interface Event extends Serializable {
 
     /**
      * The possible states of an event.

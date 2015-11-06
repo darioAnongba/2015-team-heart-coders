@@ -27,7 +27,7 @@ import ch.epfl.sweng.swissaffinity.utilities.network.NetworkEventClient;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String SERVER_URL = "http://www.beecreative.ch/api/";
+    private static final String SERVER_URL = "http://www.beecreative.ch";
     private EventClient mEventClient;
 
     public static String email;
