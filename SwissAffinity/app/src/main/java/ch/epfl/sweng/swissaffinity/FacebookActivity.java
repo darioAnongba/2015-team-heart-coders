@@ -22,19 +22,16 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
-import ch.epfl.sweng.swissaffinity.db.UserDBAdapter;
-
 
 public class FacebookActivity extends AppCompatActivity {
 
     private TextView info;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
-    private UserDBAdapter mDbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDbHelper = new UserDBAdapter(this);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
@@ -45,7 +42,6 @@ public class FacebookActivity extends AppCompatActivity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                mDbHelper.open();
 
                 GraphRequest request = GraphRequest.newMeRequest(
                         loginResult.getAccessToken(),
@@ -56,13 +52,11 @@ public class FacebookActivity extends AppCompatActivity {
                                     GraphResponse response) {
                                 try {
                                     MainActivity.email = (String) object.get("email");
-                                    long email = mDbHelper.createData("email", MainActivity.email);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                                 try {
                                     MainActivity.userName = (String) object.get("name");
-                                    long userName = mDbHelper.createData("name", MainActivity.userName);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -71,8 +65,6 @@ public class FacebookActivity extends AppCompatActivity {
                         });
                 request.executeAsync();
 
-                long id = mDbHelper.createData("id", loginResult.getAccessToken().getUserId());
-                mDbHelper.close();
 
                 info.setText("\n\n\n" +
                                 "User ID :" + loginResult.getAccessToken().getUserId()
