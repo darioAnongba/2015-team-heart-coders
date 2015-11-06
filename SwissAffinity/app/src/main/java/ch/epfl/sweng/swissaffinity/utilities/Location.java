@@ -1,9 +1,11 @@
 package ch.epfl.sweng.swissaffinity.utilities;
 
+import java.io.Serializable;
+
 /**
  * Representation of the location of an event.
  */
-public class Location {
+public class Location implements Serializable {
 
     private final String mName;
 

@@ -1,5 +1,7 @@
 package ch.epfl.sweng.swissaffinity.events;
 
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.Calendar;
 
@@ -13,7 +15,7 @@ public interface Event extends Serializable {
     /**
      * The possible states of an event.
      */
-    enum State {
+    enum State implements Serializable {
         PENDING("pending"),
         CONFIRMED("confirmed"),
         CANCELLED("cancelled");
@@ -59,7 +61,9 @@ public interface Event extends Serializable {
     /**
      * @return the date of the event.
      */
-    Calendar getDate();
+    Calendar getDateBegin();
+
+    Calendar getDateEnd();
 
     /**
      * @return the location of the event.

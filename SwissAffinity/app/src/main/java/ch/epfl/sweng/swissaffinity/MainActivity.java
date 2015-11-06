@@ -26,7 +26,7 @@ import ch.epfl.sweng.swissaffinity.utilities.network.EventClientException;
 import ch.epfl.sweng.swissaffinity.utilities.network.NetworkEventClient;
 
 public class MainActivity extends AppCompatActivity {
-
+    public static final String EXTRA_EVENT = "ch.epfl.sweng.swissaffinity.event";
     private static final String SERVER_URL = "http://www.beecreative.ch";
     private EventClient mEventClient;
 
@@ -136,7 +136,8 @@ public class MainActivity extends AppCompatActivity {
                 mListAdapter.addChild(upcomingEvents, e);
             }
         }
-        ExpandableListView listView = (ExpandableListView) findViewById(R.id.mainEventListView);
+        final ExpandableListView listView =
+                (ExpandableListView) findViewById(R.id.mainEventListView);
         listView.setAdapter(mListAdapter);
         listView.setOnChildClickListener(new OnChildClickListener() {
             @Override
@@ -146,7 +147,10 @@ public class MainActivity extends AppCompatActivity {
                                         int childPosition,
                                         long id)
             {
-                startActivity(new Intent(getApplicationContext(), EventActivity.class));
+                Intent intent = new Intent(getApplicationContext(), EventActivity.class);
+                intent.putExtra(EXTRA_EVENT,
+                                (Event) mListAdapter.getChild(groupPosition, childPosition));
+                startActivity(intent);
                 Toast.makeText(getBaseContext(), "Clicked!", Toast.LENGTH_SHORT).show();
                 return true;
             }

@@ -1,135 +1,113 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="ch.epfl.sweng.swissaffinity.EventActivity">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                tools:context="ch.epfl.sweng.swissaffinity.EventActivity">
 
     <TextView
+        android:id="@+id/eventNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/event_name"
-        android:id="@+id/eventNameTextView"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:text="@string/event_name"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <ImageView
+        android:id="@+id/eventPicture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/eventPicture"
         android:contentDescription="picture of the event"
         android:contextClickable="false"
         android:src="@drawable/couple"
-        android:layout_below="@+id/eventNameTextView"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/eventLocation"
-        android:layout_alignEnd="@+id/eventNameTextView"
-        android:layout_above="@+id/eventParticipants" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"/>
 
     <TextView
+        android:id="@+id/eventDateBegin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Date Begin"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Date"
-        android:id="@+id/eventDate"
-        android:layout_above="@+id/eventPicture"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/eventDescription"
+        android:layout_alignParentStart="true"/>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Time"
-        android:id="@+id/eventTime"
-        android:layout_marginStart="32dp"
-        android:layout_above="@+id/eventPicture"
-        android:layout_toEndOf="@+id/eventDate" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Location"
         android:id="@+id/eventLocation"
-        android:layout_centerVertical="true"
-        android:layout_alignStart="@+id/mapEvent" />
-
-    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/mapEvent"
-        android:src="@drawable/swiss"
-        android:layout_above="@+id/eventLocation"
-        android:layout_alignStart="@+id/eventDate"
-        android:layout_below="@+id/eventAgeRange"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/eventNameTextView"
+        android:text="Location"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Age Range"
         android:id="@+id/eventAgeRange"
-        android:layout_alignTop="@+id/eventPicture"
-        android:layout_alignStart="@+id/eventDate" />
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="false"
+        android:text="Age Range"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Male / Female"
+        android:layout_below="@+id/eventDateBegin"
+        android:layout_alignParentLeft="true"/>
+
+    <TextView
         android:id="@+id/eventParticipants"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Males"
-        android:id="@+id/eventMaleNumber"
-        android:layout_below="@+id/eventParticipants"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Females"
-        android:id="@+id/eventFemaleNumber"
-        android:layout_below="@+id/eventParticipants"
-        android:layout_alignEnd="@+id/eventParticipants" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:text="Male / Female"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Theme"
-        android:id="@+id/eventTheme"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/eventAgeRange"
+        android:layout_alignParentLeft="true"/>
+
+    <TextView
+        android:id="@+id/eventMaleNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:text="Males"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_below="@+id/eventParticipants"
+        android:layout_alignParentLeft="true"/>
+
+    <TextView
+        android:id="@+id/eventFemaleNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Females"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_below="@+id/eventMaleNumber"
+        android:layout_alignParentLeft="true"/>
+
+    <TextView
+        android:id="@+id/eventDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_below="@+id/eventLocation"
-        android:layout_alignStart="@+id/eventLocation" />
+        android:layout_alignParentStart="true"/>
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Register"
         android:id="@+id/eventRegistration"
-        android:layout_below="@+id/eventFemaleNumber"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp" />
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Unregister"
-        android:id="@+id/eventUnregistration"
-        android:layout_below="@+id/eventRegistration"
+        android:layout_alignBottom="@+id/eventPicture"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:visibility="invisible" />
+        android:text="Register"/>
+
+    <TextView
+        android:id="@+id/eventDateEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date End"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_alignTop="@+id/eventDateBegin"
+        android:layout_toEndOf="@+id/eventDateBegin"/>
 
 </RelativeLayout>
