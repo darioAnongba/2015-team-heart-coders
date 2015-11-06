@@ -3,7 +3,7 @@ package ch.epfl.sweng.swissaffinity.users;
 import java.util.Calendar;
 import java.util.List;
 
-import ch.epfl.sweng.swissaffinity.utils.Address;
+import ch.epfl.sweng.swissaffinity.utilities.Address;
 
 /**
  * Class representing a contributor user
