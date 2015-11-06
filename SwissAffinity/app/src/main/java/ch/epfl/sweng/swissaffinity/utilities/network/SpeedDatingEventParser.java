@@ -27,15 +27,15 @@ public class SpeedDatingEventParser implements Parsable<SpeedDatingEvent> {
             // TODO : parse establishement.
             Establishment establishment = null;
 
-            speedDatingEvent =
-                    new SpeedDatingEvent(new DefaultEventParser().parseFromJSON(jsonObject),
-                                         menSeats,
-                                         womenSeats,
-                                         menRegistered,
-                                         womenRegistered,
-                                         minAge,
-                                         maxAge,
-                                         establishment);
+            speedDatingEvent = new SpeedDatingEvent(
+                    new DefaultEventParser().parseFromJSON(jsonObject),
+                    menSeats,
+                    womenSeats,
+                    menRegistered,
+                    womenRegistered,
+                    minAge,
+                    maxAge,
+                    establishment);
         } catch (JSONException e) {
             throw new ParserException(e);
         }

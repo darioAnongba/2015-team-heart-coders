@@ -1,6 +1,7 @@
 package ch.epfl.sweng.swissaffinity.users;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
@@ -18,29 +19,29 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
 public final class User {
     public enum Gender {MALE, FEMALE}
 
-    private int id;
-    private int facebookId;
+    private int mId;
+    private int mfacebookId;
 
-    private String username;
-    private String email;
-    private String lastName;
-    private String firstName;
-    private String mobilePhone;
-    private String homePhone;
-    private Address address;
-    private String profession;
+    private String mUsername;
+    private String mEmail;
+    private String mLastName;
+    private String mFirstName;
+    private String mMobilePhone;
+    private String mHomePhone;
+    private Address mAddress;
+    private String mProfession;
 
-    private boolean locked;
-    private boolean enabled;
+    private boolean mLocked;
+    private boolean mEnabled;
 
-    private Gender gender;
+    private Gender mGender;
 
-    private Calendar birthDate;
+    private Calendar mBirthDate;
 
-    private URL profilePicture;
+    private URL mProfilePicture;
 
-    private Collection<Location> areasOfInterest;
-    private Collection<Event> eventsAttended;
+    private Collection<Location> mAreasOfInterest;
+    private List<Event> mEventsAttended;
 
     /**
      * Create a new client User
@@ -65,26 +66,26 @@ public final class User {
                 Calendar birthDate,
                 String profession,
                 URL profilePicture,
-                List<Location> areasOfInterest,
+                Collection<Location> areasOfInterest,
                 List<Event> eventsAttended) {
 
-        this.id = id;
-        this.facebookId = facebookId;
-        this.username = username;
-        this.email = email;
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.mobilePhone = mobilePhone;
-        this.homePhone = homePhone;
-        this.address = address;
-        this.locked = locked;
-        this.enabled = enabled;
-        this.gender = gender;
-        this.birthDate = birthDate;
-        this.profession = profession;
-        this.profilePicture = profilePicture;
-        this.areasOfInterest = new HashSet<>(areasOfInterest);
-        this.eventsAttended = new HashSet<>(eventsAttended);
+        mId = id;
+        mfacebookId = facebookId;
+        mUsername = username;
+        mEmail = email;
+        mLastName = lastName;
+        mFirstName = firstName;
+        mMobilePhone = mobilePhone;
+        mHomePhone = homePhone;
+        mAddress = address;
+        mLocked = locked;
+        mEnabled = enabled;
+        mGender = gender;
+        mBirthDate = birthDate;
+        mProfession = profession;
+        mProfilePicture = profilePicture;
+        mAreasOfInterest = new HashSet<>(areasOfInterest);
+        mEventsAttended = new ArrayList<>(eventsAttended);
     }
 
     /**
@@ -94,16 +95,16 @@ public final class User {
      */
     public int getId() {
 
-        return id;
+        return mId;
     }
 
     /**
-     * Get FacebookId
+     * Get facebook Id
      *
      * @return id
      */
     public int getFacebookId() {
-        return facebookId;
+        return mfacebookId;
     }
 
     /**
@@ -112,16 +113,7 @@ public final class User {
      * @return username
      */
     public String getUsername() {
-        return username;
-    }
-
-    /**
-     * Set username
-     *
-     * @param username the username of the User
-     */
-    public void setUsername(String username) {
-        this.username = username;
+        return mUsername;
     }
 
     /**
@@ -130,7 +122,7 @@ public final class User {
      * @return email
      */
     public String getEmail() {
-        return email;
+        return mEmail;
     }
 
     /**
@@ -139,7 +131,7 @@ public final class User {
      * @param email The email
      */
     public void setEmail(String email) {
-        this.email = email;
+        mEmail = email;
     }
 
     /**
@@ -148,7 +140,7 @@ public final class User {
      * @return last name
      */
     public String getLastName() {
-        return lastName;
+        return mLastName;
     }
 
     /**
@@ -157,7 +149,7 @@ public final class User {
      * @param lastName The last name
      */
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        mLastName = lastName;
     }
 
     /**
@@ -166,7 +158,7 @@ public final class User {
      * @return the first name
      */
     public String getFirstName() {
-        return firstName;
+        return mFirstName;
     }
 
     /**
@@ -175,7 +167,7 @@ public final class User {
      * @param firstName The first name
      */
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        mFirstName = firstName;
     }
 
     /**
@@ -184,7 +176,7 @@ public final class User {
      * @return mobile phone
      */
     public String getMobilePhone() {
-        return mobilePhone;
+        return mMobilePhone;
     }
 
     /**
@@ -193,7 +185,7 @@ public final class User {
      * @param mobilePhone The mobile phone
      */
     public void setMobilePhone(String mobilePhone) {
-        this.mobilePhone = mobilePhone;
+        mMobilePhone = mobilePhone;
     }
 
     /**
@@ -202,7 +194,7 @@ public final class User {
      * @return The home phone
      */
     public String getHomePhone() {
-        return homePhone;
+        return mHomePhone;
     }
 
     /**
@@ -211,7 +203,7 @@ public final class User {
      * @param homePhone The home phone
      */
     public void setHomePhone(String homePhone) {
-        this.homePhone = homePhone;
+        mHomePhone = homePhone;
     }
 
     /**
@@ -220,7 +212,7 @@ public final class User {
      * @return address
      */
     public Address getAddress() {
-        return address;
+        return mAddress;
     }
 
     /**
@@ -229,7 +221,7 @@ public final class User {
      * @param address The address
      */
     public void setAddress(Address address) {
-        this.address = address;
+        mAddress = address;
     }
 
     /**
@@ -237,7 +229,7 @@ public final class User {
      * @return locked
      */
     public boolean getLocked() {
-        return locked;
+        return mLocked;
     }
 
     /**
@@ -245,14 +237,14 @@ public final class User {
      * @return enabled
      */
     public boolean getEnabled() {
-        return enabled;
+        return mEnabled;
     }
     /**
      * Get gender
      * @return gender
      */
     public Gender getGender() {
-        return gender;
+        return mGender;
     }
 
     /**
@@ -260,7 +252,7 @@ public final class User {
      * @param gender the gender
      */
     public void setGender(Gender gender) {
-        this.gender = gender;
+        mGender = gender;
     }
 
     /**
@@ -268,7 +260,7 @@ public final class User {
      * @return birth date
      */
     public Calendar getBirthDate() {
-        return birthDate;
+        return mBirthDate;
     }
 
     /**
@@ -276,7 +268,7 @@ public final class User {
      * @param birthDate The birth date
      */
     public void setBirthDate(Calendar birthDate) {
-        this.birthDate = birthDate;
+        mBirthDate = birthDate;
     }
 
     /**
@@ -284,7 +276,7 @@ public final class User {
      * @return profession
      */
     public String getProfession() {
-        return profession;
+        return mProfession;
     }
 
     /**
@@ -292,7 +284,7 @@ public final class User {
      * @param profession The profession
      */
     public void setProfession(String profession) {
-        this.profession = profession;
+        mProfession = profession;
     }
 
     /**
@@ -300,7 +292,7 @@ public final class User {
      * @return profile picture link
      */
     public URL getProfilePicture() {
-        return profilePicture;
+        return mProfilePicture;
     }
 
     /**
@@ -308,7 +300,7 @@ public final class User {
      * @param profilePicture The profile picture link
      */
     public void setProfilePicture(URL profilePicture) {
-        this.profilePicture = profilePicture;
+        mProfilePicture = profilePicture;
     }
 
     /**
@@ -316,7 +308,7 @@ public final class User {
      * @return areas of interest
      */
     public Collection<Location> getAreasOfInterest() {
-        return areasOfInterest;
+        return new HashSet<>(mAreasOfInterest);
     }
 
     /**
@@ -325,22 +317,24 @@ public final class User {
      * @param areasOfInterest the areas of interest
      */
     public void setAreasOfInterest(Collection<Location> areasOfInterest) {
-        this.areasOfInterest = areasOfInterest;
+        mAreasOfInterest = new HashSet<>(areasOfInterest);
     }
 
     /**
      * Get the events the user attended
+     *
      * @return the events attended
      */
-    public Collection<Event> getEventsAttended() {
-        return eventsAttended;
+    public List<Event> getEventsAttended() {
+        return new ArrayList<>(mEventsAttended);
     }
 
     /**
      * Set the events attended
+     *
      * @param eventsAttended The events attended
      */
-    public void setEventsAttended(Collection<Event> eventsAttended) {
-        this.eventsAttended = eventsAttended;
+    public void setEventsAttended(List<Event> eventsAttended) {
+        mEventsAttended = new ArrayList<>(eventsAttended);
     }
 }

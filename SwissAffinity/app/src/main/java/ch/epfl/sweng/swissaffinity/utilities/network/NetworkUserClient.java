@@ -12,7 +12,6 @@ import java.util.List;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.users.User;
-import ch.epfl.sweng.swissaffinity.users.UserClientException;
 import ch.epfl.sweng.swissaffinity.utilities.Address;
 
 import static ch.epfl.sweng.swissaffinity.utilities.CalendarParser.fromDateString;
@@ -32,6 +31,7 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.PROFIL
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.USERNAME;
 
 /**
+ * User Client parser
  * Created by Max on 06/11/2015.
  */
 public class NetworkUserClient implements UserClient {
@@ -123,7 +123,7 @@ public class NetworkUserClient implements UserClient {
 
     @Override
     public User fetchByIDOrFacebookId(int id) throws UserClientException{
-        User user =null;
+        User user = null;
         try {
             String content = mNetworkProvider.getContent(mServerUrl + SERVER_API_USERS + "/" + id);
 
