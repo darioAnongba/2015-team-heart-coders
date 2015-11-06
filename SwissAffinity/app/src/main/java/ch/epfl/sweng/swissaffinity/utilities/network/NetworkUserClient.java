@@ -1,8 +1,10 @@
 package ch.epfl.sweng.swissaffinity.utilities.network;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -28,8 +30,19 @@ public class NetworkUserClient implements UserClient {
 
     @Override
     public User fetchByUsername(String userName) throws UserClientException {
-        //TODO : fectch user by username
-     return null;
+        User user =null;
+        try {
+            String content = mNetworkProvider.getContent(mServerUrl + SERVER_API_USERS + "/" + userName);
+
+                JSONObject jsonUser = new JSONObject(content);
+
+            Parsable<Event> parsable = (Parsable<Event>)ParserFactory.parserFor(jsonUser);
+            Event event = parsable.parseFromJSON(jsonUser);
+            } catch (JSONException | ParserException | IOException e) {
+                throw new UserClientException();
+            }
+
+        return user;
     }
 
     @Override

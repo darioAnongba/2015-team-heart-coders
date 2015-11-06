@@ -7,6 +7,9 @@ interface Parsable<A> {
     enum TAGS {
         ID("id"),
         NAME("name"),
+        USERNAME("username"),
+        EMAIL("email"),
+        PASSWORD("password"),
         LOCATION("location"),
         MAX_PEOPLE("max_people"),
         DATE_BEGIN("date_start"),
