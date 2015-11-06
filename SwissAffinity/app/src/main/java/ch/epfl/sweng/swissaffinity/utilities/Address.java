@@ -1,4 +1,4 @@
-package ch.epfl.sweng.swissaffinity.utils;
+package ch.epfl.sweng.swissaffinity.utilities;
 
 /**
  * Represents a Postal Address
