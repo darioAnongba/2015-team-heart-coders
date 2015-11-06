@@ -2,7 +2,7 @@ package ch.epfl.sweng.swissaffinity.users;
 
 import java.util.Calendar;
 
-import ch.epfl.sweng.swissaffinity.utils.Address;
+import ch.epfl.sweng.swissaffinity.utilities.Address;
 
 /**
  * Class that represents a basic user of the app.
