@@ -16,6 +16,9 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.login.LoginResult;
+
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
@@ -29,10 +32,12 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String SERVER_URL = "http://www.beecreative.ch/api/";
     private EventClient mEventClient;
-    private EventExpandableListAdapter mListAdapter;
 
-    // Used to simulate user login for now.
-    public static boolean USER_REGISTERED = true;
+    public static String email;
+    public static String userName;
+    public static boolean USER_REGISTERED = false;
+
+    private EventExpandableListAdapter mListAdapter;
 
     public EventClient getEventClient() {
         return mEventClient;
@@ -46,9 +51,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         setEventClient(new NetworkEventClient(SERVER_URL, new DefaultNetworkProvider()));
         mListAdapter = new EventExpandableListAdapter(this);
+
+       TextView view =(TextView) findViewById(R.id.mainWelcomeText);
+        view.setText(userName + email);
 
         if (!USER_REGISTERED) {
             login();
@@ -81,6 +88,15 @@ public class MainActivity extends AppCompatActivity {
         textView.setText(R.string.welcome_not_registered_text);
         ((Button) findViewById(R.id.mainLoginButton)).setVisibility(View.VISIBLE);
         ((Button) findViewById(R.id.mainRegisterButton)).setVisibility(View.VISIBLE);
+        final Button button = (Button) findViewById(R.id.mainLoginButton);
+        button.setOnClickListener(new View.OnClickListener() {
+                                      public void onClick(View v) {
+                                          Intent myIntent = new Intent(MainActivity.this, FacebookActivity.class);
+                                          MainActivity.this.startActivity(myIntent);
+                                      }
+                                  }
+
+        );
     }
 
     private void createData() {
