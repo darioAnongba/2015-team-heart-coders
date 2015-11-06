@@ -1,113 +1,84 @@
 package ch.epfl.sweng.swissaffinity.events;
 
 
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-
-import ch.epfl.sweng.swissaffinity.users.Contributor;
 
 /**
- * The Abstract Class to represent an event in general
+ * The Abstract Class to represent an Event in general.
  */
 public abstract class AbstractEvent implements Event {
 
-    private int id;
-    private Location location;
-    private String name;
-    private int maxPeople;
-    private Calendar dateBeginning;
-    private Calendar dateEnd;
-    private int basePrice;
-    private Collection<Contributor> animators;
-    private State state;
-    private String description;
-    private String imagePath;
-    private Calendar createdAt;
-    private Contributor createdBy;
+    private int mId;
+    private String mName;
+    private Location mLocation;
+    private int mMaxPeople;
+    private Calendar mDateBegin;
+    private Calendar mDateEnd;
+    private double mBasePrice;
+    private State mState;
+    private String mDescription;
+    private String mImagePath;
+    private Calendar mLastUpdate;
 
     /**
-     * The constructor of the AbstractEvent
+     * The constructor of the class
      *
-     * @param id            the number that represent the event
-     * @param location      the location of the event ( by a name of a city)
-     * @param name          the name of the event
-     * @param maxPeople     the maximum number of people for the event
-     * @param dateBeginning the Calendar date of the beginning of the event
-     * @param dateEnd       the Calendar date of the ending of the event
-     * @param basePrice     the base price for the participation to the event
-     * @param animators     the contributor's list for the event
-     * @param state         the state of the event ( Enumeration )
-     * @param description   the description of the event
-     * @param imagePath     the image's url of the event
-     * @param createdAt     the Calendar date for the creation of the event
-     * @param createdBy     the Contributor that has created the event
+     * @param id it's unique id
+     * @param name it's name (a good one for title)
+     * @param location it's location {@link Location}
+     * @param maxPeople the max number of people allowed
+     * @param dateBegin the beginning date and time
+     * @param dateEnd the ending date and time
+     * @param basePrice the price
+     * @param state the actual state of the event {@link Event.State}
+     * @param description a description of the event
+     * @param imagePath the relative path to an image
+     * @param lastUpdate the last time the event was updated
      */
-    public AbstractEvent(int id,
-                         Location location,
-                         String name,
-                         int maxPeople,
-                         Calendar dateBeginning,
-                         Calendar dateEnd,
-                         int basePrice,
-                         Collection<Contributor> animators,
-                         State state,
-                         String description,
-                         String imagePath,
-                         Calendar createdAt,
-                         Contributor createdBy) {
-
-        this.id = id;
-        this.location = location;
-        this.name = name;
-        this.maxPeople = maxPeople;
-        this.dateBeginning = dateBeginning;
-        this.dateEnd = dateEnd;
-        this.basePrice = basePrice;
-        this.animators = animators;
-        this.state = state;
-        this.description = description;
-        this.imagePath = imagePath;
-        this.createdAt = createdAt;
-        this.createdBy = createdBy;
-        //checkParameters();
+    public AbstractEvent(
+            int id,
+            String name,
+            Location location,
+            int maxPeople,
+            Calendar dateBegin,
+            Calendar dateEnd,
+            double basePrice,
+            State state,
+            String description,
+            String imagePath,
+            Calendar lastUpdate
+            
+    ) {
+        mId = id;
+        mLocation = location;
+        mName = name;
+        mMaxPeople = maxPeople;
+        mDateBegin = dateBegin;
+        mDateEnd = dateEnd;
+        mBasePrice = basePrice;
+        mState = state;
+        mDescription = description;
+        mImagePath = imagePath;
+        mLastUpdate = lastUpdate;
     }
 
     @Override
     public String getName() {
-        return name;
+        return mName;
     }
 
     @Override
     public String getDesription() {
-        return description;
+        return mDescription;
     }
 
     @Override
     public Calendar getDate() {
-        return dateBeginning;
+        return mDateBegin;
     }
 
     @Override
     public Location getLocation() {
-        return location;
-    }
-
-
-    /**
-     * check if all the parameters are valid for the event
-     *
-     * @throws IllegalArgumentException if one of the argument is null(for object)
-     *                                  or negative (for int) or empty(for string and list)
-     */
-    private void checkParameters() throws IllegalArgumentException {
-        if (id < 0 || id == 0 || name.isEmpty() || maxPeople == 0 || location == null
-                || maxPeople < 1 || basePrice < 0 || animators.isEmpty()
-                || imagePath == null || createdBy == null || createdAt.after(dateBeginning)
-                || createdAt.after(dateEnd) || dateBeginning.after(dateEnd)) {
-            throw new IllegalArgumentException("One of the argument is empty , null or equal to 0");
-        }
+        return mLocation;
     }
 }

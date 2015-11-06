@@ -19,10 +19,4 @@ public class LocationTest extends TestCase {
     public void testGetCity() throws Exception {
         assertEquals("City","Lausanne",location.getCity());
     }
-
-    public void testSetCity() throws Exception {
-        String newCity = "Mordor";
-        location.setCity(newCity);
-        assertEquals("City",newCity,location.getCity());
-    }
 }
