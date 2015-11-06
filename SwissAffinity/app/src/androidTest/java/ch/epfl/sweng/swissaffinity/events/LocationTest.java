@@ -3,10 +3,8 @@ package ch.epfl.sweng.swissaffinity.events;
 import junit.framework.TestCase;
 
 import org.junit.Before;
+import org.junit.Test;
 
-/**
- * Created by Max on 26/10/2015.
- */
 public class LocationTest extends TestCase {
 
     private Location location;
@@ -16,7 +14,8 @@ public class LocationTest extends TestCase {
         location = new Location("Lausanne");
     }
 
-    public void testGetCity() throws Exception {
-        assertEquals("City","Lausanne",location.getName());
+    @Test
+    public void testGetName() throws Exception {
+        assertEquals("Lausanne", location.getName());
     }
 }
