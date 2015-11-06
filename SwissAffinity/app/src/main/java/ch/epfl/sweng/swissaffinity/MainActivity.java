@@ -16,12 +16,13 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.facebook.AccessToken;
+import com.facebook.login.LoginResult;
+
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
-import ch.epfl.sweng.swissaffinity.utilities.ClientException;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.EventClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.EventClientException;
@@ -38,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
     private EventExpandableListAdapter mListAdapter;
 
-
     public EventClient getEventClient() {
         return mEventClient;
     }
@@ -53,8 +53,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setEventClient(new NetworkEventClient(SERVER_URL, new DefaultNetworkProvider()));
         mListAdapter = new EventExpandableListAdapter(this);
+
        TextView view =(TextView) findViewById(R.id.mainWelcomeText);
         view.setText(userName + email);
+
         if (!USER_REGISTERED) {
             login();
         } else {
@@ -98,27 +100,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createData() {
-
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             // fetch data
-            new DownloadWebpageTask().execute();
+            new DownloadEventsTask().execute();
         } else {
             // display error
             Toast.makeText(MainActivity.this, "No Network", Toast.LENGTH_LONG).show();
         }
     }
 
-    private class DownloadWebpageTask extends AsyncTask<Void, Void, List<Event>> {
+    private class DownloadEventsTask extends AsyncTask<Void, Void, List<Event>> {
         @Override
         protected List<Event> doInBackground(Void... args) {
             List<Event> result = null;
-            // params comes from the execute() call: params[0] is the url.
             try {
                 result = mEventClient.fetchAll();
             } catch (EventClientException e) {
-                System.console().printf(e.getMessage());
+                // TODO: check for an error handling
             }
             return result;
         }
@@ -127,18 +127,17 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(List<Event> result) {
             displayEvents(result);
         }
-
     }
 
     private void displayEvents(List<Event> result) {
-
         String myEvents = getResources().getString(R.string.my_events);
         String upcomingEvents = getResources().getString(R.string.upcoming_events);
         mListAdapter.addGroup(myEvents);
         mListAdapter.addGroup(upcomingEvents);
-        for (Event e : result) {
-            mListAdapter.addChild(upcomingEvents, e);
-            mListAdapter.notifyDataSetChanged();
+        if (result != null) {
+            for (Event e : result) {
+                mListAdapter.addChild(upcomingEvents, e);
+            }
         }
         ExpandableListView listView = (ExpandableListView) findViewById(R.id.mainEventListView);
         listView.setAdapter(mListAdapter);

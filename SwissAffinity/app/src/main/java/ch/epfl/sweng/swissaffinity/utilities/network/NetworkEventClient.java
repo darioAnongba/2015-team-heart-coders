@@ -11,6 +11,8 @@ import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.events.Location;
 
 public class NetworkEventClient implements EventClient {
+    private static final String SERVER_API_EVENTS = "events";
+
     private final String mServerUrl;
     private final NetworkProvider mNetworkProvider;
 
@@ -23,10 +25,10 @@ public class NetworkEventClient implements EventClient {
     public List<Event> fetchAll() throws EventClientException {
         List<Event> events = new ArrayList<>();
         try {
-            String content = mNetworkProvider.getContent(mServerUrl + "events.json");
+            String content = mNetworkProvider.getContent(mServerUrl + SERVER_API_EVENTS);
             JSONArray jsonEvents = new JSONArray(content);
             for (int i = 0; i < jsonEvents.length(); ++i) {
-                Event event = EventParser.parseFromJSON(jsonEvents.getJSONObject(i));
+                Event event = SpeedDatingEventParser.parseFromJSON(jsonEvents.getJSONObject(i));
                 events.add(event);
             }
         } catch (Exception e) {

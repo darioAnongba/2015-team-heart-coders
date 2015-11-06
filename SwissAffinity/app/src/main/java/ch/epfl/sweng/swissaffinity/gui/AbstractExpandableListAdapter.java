@@ -29,13 +29,18 @@ public abstract class AbstractExpandableListAdapter<A, B> extends BaseExpandable
         if (!mData.containsKey(group)) {
             mData.put(group, new ArrayList<B>());
             added = mGroups.add(group);
+            notifyDataSetChanged();
         }
         return added;
     }
 
     public boolean addChild(A group, B child) {
         addGroup(group);
-        return mData.get(group).add(child);
+        boolean added = mData.get(group).add(child);
+        if (added) {
+            notifyDataSetChanged();
+        }
+        return added;
     }
 
     @Override
