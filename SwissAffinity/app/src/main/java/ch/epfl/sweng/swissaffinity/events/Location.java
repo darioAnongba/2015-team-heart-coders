@@ -26,16 +26,4 @@ public class Location {
     public String getCity(){
         return city;
     }
-
-    /**
-     * The setter for the city name
-     * @param city  the new name of the city
-     * @throws IllegalArgumentException if the new name is empty
-     */
-    public void setCity(String city)throws IllegalArgumentException{
-        if(city.isEmpty()) {
-            throw new IllegalArgumentException("The city name is invalid" + city);
-        }
-        this.city = city;
-    }
 }
