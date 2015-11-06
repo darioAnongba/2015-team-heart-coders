@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
@@ -39,7 +40,7 @@ public final class User {
 
     private URL mProfilePicture;
 
-    private List<Location> mAreasOfInterest;
+    private Collection<Location> mAreasOfInterest;
     private List<Event> mEventsAttended;
 
     /**
@@ -66,7 +67,7 @@ public final class User {
                 String profession,
                 URL profilePicture,
                 Collection<Location> areasOfInterest,
-                Collection<Event> eventsAttended) {
+                List<Event> eventsAttended) {
 
         mId = id;
         mfacebookId = facebookId;
@@ -83,7 +84,7 @@ public final class User {
         mBirthDate = birthDate;
         mProfession = profession;
         mProfilePicture = profilePicture;
-        mAreasOfInterest = new ArrayList<>(areasOfInterest);
+        mAreasOfInterest = new HashSet<>(areasOfInterest);
         mEventsAttended = new ArrayList<>(eventsAttended);
     }
 
@@ -307,7 +308,7 @@ public final class User {
      * @return areas of interest
      */
     public Collection<Location> getAreasOfInterest() {
-        return mAreasOfInterest;
+        return new HashSet<>(mAreasOfInterest);
     }
 
     /**
@@ -315,8 +316,8 @@ public final class User {
      *
      * @param areasOfInterest the areas of interest
      */
-    public void setAreasOfInterest(List<Location> areasOfInterest) {
-        mAreasOfInterest = new ArrayList<>(areasOfInterest);
+    public void setAreasOfInterest(Collection<Location> areasOfInterest) {
+        mAreasOfInterest = new HashSet<>(areasOfInterest);
     }
 
     /**
