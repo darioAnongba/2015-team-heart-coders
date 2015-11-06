@@ -6,7 +6,7 @@ import java.util.Calendar;
 /**
  * The Abstract Class to represent an Event in general.
  */
-public abstract class AbstractEvent implements Event {
+public class DefaultEvent implements Event {
 
     private int mId;
     private String mName;
@@ -35,7 +35,7 @@ public abstract class AbstractEvent implements Event {
      * @param imagePath the relative path to an image
      * @param lastUpdate the last time the event was updated
      */
-    public AbstractEvent(
+    public DefaultEvent(
             int id,
             String name,
             Location location,
@@ -47,7 +47,7 @@ public abstract class AbstractEvent implements Event {
             String description,
             String imagePath,
             Calendar lastUpdate
-            
+
     ) {
         mId = id;
         mLocation = location;
