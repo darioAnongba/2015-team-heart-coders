@@ -5,7 +5,6 @@ import org.json.JSONObject;
 
 import ch.epfl.sweng.swissaffinity.events.Establishment;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
-import ch.epfl.sweng.swissaffinity.utilities.client_utilities.EventParseException;
 
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.MAX_AGE;
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.MEN_REGISTERED;
@@ -16,7 +15,7 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.WOMEN_
 
 public class SpeedDatingEventParser implements Parsable<SpeedDatingEvent> {
 
-    public SpeedDatingEvent parseFromJSON(JSONObject jsonObject) throws EventParseException {
+    public SpeedDatingEvent parseFromJSON(JSONObject jsonObject) throws ParserException {
         SpeedDatingEvent speedDatingEvent = null;
         try {
             int menSeats = jsonObject.getInt(MEN_SEATS.get());
@@ -38,7 +37,7 @@ public class SpeedDatingEventParser implements Parsable<SpeedDatingEvent> {
                                          maxAge,
                                          establishment);
         } catch (JSONException e) {
-            throw new EventParseException(e);
+            throw new ParserException(e);
         }
         return speedDatingEvent;
     }
