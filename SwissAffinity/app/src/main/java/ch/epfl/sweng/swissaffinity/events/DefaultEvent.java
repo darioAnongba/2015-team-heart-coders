@@ -1,10 +1,10 @@
 package ch.epfl.sweng.swissaffinity.events;
 
 
-import java.util.Calendar;
+import ch.epfl.sweng.swissaffinity.utilities.Calendar;
 
 /**
- * The Abstract Class to represent an Event in general.
+ * Representation of a default event.
  */
 public class DefaultEvent implements Event {
 
@@ -23,17 +23,17 @@ public class DefaultEvent implements Event {
     /**
      * The constructor of the class
      *
-     * @param id it's unique id
-     * @param name it's name (a good one for title)
-     * @param location it's location {@link Location}
-     * @param maxPeople the max number of people allowed
-     * @param dateBegin the beginning date and time
-     * @param dateEnd the ending date and time
-     * @param basePrice the price
-     * @param state the actual state of the event {@link Event.State}
+     * @param id          it's unique id
+     * @param name        it's name (a good one for title)
+     * @param location    it's location {@link Location}
+     * @param maxPeople   the max number of people allowed
+     * @param dateBegin   the beginning date and time
+     * @param dateEnd     the ending date and time
+     * @param basePrice   the price
+     * @param state       the actual state of the event {@link Event.State}
      * @param description a description of the event
-     * @param imagePath the relative path to an image
-     * @param lastUpdate the last time the event was updated
+     * @param imagePath   the relative path to an image
+     * @param lastUpdate  the last time the event was updated
      */
     public DefaultEvent(
             int id,
@@ -46,9 +46,8 @@ public class DefaultEvent implements Event {
             State state,
             String description,
             String imagePath,
-            Calendar lastUpdate
-
-    ) {
+            Calendar lastUpdate)
+    {
         mId = id;
         mLocation = location;
         mName = name;

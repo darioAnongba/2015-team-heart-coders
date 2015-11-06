@@ -17,6 +17,6 @@ public class LocationTest extends TestCase {
     }
 
     public void testGetCity() throws Exception {
-        assertEquals("City","Lausanne",location.getCity());
+        assertEquals("City","Lausanne",location.getName());
     }
 }

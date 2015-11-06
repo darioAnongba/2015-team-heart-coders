@@ -1,29 +1,28 @@
 package ch.epfl.sweng.swissaffinity.events;
 
 /**
- * The class that represent a city
+ * Representation of the location of an event.
  */
 public class Location {
 
-    private String city;
+    private final String mName;
 
     /**
-     * The constructor for the class Location
-     * @param city the name of the city
-     * @throws IllegalArgumentException if the name is empty
+     * The constructor of a location.
+     *
+     * @param name the name of the location.
      */
-    public Location(String city) throws IllegalArgumentException{
-        if(city.isEmpty()){
-            throw new IllegalArgumentException("The city name is invalid" + city);
+    public Location(String name) {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("The location name is invalid");
         }
-        this.city=city;
+        mName = name;
     }
 
     /**
-     * The getter of the city name
-     * @return the city name
+     * @return the location name.
      */
-    public String getCity(){
-        return city;
+    public String getName() {
+        return mName;
     }
 }
