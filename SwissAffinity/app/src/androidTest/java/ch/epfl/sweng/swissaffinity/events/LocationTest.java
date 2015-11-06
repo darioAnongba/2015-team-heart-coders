@@ -5,6 +5,8 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.epfl.sweng.swissaffinity.utilities.Location;
+
 public class LocationTest extends TestCase {
 
     private Location location;

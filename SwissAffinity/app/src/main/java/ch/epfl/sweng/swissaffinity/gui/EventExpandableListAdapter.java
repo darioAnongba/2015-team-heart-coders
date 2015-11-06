@@ -84,8 +84,10 @@ public class EventExpandableListAdapter extends AbstractExpandableListAdapter<St
                              ViewGroup parent) {
 
         // TODO: change it to reflect event display.
+        Event event = (Event) getChild(groupPosition, childPosition);
 
-        final String childText = ((Event) getChild(groupPosition, childPosition)).getName();
+        final String eventName = event.getName();
+        final String eventDescription = event.getDesription();
 
         if (convertView == null) {
             LayoutInflater inflater =
@@ -93,8 +95,8 @@ public class EventExpandableListAdapter extends AbstractExpandableListAdapter<St
             convertView = inflater.inflate(R.layout.list_item, null);
         }
 
-        TextView textView = (TextView) convertView.findViewById(R.id.rowEventName);
-        textView.setText(childText);
+        ((TextView) convertView.findViewById(R.id.rowEventName)).setText(eventName);
+        ((TextView) convertView.findViewById(R.id.rowEventDetails)).setText(eventDescription);
 
         return convertView;
     }

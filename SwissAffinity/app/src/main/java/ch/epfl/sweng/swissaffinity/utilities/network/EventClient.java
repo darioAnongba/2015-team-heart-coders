@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
-import ch.epfl.sweng.swissaffinity.events.Location;
+import ch.epfl.sweng.swissaffinity.utilities.Location;
 
 public interface EventClient {
     List<Event> fetchAll() throws EventClientException;

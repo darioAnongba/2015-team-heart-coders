@@ -3,6 +3,7 @@ package ch.epfl.sweng.swissaffinity.events;
 import java.net.URL;
 
 import ch.epfl.sweng.swissaffinity.utilities.Address;
+import ch.epfl.sweng.swissaffinity.utilities.Location;
 
 /**
  * Representation of an establishment for an event to take place in.

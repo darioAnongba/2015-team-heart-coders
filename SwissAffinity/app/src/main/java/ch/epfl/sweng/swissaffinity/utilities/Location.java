@@ -1,4 +1,4 @@
-package ch.epfl.sweng.swissaffinity.events;
+package ch.epfl.sweng.swissaffinity.utilities;
 
 /**
  * Representation of the location of an event.
