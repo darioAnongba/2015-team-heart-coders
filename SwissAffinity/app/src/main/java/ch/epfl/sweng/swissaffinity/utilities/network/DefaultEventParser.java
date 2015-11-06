@@ -7,7 +7,7 @@ import ch.epfl.sweng.swissaffinity.events.DefaultEvent;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.events.Location;
 
-import static ch.epfl.sweng.swissaffinity.utilities.Calendar.fromDateString;
+import static ch.epfl.sweng.swissaffinity.utilities.CalendarParser.fromDateString;
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.BASE_PRICE;
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.DATE_BEGIN;
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.DATE_END;

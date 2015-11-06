@@ -1,6 +1,7 @@
 package ch.epfl.sweng.swissaffinity.events;
 
-import ch.epfl.sweng.swissaffinity.utilities.Calendar;
+import java.util.Calendar;
+
 
 /**
  * Representation of a speed-dating event.

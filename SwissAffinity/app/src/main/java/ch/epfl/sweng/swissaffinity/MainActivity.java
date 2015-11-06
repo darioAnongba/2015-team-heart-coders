@@ -16,9 +16,6 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
-import com.facebook.login.LoginResult;
-
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
@@ -35,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static String email;
     public static String userName;
-    public static boolean USER_REGISTERED = false;
+    public static boolean USER_REGISTERED = true;
 
     private EventExpandableListAdapter mListAdapter;
 
@@ -51,11 +48,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         setEventClient(new NetworkEventClient(SERVER_URL, new DefaultNetworkProvider()));
         mListAdapter = new EventExpandableListAdapter(this);
-
-       TextView view =(TextView) findViewById(R.id.mainWelcomeText);
-        view.setText(userName + email);
 
         if (!USER_REGISTERED) {
             login();
@@ -91,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
         final Button button = (Button) findViewById(R.id.mainLoginButton);
         button.setOnClickListener(new View.OnClickListener() {
                                       public void onClick(View v) {
-                                          Intent myIntent = new Intent(MainActivity.this, FacebookActivity.class);
+                                          Intent myIntent = new Intent(MainActivity.this,
+                                                                       FacebookActivity.class);
                                           MainActivity.this.startActivity(myIntent);
                                       }
                                   }
@@ -100,7 +96,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createData() {
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connMgr =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             // fetch data
@@ -143,9 +140,14 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(mListAdapter);
         listView.setOnChildClickListener(new OnChildClickListener() {
             @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+            public boolean onChildClick(ExpandableListView parent,
+                                        View v,
+                                        int groupPosition,
+                                        int childPosition,
+                                        long id)
+            {
                 startActivity(new Intent(getApplicationContext(), EventActivity.class));
-                //Toast.makeText(getBaseContext(), "Clicked!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Clicked!", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });

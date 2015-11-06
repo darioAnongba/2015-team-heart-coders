@@ -15,7 +15,7 @@ import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.users.UserClientException;
 import ch.epfl.sweng.swissaffinity.utilities.Address;
 
-import static ch.epfl.sweng.swissaffinity.utilities.Calendar.fromDateString;
+import static ch.epfl.sweng.swissaffinity.utilities.CalendarParser.fromDateString;
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.BIRTH_DATE;
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.EMAIL;
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.ENABLED;
