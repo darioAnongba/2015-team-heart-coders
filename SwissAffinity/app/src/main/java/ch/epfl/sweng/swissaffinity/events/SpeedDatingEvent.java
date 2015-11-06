@@ -1,5 +1,6 @@
 package ch.epfl.sweng.swissaffinity.events;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 import ch.epfl.sweng.swissaffinity.utilities.Location;
@@ -8,7 +9,7 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
 /**
  * Representation of a speed-dating event.
  */
-public class SpeedDatingEvent implements Event {
+public class SpeedDatingEvent implements Event, Serializable {
 
     private DefaultEvent mDefaultEvent;
     private int mMenSeats;
@@ -123,8 +124,13 @@ public class SpeedDatingEvent implements Event {
     }
 
     @Override
-    public Calendar getDate() {
-        return mDefaultEvent.getDate();
+    public Calendar getDateBegin() {
+        return mDefaultEvent.getDateBegin();
+    }
+
+    @Override
+    public Calendar getDateEnd() {
+        return mDefaultEvent.getDateEnd();
     }
 
     @Override

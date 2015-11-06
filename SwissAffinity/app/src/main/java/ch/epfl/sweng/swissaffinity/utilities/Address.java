@@ -1,10 +1,12 @@
 package ch.epfl.sweng.swissaffinity.utilities;
 
+import java.io.Serializable;
+
 /**
  * Represents a Postal Address
  * Created by dario on 16.10.2015.
  */
-public class Address {
+public class Address implements Serializable {
     private String street;
     private int streetNumber;
     private int zipCode;

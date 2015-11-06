@@ -1,6 +1,7 @@
 package ch.epfl.sweng.swissaffinity.events;
 
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 import ch.epfl.sweng.swissaffinity.utilities.Location;
@@ -8,7 +9,7 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
 /**
  * Representation of a default event.
  */
-public class DefaultEvent implements Event {
+public class DefaultEvent implements Event, Serializable {
 
     private int mId;
     private String mName;
@@ -74,8 +75,13 @@ public class DefaultEvent implements Event {
     }
 
     @Override
-    public Calendar getDate() {
+    public Calendar getDateBegin() {
         return mDateBegin;
+    }
+
+    @Override
+    public Calendar getDateEnd() {
+        return mDateEnd;
     }
 
     @Override

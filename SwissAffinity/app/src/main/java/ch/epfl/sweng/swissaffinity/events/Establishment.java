@@ -1,5 +1,6 @@
 package ch.epfl.sweng.swissaffinity.events;
 
+import java.io.Serializable;
 import java.net.URL;
 
 import ch.epfl.sweng.swissaffinity.utilities.Address;
@@ -8,9 +9,9 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
 /**
  * Representation of an establishment for an event to take place in.
  */
-public class Establishment {
+public class Establishment implements Serializable {
 
-    public enum Type {
+    public enum Type implements Serializable {
         BAR("bar"),
         RESTAURANT("restaurant"),
         HOTEL("hotel");
@@ -39,27 +40,29 @@ public class Establishment {
 
     /**
      * Constructor for an establishment.
-     * @param id its unique id.
-     * @param name its name.
-     * @param type its type {@link Type}
-     * @param address its address {@link Address}
+     *
+     * @param id          its unique id.
+     * @param name        its name.
+     * @param type        its type {@link Type}
+     * @param address     its address {@link Address}
      * @param phoneNumber its phone number
      * @param description the description of the establishment.
-     * @param url the URL of the website
-     * @param maxSeats maximum number of seats
-     * @param logoPath the relative path to the logo
-     * @param location its location {@link Location}
+     * @param url         the URL of the website
+     * @param maxSeats    maximum number of seats
+     * @param logoPath    the relative path to the logo
+     * @param location    its location {@link Location}
      */
-    public Establishment(int id,
-                         String name,
-                         Type type,
-                         Address address,
-                         String phoneNumber,
-                         String description,
-                         URL url,
-                         int maxSeats,
-                         String logoPath,
-                         Location location)
+    public Establishment(
+            int id,
+            String name,
+            Type type,
+            Address address,
+            String phoneNumber,
+            String description,
+            URL url,
+            int maxSeats,
+            String logoPath,
+            Location location)
     {
         mId = id;
         mName = name;
