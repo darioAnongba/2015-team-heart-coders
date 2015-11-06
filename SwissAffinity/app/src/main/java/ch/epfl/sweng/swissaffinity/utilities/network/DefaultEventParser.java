@@ -3,13 +3,11 @@ package ch.epfl.sweng.swissaffinity.utilities.network;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-
 import ch.epfl.sweng.swissaffinity.events.DefaultEvent;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.events.Location;
-import ch.epfl.sweng.swissaffinity.utilities.client_utilities.EventParseException;
 
+import static ch.epfl.sweng.swissaffinity.utilities.Calendar.fromDateString;
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.BASE_PRICE;
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.DATE_BEGIN;
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.DATE_END;
@@ -21,11 +19,10 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.LOCATI
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.MAX_PEOPLE;
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.STATE;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.fromDateString;
 
 public class DefaultEventParser implements Parsable<DefaultEvent> {
 
-    public DefaultEvent parseFromJSON(JSONObject jsonObject) throws ParseException {
+    public DefaultEvent parseFromJSON(JSONObject jsonObject) throws ParserException {
         DefaultEvent defaultEvent = null;
         try {
             // Check that Strings are correct.
@@ -59,7 +56,7 @@ public class DefaultEventParser implements Parsable<DefaultEvent> {
                                             imageUrl,
                                             fromDateString(lastUpdate));
         } catch (JSONException e) {
-            throw new ParseException(e.getMessage(),0);
+            throw new ParserException(e);
         }
         return defaultEvent;
     }
