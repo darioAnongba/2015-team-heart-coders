@@ -1,113 +1,98 @@
 package ch.epfl.sweng.swissaffinity.events;
 
-import java.util.IllegalFormatCodePointException;
+import java.net.URL;
+
+import ch.epfl.sweng.swissaffinity.utils.Address;
 
 /**
- * The class that represents an establishment or more or less a partner
+ * Representation of an establishment for an event to take place in.
  */
 public class Establishment {
 
-    private String type;
-    private String address;
-    private String phoneNumber;
-    private String contactName;
+    public enum Type {
+        BAR("bar"),
+        RESTAURANT("restaurant"),
+        HOTEL("hotel");
 
-    /**
-     * the setter of the Estabmishment
-     * @param type (EstablishmentType) the type of establishment
-     * @param address the adress of the Establishment
-     * @param phoneNumber the phone number of the establishment
-     * @param contactName the contact's name of the establishment
-     * @throws IllegalArgumentException if there is no phone number , no type , no adress or no contact name
-     */
-    public Establishment(String type, String address, String phoneNumber, String contactName) throws IllegalArgumentException {
-        if(type==null || address.isEmpty() || phoneNumber.isEmpty() || contactName.isEmpty() ) {
-            throw new IllegalArgumentException("Un des arguments est vide ou sans valeur");
+        private final String mType;
+
+        Type(String type) {
+            mType = type;
         }
-        this.type = type;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.contactName = contactName;
-    }
 
-    /**
-     * The getter for the establishment's type
-     * @return the establisment's type ( in EstablishmentType)
-     */
-    public String getType() {
-        return type;
-    }
-
-    /**
-     * The setter fot the establishment's type
-     * @param type the new establishment's type (EstablishmentType)
-     * @throws IllegalArgumentException if the new EstablishmentType is null
-     */
-    public void setType(String type) throws IllegalArgumentException {
-        if(type==null)  {
-            throw new IllegalArgumentException("The type must be non-null" + type);
+        public String get() {
+            return mType;
         }
-        this.type = type;
     }
 
+    private final int mId;
+    private final String mName;
+    private final Type mType;
+    private final Address mAddress;
+    private final String mPhoneNumber;
+    private final String mDescription; // nullable
+    private final URL mUrl; // nullable
+    private final int mMaxSeats; // nullable
+    private final String mLogoPath; // nullable
+    private final Location mLocation;
 
     /**
-     * The getter for the establishment's address
-     * @return the establishment's adress
+     * Constructor for an establishment.
+     * @param id its unique id.
+     * @param name its name.
+     * @param type its type {@link Type}
+     * @param address its address {@link Address}
+     * @param phoneNumber its phone number
+     * @param description the description of the establishment.
+     * @param url the URL of the website
+     * @param maxSeats maximum number of seats
+     * @param logoPath the relative path to the logo
+     * @param location its location {@link Location}
      */
-    public String getAddress() {
-        return address;
+    public Establishment(int id,
+                         String name,
+                         Type type,
+                         Address address,
+                         String phoneNumber,
+                         String description,
+                         URL url,
+                         int maxSeats,
+                         String logoPath,
+                         Location location)
+    {
+        mId = id;
+        mName = name;
+        mType = type;
+        mAddress = address;
+        mPhoneNumber = phoneNumber;
+        mDescription = description;
+        mUrl = url;
+        mMaxSeats = maxSeats;
+        mLogoPath = logoPath;
+        mLocation = location;
     }
 
-    /**
-     * The setter for the establishment's address
-     * @param address
-     * @throws IllegalArgumentException when the address is empty
-     */
-    public void setAddress(String address) throws IllegalArgumentException {
-        if(address.isEmpty()) {
-            throw new IllegalArgumentException("The adress is empty" + address);
-        }
-        this.address = address;
+    public String getmName() {
+        return mName;
     }
 
-    /**
-     * The getter for the establishment's phone number
-     * @return the establishment's phone number
-     */
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getmLogoPath() {
+        return mLogoPath;
     }
 
-    /**
-     * The setter for the establishment's phone number
-     * @param phoneNumber the new establishment's phone number
-     * @throws IllegalArgumentException if the phone number is empty
-     */
-    public void setPhoneNumber(String phoneNumber) throws IllegalArgumentException{
-        if(phoneNumber.isEmpty()) {
-            throw new IllegalArgumentException("The phone number is empty" + phoneNumber);
-        }
-        this.phoneNumber = phoneNumber;
+    public URL getmUrl() {
+        return mUrl;
     }
 
-    /**
-     * The getter for the name of the contact for the establishment
-     * @return the name of the contact of the establishment
-     */
-    public String getContactName() {
-        return contactName;
+    public String getmDescription() {
+        return mDescription;
     }
 
-    /**
-     * The setter for the name of the contact for the establishment
-     * @param contactName the new contact's name for the establishment
-     * @throws IllegalArgumentException if the contact name is empty
-     */
-    public void setContactName(String contactName) throws IllegalArgumentException {
-        if(contactName.isEmpty()) {
-            throw new IllegalArgumentException("The contact's name is empty"+contactName);
-        }
-        this.contactName = contactName;
+    public Address getmAddress() {
+        return mAddress;
+    }
+
+    public Type getmType() {
+        return mType;
     }
 }

@@ -1,9 +1,9 @@
 package ch.epfl.sweng.swissaffinity.events;
 
-import java.util.Calendar;
+import ch.epfl.sweng.swissaffinity.utilities.Calendar;
 
 /**
- * The class to represent the speedDating which extends Event
+ * Representation of a speed-dating event.
  */
 public class SpeedDatingEvent implements Event {
 
@@ -17,6 +17,8 @@ public class SpeedDatingEvent implements Event {
     private Establishment mEstablishment;
 
     /**
+     * A full constructor for a speed-dating event.
+     *
      * @param id              it's unique id
      * @param name            it's name (a good one for title)
      * @param location        it's location {@link Location}
@@ -76,7 +78,20 @@ public class SpeedDatingEvent implements Event {
              establishment);
     }
 
-    public SpeedDatingEvent(DefaultEvent defaultEvent, int menSeats,
+    /**
+     * A constructor with a default event and the supplementary fields.
+     *
+     * @param defaultEvent    the default event instance.
+     * @param menSeats        number of men seats.
+     * @param womenSeats      number of women seats.
+     * @param menRegistered   number of registered men.
+     * @param womenRegistered number of registered women.
+     * @param minAge          minimum age for attending the event.
+     * @param maxAge          maximum age for attending the event.
+     * @param establishment   the establishment where the event takes place. {@link Establishment}
+     */
+    public SpeedDatingEvent(DefaultEvent defaultEvent,
+                            int menSeats,
                             int womenSeats,
                             int menRegistered,
                             int womenRegistered,
