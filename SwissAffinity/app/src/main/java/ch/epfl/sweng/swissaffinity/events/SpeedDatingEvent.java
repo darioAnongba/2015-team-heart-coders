@@ -9,7 +9,7 @@ import ch.epfl.sweng.swissaffinity.users.Contributor;
 /**
  * The class to represent the speedDating which extends Event
  */
-public class SpeedDating extends AbstractEvent {
+public class SpeedDatingEvent extends AbstractEvent {
 
     private int menSits;
     private int womenSits;
@@ -19,50 +19,26 @@ public class SpeedDating extends AbstractEvent {
     private int maxAge;
     private Establishment establishment;
 
-    /**
-     * The constructor for the SpeedDation class
-     * @param id the number that represent the SpeedDating
-     * @param location the location of SpeedDating
-     * @param name the name of the SpeedDating
-     * @param maxPeople the maximum number of people allowed to the SpeedDating
-     * @param dateBeginning The Calendar date at which the SpeedDating begins
-     * @param dateEnd The Calendar date at which the SpeedDating ends
-     * @param basePrice the base price of the SpeedDating
-     * @param animators the list of Contributor of the SpeedDating
-     * @param state the state of the SpeedDating
-     * @param description the description of the SpeedDating
-     * @param imageEventURl the url of the image for the SpeedDating
-     * @param createdAt the Calendar date of the creation of the SpeedDating
-     * @param createdBy the Contributor that created the SpeedDating
-     * @param menSits the number of place for men
-     * @param womenSits the number of place for women
-     * @param menSitsAvailable the number of place still available for man
-     * @param womenSitsAvailable the number of place still available for women
-     * @param minAge the minimum age to particpate to the SpeedDating
-     * @param maxAge  the maximum age to participate to the SpeedDating
-     * @param establishment the Establishment where will be the SpeedDating
-     * @throws IllegalArgumentException if one attributes is empty or null or negative
-     */
-    public SpeedDating(int id,
-                       Location location,
-                       String name,
-                       int maxPeople,
-                       Calendar dateBeginning,
-                       Calendar dateEnd,
-                       int basePrice,
-                       ArrayList<Contributor> animators,
-                       State state,
-                       String description,
-                       String imageEventURl,
-                       Calendar createdAt,
-                       Contributor createdBy,
-                       int menSits,
-                       int womenSits,
-                       int menSitsAvailable,
-                       int womenSitsAvailable,
-                       int minAge,
-                       int maxAge,
-                       Establishment establishment) throws IllegalArgumentException{
+    public SpeedDatingEvent(int id,
+                            Location location,
+                            String name,
+                            int maxPeople,
+                            Calendar dateBeginning,
+                            Calendar dateEnd,
+                            int basePrice,
+                            ArrayList<Contributor> animators,
+                            State state,
+                            String description,
+                            String imageEventURl,
+                            Calendar createdAt,
+                            Contributor createdBy,
+                            int menSits,
+                            int womenSits,
+                            int menSitsAvailable,
+                            int womenSitsAvailable,
+                            int minAge,
+                            int maxAge,
+                            Establishment establishment) throws IllegalArgumentException{
 
         super(id, location, name, maxPeople, dateBeginning, dateEnd, basePrice, animators, state, description, imageEventURl, createdAt, createdBy);
         if(menSits<1 || womenSits <1 || menSitsAvailable<1 || womenSitsAvailable<1 || womenSitsAvailable>womenSits||menSitsAvailable>menSits|| minAge<5 || maxAge>120 || establishment==null) {
@@ -159,7 +135,7 @@ public class SpeedDating extends AbstractEvent {
     }
 
     /**
-     * The getter of the minimum age for the SpeedDating
+     * The getter of the minimum age for the SpeedDatingEvent
      * @return the minimum age fot the speedDating
      */
     public int getMinAge() {
@@ -199,16 +175,16 @@ public class SpeedDating extends AbstractEvent {
     }
 
     /**
-     * The getter for the establisment of the SpeedDating
-     * @return the estalisment of the SpeedDating
+     * The getter for the establisment of the SpeedDatingEvent
+     * @return the estalisment of the SpeedDatingEvent
      */
     public Establishment getEstablishment() {
         return establishment;
     }
 
     /**
-     * The setter for the establisment of the SpeedDating
-     * @param establishment the new establisment of the SpeedDating
+     * The setter for the establisment of the SpeedDatingEvent
+     * @param establishment the new establisment of the SpeedDatingEvent
      * @throws IllegalArgumentException if the new establisment is null
      */
     public void setEstablishment(Establishment establishment) throws IllegalArgumentException{
