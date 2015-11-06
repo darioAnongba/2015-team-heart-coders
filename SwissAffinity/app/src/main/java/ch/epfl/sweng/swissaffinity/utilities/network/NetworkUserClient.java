@@ -113,8 +113,7 @@ public class NetworkUserClient implements UserClient {
 
                 JSONObject jsonUser = new JSONObject(content);
 
-            Parsable<Event> parsable = (Parsable<Event>)ParserFactory.parserFor(jsonUser);
-            Event event = parsable.parseFromJSON(jsonUser);
+            user = parseFromJSON(jsonUser);
             } catch (JSONException | ParserException | IOException e) {
                 throw new UserClientException();
             }
@@ -123,8 +122,20 @@ public class NetworkUserClient implements UserClient {
     }
 
     @Override
-    public User fetchByID(int id) {
-        //TODO : fetech user by id
-        return null;
+    public User fetchByIDOrFacebookId(int id) throws UserClientException{
+        User user =null;
+        try {
+            String content = mNetworkProvider.getContent(mServerUrl + SERVER_API_USERS + "/" + id);
+
+            JSONObject jsonUser = new JSONObject(content);
+
+            user = parseFromJSON(jsonUser);
+        } catch (JSONException | ParserException | IOException e) {
+            throw new UserClientException();
+        }
+
+        return user;
     }
+
+
 }

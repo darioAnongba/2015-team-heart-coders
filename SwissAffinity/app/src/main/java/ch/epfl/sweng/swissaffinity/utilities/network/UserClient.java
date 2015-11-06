@@ -6,5 +6,5 @@ import ch.epfl.sweng.swissaffinity.users.UserClientException;
 public interface UserClient {
     User fetchByUsername(String userName) throws UserClientException;
 
-    User fetchByID(int id) throws UserClientException;
+    User fetchByIDOrFacebookId(int id) throws UserClientException;
 }
