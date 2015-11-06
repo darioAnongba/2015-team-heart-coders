@@ -28,11 +28,13 @@ public class NetworkEventClient implements EventClient {
             String content = mNetworkProvider.getContent(mServerUrl + SERVER_API_EVENTS);
             JSONArray jsonEvents = new JSONArray(content);
             for (int i = 0; i < jsonEvents.length(); ++i) {
-                Event event = SpeedDatingEventParser.parseFromJSON(jsonEvents.getJSONObject(i));
+                JSONObject jsonObject = jsonEvents.getJSONObject(i);
+                Parsable<Event> parsable = (Parsable<Event>)ParserFactory.parserFor(jsonObject);
+                Event event = parsable.parseFromJSON(jsonObject);
                 events.add(event);
             }
         } catch (Exception e) {
-            throw new EventClientException();
+            throw new EventClientException(e);
         }
         return events;
     }

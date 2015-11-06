@@ -71,7 +71,7 @@ public class FacebookActivity extends AppCompatActivity {
                                 + "\n" + "Permissions" + loginResult.getAccessToken().getPermissions().toString()
                                 + "\n" + "Auth Token :" + loginResult.getAccessToken().getToken()
                 );
-                
+
                 loginButton.setVisibility(View.INVISIBLE);
                 MainActivity.USER_REGISTERED=true;
                 Intent myIntent = new Intent( FacebookActivity.this,EventActivity.class);
