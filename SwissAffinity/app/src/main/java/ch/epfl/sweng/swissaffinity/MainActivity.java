@@ -2,6 +2,7 @@ package ch.epfl.sweng.swissaffinity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ import com.facebook.login.LoginResult;
 
 import java.util.List;
 
+import ch.epfl.sweng.swissaffinity.db.UserDBAdapter;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String SERVER_URL = "http://www.beecreative.ch/api/";
     private EventClient mEventClient;
+    private UserDBAdapter mDbHelper;
 
     public static String email;
     public static String userName;
@@ -53,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setEventClient(new NetworkEventClient(SERVER_URL, new DefaultNetworkProvider()));
         mListAdapter = new EventExpandableListAdapter(this);
+        mDbHelper = new UserDBAdapter(this);
 
        TextView view =(TextView) findViewById(R.id.mainWelcomeText);
         view.setText(userName + email);
@@ -105,11 +110,29 @@ public class MainActivity extends AppCompatActivity {
         if (networkInfo != null && networkInfo.isConnected()) {
             // fetch data
             new DownloadEventsTask().execute();
+            mDbHelper.open();
+            fillData();
         } else {
             // display error
             Toast.makeText(MainActivity.this, "No Network", Toast.LENGTH_LONG).show();
         }
     }
+
+    private void fillData(){
+        Cursor dataCursor = mDbHelper.fetchAllData();
+        if(dataCursor != null) {
+            // Create an array to specify the fields we want (only the TITLE)
+            String[] from = new String[]{UserDBAdapter.KEY_TITLE};
+            // and an array of the fields we want to bind in the view
+            TextView view =(TextView) findViewById(R.id.mainWelcomeText);
+
+            // Now create a simple cursor adapter and set it to display
+            userName = dataCursor.getString(1);
+            email = dataCursor.getString(2);
+            view.setText(userName + email);
+        }
+    }
+
 
     private class DownloadEventsTask extends AsyncTask<Void, Void, List<Event>> {
         @Override
@@ -151,4 +174,11 @@ public class MainActivity extends AppCompatActivity {
         });
         listView.expandGroup(0);
     }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+    }
+
+
 }

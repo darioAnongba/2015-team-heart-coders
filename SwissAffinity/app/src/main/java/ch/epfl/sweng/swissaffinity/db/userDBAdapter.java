@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.sql.SQLException;
+
 /**
  * Created by sahinfurkan on 06/11/15.
  */
@@ -48,10 +50,26 @@ public class UserDBAdapter {
         return mDb.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowId, null) >0;
     }
 
-    public Cursor fetchAllReminders(){
+    public Cursor fetchAllData(){
         return mDb.query(DATABASE_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
                 KEY_BODY}, null, null, null, null, null);
     }
+
+    public Cursor fetchData(long rowId) throws SQLException {
+        Cursor mCursor = mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
+                KEY_TITLE, KEY_BODY},KEY_ROWID + "=" + rowId, null, null, null, null, null);
+        if(mCursor != null){
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+    public boolean updateData(long rowId, String title, String body){
+        ContentValues args = new ContentValues();
+        args.put(KEY_TITLE, title); args.put(KEY_BODY, body);
+        return mDb.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+
     private static class DatabaseHelper extends SQLiteOpenHelper {
         DatabaseHelper(Context context){
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
