@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ch.epfl.sweng.swissaffinity">
+<manifest
+    package="ch.epfl.sweng.swissaffinity"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -15,8 +16,8 @@
             android:name=".MainActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
@@ -24,7 +25,7 @@
             android:label="@string/title_activity_about">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ch.epfl.sweng.swissaffinity.MainActivity" />
+                android:value="ch.epfl.sweng.swissaffinity.MainActivity"/>
         </activity>
         <activity
             android:name=".SettingsActivity"
@@ -32,26 +33,31 @@
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ch.epfl.sweng.swissaffinity.MainActivity" />
+                android:value="ch.epfl.sweng.swissaffinity.MainActivity"/>
         </activity>
         <activity
             android:name=".EventActivity"
             android:label="@string/title_activity_event">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ch.epfl.sweng.swissaffinity.MainActivity" />
+                android:value="ch.epfl.sweng.swissaffinity.MainActivity"/>
         </activity>
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:value="@string/facebook_app_id"/>
+
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <activity
             android:name=".FacebookActivity"
             android:label="@string/title_activity_facebook">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ch.epfl.sweng.swissaffinity.MainActivity"/>
 
         </activity>
     </application>
