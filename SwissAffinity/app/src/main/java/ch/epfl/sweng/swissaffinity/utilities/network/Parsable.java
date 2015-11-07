@@ -2,8 +2,14 @@ package ch.epfl.sweng.swissaffinity.utilities.network;
 
 import org.json.JSONObject;
 
-interface Parsable<A> {
+/**
+ * Generic interface that represents parsables we get from the server API.
+ *
+ * @param <A> generic type to parse out.
+ */
+public interface Parsable<A> {
 
+    /** Enumertates all the server API tags to use. */
     enum TAGS {
         ID("id"),
         NAME("name"),
@@ -48,10 +54,19 @@ interface Parsable<A> {
             mName = name;
         }
 
-        String get() {
+        public String get() {
             return mName;
         }
     }
 
+    /**
+     * Allows to parse a JSON object to get an instance of type A.
+     *
+     * @param jsonObject
+     *
+     * @return an instance of type A.
+     *
+     * @throws ParserException in case a problem occurs while parsing.
+     */
     A parseFromJSON(JSONObject jsonObject) throws ParserException;
 }

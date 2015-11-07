@@ -21,9 +21,9 @@ import java.util.List;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
-import ch.epfl.sweng.swissaffinity.utilities.network.EventClient;
-import ch.epfl.sweng.swissaffinity.utilities.network.EventClientException;
-import ch.epfl.sweng.swissaffinity.utilities.network.NetworkEventClient;
+import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClient;
+import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClientException;
+import ch.epfl.sweng.swissaffinity.utilities.network.events.NetworkEventClient;
 
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_EVENT = "ch.epfl.sweng.swissaffinity.event";

@@ -1,10 +1,13 @@
-package ch.epfl.sweng.swissaffinity.utilities.network;
+package ch.epfl.sweng.swissaffinity.utilities.network.events;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ch.epfl.sweng.swissaffinity.events.AbstractEvent;
 import ch.epfl.sweng.swissaffinity.events.Establishment;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
+import ch.epfl.sweng.swissaffinity.utilities.network.Parsable;
+import ch.epfl.sweng.swissaffinity.utilities.network.ParserException;
 
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.MAX_AGE;
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.MEN_REGISTERED;
@@ -13,11 +16,18 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.MIN_AG
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.WOMEN_REGISTERED;
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.WOMEN_SEATS;
 
+/**
+ * Parser for getting a speed-dating event instance.
+ */
 public class SpeedDatingEventParser implements Parsable<SpeedDatingEvent> {
 
+    @Override
     public SpeedDatingEvent parseFromJSON(JSONObject jsonObject) throws ParserException {
-        SpeedDatingEvent speedDatingEvent = null;
+        SpeedDatingEvent.Builder builder = new SpeedDatingEvent.Builder();
         try {
+            AbstractEvent.Builder abstractEventBuilder =
+                    new AbstractEventParser().parseFromJSON(jsonObject);
+
             int menSeats = jsonObject.getInt(MEN_SEATS.get());
             int womenSeats = jsonObject.getInt(WOMEN_SEATS.get());
             int menRegistered = jsonObject.getInt(MEN_REGISTERED.get());
@@ -27,18 +37,16 @@ public class SpeedDatingEventParser implements Parsable<SpeedDatingEvent> {
             // TODO : parse establishement.
             Establishment establishment = null;
 
-            speedDatingEvent = new SpeedDatingEvent(
-                    new DefaultEventParser().parseFromJSON(jsonObject),
-                    menSeats,
-                    womenSeats,
-                    menRegistered,
-                    womenRegistered,
-                    minAge,
-                    maxAge,
-                    establishment);
+            return builder.setMenSeats(menSeats)
+                          .setWomenSeats(womenSeats)
+                          .setMenRegistered(menRegistered)
+                          .setWomenRegistered(womenRegistered)
+                          .setMinAge(minAge)
+                          .setMaxAge(maxAge)
+                          .setEstablishment(establishment)
+                          .build(abstractEventBuilder);
         } catch (JSONException e) {
             throw new ParserException(e);
         }
-        return speedDatingEvent;
     }
 }

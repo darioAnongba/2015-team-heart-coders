@@ -102,6 +102,11 @@ public abstract class AbstractEvent implements Serializable {
             return this;
         }
 
+        public Builder setLocation(String location) {
+            mLocation = new Location(location);
+            return this;
+        }
+
         public Builder setMaxPeople(int maxPeople) {
             mMaxPeople = maxPeople;
             return this;

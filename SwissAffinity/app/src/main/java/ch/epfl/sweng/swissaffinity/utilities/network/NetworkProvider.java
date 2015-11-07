@@ -8,7 +8,7 @@ import java.net.URL;
  * Constructs {@link HttpURLConnection} objects that can be used to
  * retrieve data from a given {@link URL}.
  */
-interface NetworkProvider {
+public interface NetworkProvider {
     /**
      * Returns a new {@link HttpURLConnection} object for the given {@link URL}.
      *

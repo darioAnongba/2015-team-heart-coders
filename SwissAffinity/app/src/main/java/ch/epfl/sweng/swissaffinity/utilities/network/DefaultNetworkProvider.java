@@ -25,7 +25,9 @@ public class DefaultNetworkProvider implements NetworkProvider {
      * Get the content of a HTTP GET request to the provided server URL.
      *
      * @param serverURL the server address
+     *
      * @return the content of the request
+     *
      * @throws IOException if no success with the request.
      */
     @Override

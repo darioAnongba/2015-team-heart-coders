@@ -1,4 +1,4 @@
-package ch.epfl.sweng.swissaffinity.utilities.network;
+package ch.epfl.sweng.swissaffinity.utilities.network.events;
 
 /**
  * Created by Lionel on 05/11/15.

@@ -1,4 +1,4 @@
-package ch.epfl.sweng.swissaffinity.utilities.network;
+package ch.epfl.sweng.swissaffinity.utilities.network.users;
 
 import ch.epfl.sweng.swissaffinity.users.User;
 

@@ -1,4 +1,4 @@
-package ch.epfl.sweng.swissaffinity.utilities.network;
+package ch.epfl.sweng.swissaffinity.utilities.network.users;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,6 +13,8 @@ import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.Address;
+import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
+import ch.epfl.sweng.swissaffinity.utilities.network.ParserException;
 
 import static ch.epfl.sweng.swissaffinity.utilities.CalendarParser.fromDateString;
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.BIRTH_DATE;

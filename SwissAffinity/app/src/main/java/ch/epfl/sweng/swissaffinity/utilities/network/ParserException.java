@@ -1,7 +1,7 @@
 package ch.epfl.sweng.swissaffinity.utilities.network;
 
 /**
- * Created by Lionel on 06/11/15.
+ * Exception raised in parser operations.
  */
 public class ParserException extends Exception {
     public ParserException() {
@@ -15,5 +15,4 @@ public class ParserException extends Exception {
     public ParserException(Throwable throwable) {
         super(throwable);
     }
-
 }

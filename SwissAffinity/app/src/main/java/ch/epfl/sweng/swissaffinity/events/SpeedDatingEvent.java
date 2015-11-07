@@ -1,11 +1,9 @@
 package ch.epfl.sweng.swissaffinity.events;
 
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Date;
 
 import ch.epfl.sweng.swissaffinity.utilities.Location;
-import ch.epfl.sweng.swissaffinity.utilities.network.SpeedDatingEventParser;
 
 
 /**
