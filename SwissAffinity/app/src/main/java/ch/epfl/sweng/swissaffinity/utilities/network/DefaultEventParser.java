@@ -3,7 +3,7 @@ package ch.epfl.sweng.swissaffinity.utilities.network;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ch.epfl.sweng.swissaffinity.events.DefaultEvent;
+import ch.epfl.sweng.swissaffinity.events.AbstractEvent;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 
@@ -20,10 +20,10 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.MAX_PE
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.STATE;
 
-public class DefaultEventParser implements Parsable<DefaultEvent> {
+public class DefaultEventParser implements Parsable<AbstractEvent> {
 
-    public DefaultEvent parseFromJSON(JSONObject jsonObject) throws ParserException {
-        DefaultEvent defaultEvent = null;
+    public AbstractEvent parseFromJSON(JSONObject jsonObject) throws ParserException {
+        AbstractEvent abstractEvent = null;
         try {
             // Check that Strings are correct.
             // TODO: more to check here
@@ -44,7 +44,7 @@ public class DefaultEventParser implements Parsable<DefaultEvent> {
             String imageUrl = jsonObject.getString(IMAGE_PATH.get());
             String lastUpdate = jsonObject.getString(LAST_UPDATE.get());
 
-            defaultEvent = new DefaultEvent(id,
+            abstractEvent = new AbstractEvent(id,
                                             name,
                                             new Location(location),
                                             maxPeople,
@@ -58,6 +58,6 @@ public class DefaultEventParser implements Parsable<DefaultEvent> {
         } catch (JSONException e) {
             throw new ParserException(e);
         }
-        return defaultEvent;
+        return abstractEvent;
     }
 }

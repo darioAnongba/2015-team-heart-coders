@@ -2,26 +2,26 @@ package ch.epfl.sweng.swissaffinity.events;
 
 
 import java.io.Serializable;
-import java.util.Calendar;
+import java.util.Date;
 
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 
 /**
- * Representation of a default event.
+ * Representation of an abstract event.
  */
-public class AbstractEvent implements Event, Serializable {
+public abstract class AbstractEvent implements Serializable {
 
-    private int mId;
-    private String mName;
-    private Location mLocation;
-    private int mMaxPeople;
-    private Calendar mDateBegin;
-    private Calendar mDateEnd;
-    private double mBasePrice;
-    private State mState;
-    private String mDescription;
-    private String mImagePath;
-    private Calendar mLastUpdate;
+    protected final int mId;
+    protected final String mName;
+    protected final Location mLocation;
+    protected final int mMaxPeople;
+    protected final Date mDateBegin;
+    protected final Date mDateEnd;
+    protected final double mBasePrice;
+    protected final Event.State mState;
+    protected final String mDescription;
+    protected final String mImagePath;
+    protected final Date mLastUpdate;
 
     /**
      * The constructor of the class
@@ -38,18 +38,18 @@ public class AbstractEvent implements Event, Serializable {
      * @param imagePath   the relative path to an image
      * @param lastUpdate  the last time the event was updated
      */
-    public AbstractEvent(
+    private AbstractEvent(
             int id,
             String name,
             Location location,
             int maxPeople,
-            Calendar dateBegin,
-            Calendar dateEnd,
+            Date dateBegin,
+            Date dateEnd,
             double basePrice,
-            State state,
+            Event.State state,
             String description,
             String imagePath,
-            Calendar lastUpdate)
+            Date lastUpdate)
     {
         mId = id;
         mLocation = location;
@@ -64,28 +64,82 @@ public class AbstractEvent implements Event, Serializable {
         mLastUpdate = lastUpdate;
     }
 
-    @Override
-    public String getName() {
-        return mName;
+    protected AbstractEvent(Builder builder) {
+        this(
+                builder.mId,
+                builder.mName,
+                builder.mLocation,
+                builder.mMaxPeople,
+                builder.mDateBegin,
+                builder.mDateEnd,
+                builder.mBasePrice,
+                builder.mState,
+                builder.mDescription,
+                builder.mImagePath,
+                builder.mLastUpdate);
     }
 
-    @Override
-    public String getDesription() {
-        return mDescription;
-    }
+    public static class Builder {
+        private int mId;
+        private String mName;
+        private Location mLocation;
+        private int mMaxPeople;
+        private Date mDateBegin;
+        private Date mDateEnd;
+        private double mBasePrice;
+        private Event.State mState;
+        private String mDescription;
+        private String mImagePath;
+        private Date mLastUpdate;
 
-    @Override
-    public Calendar getDateBegin() {
-        return mDateBegin;
-    }
+        public Builder setId(int id) {
+            mId = id;
+            return this;
+        }
 
-    @Override
-    public Calendar getDateEnd() {
-        return mDateEnd;
-    }
+        public Builder setName(String name) {
+            mName = name;
+            return this;
+        }
 
-    @Override
-    public Location getLocation() {
-        return mLocation;
+        public Builder setMaxPeople(int maxPeople) {
+            mMaxPeople = maxPeople;
+            return this;
+        }
+
+        public Builder setDateBegin(Date dateBegin) {
+            mDateBegin = dateBegin;
+            return this;
+        }
+
+        public Builder setDateEnd(Date dateEnd) {
+            mDateEnd = dateEnd;
+            return this;
+        }
+
+        public Builder setBasePrice(double basePrice) {
+            mBasePrice = basePrice;
+            return this;
+        }
+
+        public Builder setState(String state) {
+            mState = Event.State.getState(state);
+            return this;
+        }
+
+        public Builder setDescrition(String descrition) {
+            mDescription = descrition;
+            return this;
+        }
+
+        public Builder setImagePath(String imagePath) {
+            mImagePath = imagePath;
+            return this;
+        }
+
+        public Builder setmLastUpdate(Date lastUpdate) {
+            mLastUpdate = lastUpdate;
+            return this;
+        }
     }
 }
