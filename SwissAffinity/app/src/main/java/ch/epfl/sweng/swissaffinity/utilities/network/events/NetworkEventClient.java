@@ -10,8 +10,8 @@ import java.util.List;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
-import ch.epfl.sweng.swissaffinity.utilities.network.Parsable;
-import ch.epfl.sweng.swissaffinity.utilities.network.ParserFactory;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.Parsable;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserFactory;
 
 public class NetworkEventClient implements EventClient {
     private static final String SERVER_API_EVENTS = "/api/events";

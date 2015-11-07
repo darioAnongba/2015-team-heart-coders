@@ -1,4 +1,4 @@
-package ch.epfl.sweng.swissaffinity.utilities.network;
+package ch.epfl.sweng.swissaffinity.utilities.parsers;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

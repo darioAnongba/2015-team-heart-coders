@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
 
 /**
  * Class that represents a client User
- *
+ * <p/>
  * Created by dario on 17.10.2015.
  */
 public final class User {
@@ -36,7 +37,7 @@ public final class User {
 
     private Gender mGender;
 
-    private Calendar mBirthDate;
+    private Date mBirthDate;
 
     private URL mProfilePicture;
 
@@ -46,28 +47,30 @@ public final class User {
     /**
      * Create a new client User
      *
-     * @param gender the gender
-     * @param birthDate the birth date
-     * @param profession the job
+     * @param gender         the gender
+     * @param birthDate      the birth date
+     * @param profession     the job
      * @param profilePicture the profile picture link on the server
      */
-    public User(int id,
-                int facebookId,
-                String username,
-                String email,
-                String lastName,
-                String firstName,
-                String mobilePhone,
-                String homePhone,
-                Address address,
-                boolean locked,
-                boolean enabled,
-                Gender gender,
-                Calendar birthDate,
-                String profession,
-                URL profilePicture,
-                Collection<Location> areasOfInterest,
-                List<Event> eventsAttended) {
+    public User(
+            int id,
+            int facebookId,
+            String username,
+            String email,
+            String lastName,
+            String firstName,
+            String mobilePhone,
+            String homePhone,
+            Address address,
+            boolean locked,
+            boolean enabled,
+            Gender gender,
+            Date birthDate,
+            String profession,
+            URL profilePicture,
+            Collection<Location> areasOfInterest,
+            List<Event> eventsAttended)
+    {
 
         mId = id;
         mfacebookId = facebookId;
@@ -226,6 +229,7 @@ public final class User {
 
     /**
      * Get locked
+     *
      * @return locked
      */
     public boolean getLocked() {
@@ -234,13 +238,16 @@ public final class User {
 
     /**
      * Get locked
+     *
      * @return enabled
      */
     public boolean getEnabled() {
         return mEnabled;
     }
+
     /**
      * Get gender
+     *
      * @return gender
      */
     public Gender getGender() {
@@ -249,6 +256,7 @@ public final class User {
 
     /**
      * Set gender
+     *
      * @param gender the gender
      */
     public void setGender(Gender gender) {
@@ -257,22 +265,25 @@ public final class User {
 
     /**
      * get birth date
+     *
      * @return birth date
      */
-    public Calendar getBirthDate() {
+    public Date getBirthDate() {
         return mBirthDate;
     }
 
     /**
      * Set birthDate
+     *
      * @param birthDate The birth date
      */
-    public void setBirthDate(Calendar birthDate) {
+    public void setBirthDate(Date birthDate) {
         mBirthDate = birthDate;
     }
 
     /**
      * the job (profession)
+     *
      * @return profession
      */
     public String getProfession() {
@@ -281,6 +292,7 @@ public final class User {
 
     /**
      * Set profession
+     *
      * @param profession The profession
      */
     public void setProfession(String profession) {
@@ -289,6 +301,7 @@ public final class User {
 
     /**
      * Get profile picture link
+     *
      * @return profile picture link
      */
     public URL getProfilePicture() {
@@ -297,6 +310,7 @@ public final class User {
 
     /**
      * Set profile picture link
+     *
      * @param profilePicture The profile picture link
      */
     public void setProfilePicture(URL profilePicture) {
@@ -305,6 +319,7 @@ public final class User {
 
     /**
      * Get areas of interest
+     *
      * @return areas of interest
      */
     public Collection<Location> getAreasOfInterest() {

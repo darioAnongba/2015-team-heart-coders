@@ -1,4 +1,4 @@
-package ch.epfl.sweng.swissaffinity.utilities.network.events;
+package ch.epfl.sweng.swissaffinity.utilities.parsers.events;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -6,15 +6,15 @@ import org.json.JSONObject;
 import ch.epfl.sweng.swissaffinity.events.AbstractEvent;
 import ch.epfl.sweng.swissaffinity.events.Establishment;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
-import ch.epfl.sweng.swissaffinity.utilities.network.Parsable;
-import ch.epfl.sweng.swissaffinity.utilities.network.ParserException;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.Parsable;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.MAX_AGE;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.MEN_REGISTERED;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.MEN_SEATS;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.MIN_AGE;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.WOMEN_REGISTERED;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.WOMEN_SEATS;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.MAX_AGE;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.MEN_REGISTERED;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.MEN_SEATS;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.MIN_AGE;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.WOMEN_REGISTERED;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.WOMEN_SEATS;
 
 /**
  * Parser for getting a speed-dating event instance.
