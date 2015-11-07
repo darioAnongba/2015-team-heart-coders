@@ -1,4 +1,4 @@
-package ch.epfl.sweng.swissaffinity.utilities.network;
+package ch.epfl.sweng.swissaffinity.utilities.network.users;
 
 /**
  * Created by Joel on 10/26/2015.

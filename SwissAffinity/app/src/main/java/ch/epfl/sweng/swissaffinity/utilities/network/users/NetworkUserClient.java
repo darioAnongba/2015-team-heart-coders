@@ -1,4 +1,4 @@
-package ch.epfl.sweng.swissaffinity.utilities.network;
+package ch.epfl.sweng.swissaffinity.utilities.network.users;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,29 +10,30 @@ import java.net.URL;
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
-import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.Address;
+import ch.epfl.sweng.swissaffinity.utilities.Location;
+import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 
-import static ch.epfl.sweng.swissaffinity.utilities.CalendarParser.fromDateString;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.BIRTH_DATE;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.EMAIL;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.ENABLED;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.FACEBOOKID;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.FIRST_NAME;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.HOME_PHONE;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.ID;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.LAST_NAME;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.LOCATIONS_INTEREST;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.LOCKED;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.MOBILE_PHONE;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.PROFESSION;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.PROFILE_PICTURE;
-import static ch.epfl.sweng.swissaffinity.utilities.network.Parsable.TAGS.USERNAME;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTH_DATE;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ENABLED;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOKID;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.HOME_PHONE;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ID;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_NAME;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LOCATIONS_INTEREST;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LOCKED;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.MOBILE_PHONE;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.PROFESSION;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.PROFILE_PICTURE;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
 /**
- * User Client parser
- * Created by Max on 06/11/2015.
+ * User Client parser Created by Max on 06/11/2015.
  */
 public class NetworkUserClient implements UserClient {
     private static final String SERVER_API_USERS = "users";
@@ -44,7 +45,6 @@ public class NetworkUserClient implements UserClient {
         mServerUrl = serverUrl;
         mNetworkProvider = networkProvider;
     }
-
 
 
     public User parseFromJSON(JSONObject jsonObject) throws ParserException {
@@ -72,7 +72,7 @@ public class NetworkUserClient implements UserClient {
             String profession = jsonObject.getString(PROFESSION.get());
             URL profilePicture = new URL(jsonObject.getString(PROFILE_PICTURE.get()));
             JSONArray areas = jsonObject.getJSONArray(LOCATIONS_INTEREST.get());
-            List<Location> areasOfInterest= null;
+            List<Location> areasOfInterest = null;
             /*for(int i=0;i<areas.length();i++) {
                 areasOfInterest.add(areas.getJSONObject(i).toString());
                 //TODO create parser for Location
@@ -81,22 +81,22 @@ public class NetworkUserClient implements UserClient {
 
 
             user = new User(id,
-                    facebookId,
-                    username,
-                    email,
-                    firstName,
-                    lastName,
-                    mobilePhone,
-                    homePhone,
-                    address,
-                    locked,
-                    enabled,
-                    gender,
-                    fromDateString(birthDate),
-                    profession,
-                    profilePicture,
-                    areasOfInterest,
-                    eventsAttended);
+                            facebookId,
+                            username,
+                            email,
+                            firstName,
+                            lastName,
+                            mobilePhone,
+                            homePhone,
+                            address,
+                            locked,
+                            enabled,
+                            gender,
+                            DateParser.parseFromString(birthDate),
+                            profession,
+                            profilePicture,
+                            areasOfInterest,
+                            eventsAttended);
         } catch (JSONException e) {
             throw new ParserException(e);
         } catch (MalformedURLException e) {
@@ -107,22 +107,23 @@ public class NetworkUserClient implements UserClient {
 
     @Override
     public User fetchByUsername(String userName) throws UserClientException {
-        User user =null;
+        User user = null;
         try {
-            String content = mNetworkProvider.getContent(mServerUrl + SERVER_API_USERS + "/" + userName);
+            String content =
+                    mNetworkProvider.getContent(mServerUrl + SERVER_API_USERS + "/" + userName);
 
-                JSONObject jsonUser = new JSONObject(content);
+            JSONObject jsonUser = new JSONObject(content);
 
             user = parseFromJSON(jsonUser);
-            } catch (JSONException | ParserException | IOException e) {
-                throw new UserClientException();
-            }
+        } catch (JSONException | ParserException | IOException e) {
+            throw new UserClientException();
+        }
 
         return user;
     }
 
     @Override
-    public User fetchByIDOrFacebookId(int id) throws UserClientException{
+    public User fetchByIDOrFacebookId(int id) throws UserClientException {
         User user = null;
         try {
             String content = mNetworkProvider.getContent(mServerUrl + SERVER_API_USERS + "/" + id);

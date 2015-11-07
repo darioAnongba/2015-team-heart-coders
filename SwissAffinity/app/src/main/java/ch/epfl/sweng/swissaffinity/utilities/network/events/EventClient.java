@@ -1,4 +1,4 @@
-package ch.epfl.sweng.swissaffinity.utilities.network;
+package ch.epfl.sweng.swissaffinity.utilities.network.events;
 
 import java.util.Collection;
 import java.util.List;

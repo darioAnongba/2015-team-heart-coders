@@ -2,7 +2,7 @@
     <string name="app_name">Swiss Affinity</string>
     <string name="action_settings">Preferences</string>
     <string name="action_about">About</string>
-    <string name="welcome_registered_text">Welcome username!</string>
+    <string name="welcome_registered_text">Welcome %s</string>
     <string name="title_activity_about">About</string>
     <string name="about_leader">Leader de l\'organisation événementielle pour célibataires en Suisse romande</string>
     <string name="title_activity_settings">Settings</string>
@@ -12,6 +12,9 @@
     <string name="upcoming_events">Upcoming events :</string>
     <string name="facebook_app_id">539583159528191</string>
     <string name="title_activity_facebook">FacebookActivity</string>
+    <string name="welcome_not_registered_text">To start, you need to login</string>
+    <string name="about_text_link">http://swiss-affinity.ch</string>
+    <string name="about_info_text">Pour de plus amples informations:</string>
 
     <!-- Strings related to Settings -->
 
@@ -59,8 +62,7 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
-    <string name="welcome_not_registered_text">You need to register or login</string>
-    <string name="about_text_link">http://swiss-affinity.ch</string>
-    <string name="about_info_text">Pour de plus amples informations:</string>
+    <string name="about_loged">You\'re loged in as %s</string>
+
 
 </resources>

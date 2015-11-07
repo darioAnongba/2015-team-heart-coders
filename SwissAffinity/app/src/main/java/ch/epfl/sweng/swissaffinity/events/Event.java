@@ -1,9 +1,7 @@
 package ch.epfl.sweng.swissaffinity.events;
 
-import android.os.Parcelable;
-
 import java.io.Serializable;
-import java.util.Calendar;
+import java.util.Date;
 
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 
@@ -48,25 +46,14 @@ public interface Event extends Serializable {
         }
     }
 
-    /**
-     * @return the name of the event.
-     */
+
     String getName();
 
-    /**
-     * @return the description of the event.
-     */
     String getDesription();
 
-    /**
-     * @return the date of the event.
-     */
-    Calendar getDateBegin();
+    Date getDateBegin();
 
-    Calendar getDateEnd();
+    Date getDateEnd();
 
-    /**
-     * @return the location of the event.
-     */
     Location getLocation();
 }

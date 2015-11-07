@@ -52,14 +52,6 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-        <activity
-            android:name=".FacebookActivity"
-            android:label="@string/title_activity_facebook">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ch.epfl.sweng.swissaffinity.MainActivity"/>
-
-        </activity>
     </application>
 
 </manifest>
