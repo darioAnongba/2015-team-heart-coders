@@ -29,15 +29,6 @@
         android:layout_gravity="center_horizontal"
         android:visibility="gone" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Login"
-        android:id="@+id/mainLoginButton"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone" />
-
-
     <ExpandableListView
         android:id="@+id/mainEventListView"
         android:layout_width="match_parent"

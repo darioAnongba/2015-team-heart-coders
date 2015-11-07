@@ -2,6 +2,7 @@ package ch.epfl.sweng.swissaffinity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -10,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
@@ -27,14 +27,15 @@ import ch.epfl.sweng.swissaffinity.utilities.network.events.NetworkEventClient;
 
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_EVENT = "ch.epfl.sweng.swissaffinity.event";
+    public static final String SHARED_PREF = "ch.epfl.sweng.swissaffinity.shared_pref";
+    public static final String USERNAME = "user_name";
+    public static final String USERID = "user_id";
     private static final String SERVER_URL = "http://www.beecreative.ch";
+
     private EventClient mEventClient;
-
-    public static String email;
-    public static String userName;
-    public static boolean USER_REGISTERED = true;
-
     private EventExpandableListAdapter mListAdapter;
+    private SharedPreferences sharedPreferences;
+
 
     public EventClient getEventClient() {
         return mEventClient;
@@ -48,13 +49,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         setEventClient(new NetworkEventClient(SERVER_URL, new DefaultNetworkProvider()));
         mListAdapter = new EventExpandableListAdapter(this);
+        sharedPreferences =
+                getApplicationContext().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+    }
 
-        if (!USER_REGISTERED) {
-            login();
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        String userName = sharedPreferences.getString(USERNAME, null);
+        String userId = sharedPreferences.getString(USERID, null);
+
+        if (userName == null) {
+            startActivity(new Intent(this, AboutActivity.class));
         } else {
+            String welcomeText =
+                    String.format(getString(R.string.welcome_registered_text), userName);
+            ((TextView) findViewById(R.id.mainWelcomeText)).setText(welcomeText);
             createData();
         }
     }
@@ -78,30 +91,15 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void login() {
-        TextView textView = (TextView) findViewById(R.id.mainWelcomeText);
-        textView.setText(R.string.welcome_not_registered_text);
-        ((Button) findViewById(R.id.mainLoginButton)).setVisibility(View.VISIBLE);
-        ((Button) findViewById(R.id.mainRegisterButton)).setVisibility(View.VISIBLE);
-        final Button button = (Button) findViewById(R.id.mainLoginButton);
-        button.setOnClickListener(new View.OnClickListener() {
-                                      public void onClick(View v) {
-                                          Intent myIntent = new Intent(MainActivity.this,
-                                                                       FacebookActivity.class);
-                                          MainActivity.this.startActivity(myIntent);
-                                      }
-                                  }
-
-        );
-    }
-
     private void createData() {
         ConnectivityManager connMgr =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             // fetch data
-            new DownloadEventsTask().execute();
+            if (mListAdapter.getGroupCount() == 0) {
+                new DownloadEventsTask().execute();
+            }
         } else {
             // display error
             Toast.makeText(MainActivity.this, "No Network", Toast.LENGTH_LONG).show();
@@ -109,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class DownloadEventsTask extends AsyncTask<Void, Void, List<Event>> {
+
         @Override
         protected List<Event> doInBackground(Void... args) {
             List<Event> result = null;
@@ -127,8 +126,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayEvents(List<Event> result) {
+
         String myEvents = getResources().getString(R.string.my_events);
         String upcomingEvents = getResources().getString(R.string.upcoming_events);
+
         mListAdapter.addGroup(myEvents);
         mListAdapter.addGroup(upcomingEvents);
         if (result != null) {
@@ -139,22 +140,26 @@ public class MainActivity extends AppCompatActivity {
         final ExpandableListView listView =
                 (ExpandableListView) findViewById(R.id.mainEventListView);
         listView.setAdapter(mListAdapter);
-        listView.setOnChildClickListener(new OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent,
-                                        View v,
-                                        int groupPosition,
-                                        int childPosition,
-                                        long id)
-            {
-                Intent intent = new Intent(getApplicationContext(), EventActivity.class);
-                intent.putExtra(EXTRA_EVENT,
+        listView.setOnChildClickListener(
+                new OnChildClickListener() {
+                    @Override
+                    public boolean onChildClick(
+                            ExpandableListView parent,
+                            View v,
+                            int groupPosition,
+                            int childPosition,
+                            long id)
+                    {
+                        Intent intent = new Intent(getApplicationContext(), EventActivity.class);
+                        intent.putExtra(
+                                EXTRA_EVENT,
                                 (Event) mListAdapter.getChild(groupPosition, childPosition));
-                startActivity(intent);
-                Toast.makeText(getBaseContext(), "Clicked!", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
+                        startActivity(intent);
+                        Toast.makeText(getBaseContext(), "Clicked!", Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
         listView.expandGroup(0);
+        listView.expandGroup(1);
     }
 }
