@@ -9,7 +9,7 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
 /**
  * Representation of a default event.
  */
-public class DefaultEvent implements Event, Serializable {
+public class AbstractEvent implements Event, Serializable {
 
     private int mId;
     private String mName;
@@ -38,7 +38,7 @@ public class DefaultEvent implements Event, Serializable {
      * @param imagePath   the relative path to an image
      * @param lastUpdate  the last time the event was updated
      */
-    public DefaultEvent(
+    public AbstractEvent(
             int id,
             String name,
             Location location,
