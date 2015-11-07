@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static String email;
     public static String userName;
-    public static boolean USER_REGISTERED = false;
+    public static boolean USER_REGISTERED = true;
 
     private EventExpandableListAdapter mListAdapter;
 
@@ -58,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
         setEventClient(new NetworkEventClient(SERVER_URL, new DefaultNetworkProvider()));
         mListAdapter = new EventExpandableListAdapter(this);
         mDbHelper = new UserDBAdapter(this);
+        mDbHelper.open();
+        mDbHelper.createData("Furkan", "sahinffurkan@gmail.com", "123456", "male");
+        fillData();
+        mDbHelper.close();
 
        TextView view =(TextView) findViewById(R.id.mainWelcomeText);
         view.setText(userName + email);
@@ -121,15 +125,16 @@ public class MainActivity extends AppCompatActivity {
     private void fillData(){
         Cursor dataCursor = mDbHelper.fetchAllData();
         if(dataCursor != null) {
-            // Create an array to specify the fields we want (only the TITLE)
-            String[] from = new String[]{UserDBAdapter.KEY_TITLE};
-            // and an array of the fields we want to bind in the view
-            TextView view =(TextView) findViewById(R.id.mainWelcomeText);
 
+            TextView view =(TextView) findViewById(R.id.mainWelcomeText);
             // Now create a simple cursor adapter and set it to display
-            userName = dataCursor.getString(1);
-            email = dataCursor.getString(2);
-            view.setText(userName + email);
+            dataCursor.getColumnCount();
+            dataCursor.getColumnName(0);
+            dataCursor.getColumnName(1);
+            dataCursor.moveToFirst();
+            userName = dataCursor.getString(dataCursor.getColumnIndex(mDbHelper.KEY_NAME));
+            email = dataCursor.getString(dataCursor.getColumnIndex(mDbHelper.KEY_EMAIL));
+            view.setText("Welcome " + userName + "\n" +  email);
         }
     }
 

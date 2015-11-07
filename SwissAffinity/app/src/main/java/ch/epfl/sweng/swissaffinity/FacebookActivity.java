@@ -56,13 +56,12 @@ public class FacebookActivity extends AppCompatActivity {
                                     GraphResponse response) {
                                 try {
                                     MainActivity.email = (String) object.get("email");
-                                    long email = mDbHelper.createData("email", MainActivity.email);
+                                    mDbHelper.createData("Furkan", "sahinffurkan[at]gmail[dot]com", "123456", "male");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                                 try {
                                     MainActivity.userName = (String) object.get("name");
-                                    long userName = mDbHelper.createData("name", MainActivity.userName);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -71,7 +70,6 @@ public class FacebookActivity extends AppCompatActivity {
                         });
                 request.executeAsync();
 
-                long id = mDbHelper.createData("id", loginResult.getAccessToken().getUserId());
                 mDbHelper.close();
 
                 info.setText("\n\n\n" +
