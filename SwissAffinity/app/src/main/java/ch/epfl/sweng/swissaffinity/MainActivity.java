@@ -17,6 +17,7 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.db.userDBAdapter;
@@ -107,7 +108,11 @@ public class MainActivity extends AppCompatActivity {
             // fetch data
             new DownloadEventsTask().execute();
             mDbHelper.open();
-            fillData();
+            try {
+                fillData();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             mDbHelper.close();
         } else {
             // display error
@@ -115,19 +120,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void fillData(){
+    private void fillData() throws SQLException {
         Cursor dataCursor = mDbHelper.fetchAllData();
         if(dataCursor != null) {
-
+            dataCursor.moveToFirst();
             TextView view =(TextView) findViewById(R.id.mainWelcomeText);
             // Now create a simple cursor adapter and set it to display
-            dataCursor.getColumnCount();
-            dataCursor.getColumnName(0);
-            dataCursor.getColumnName(1);
-            dataCursor.moveToFirst();
-            userName = dataCursor.getString(dataCursor.getColumnIndex(mDbHelper.KEY_USER_NAME));
+            userName = dataCursor.getString(2);
             email = dataCursor.getString(dataCursor.getColumnIndex(mDbHelper.KEY_EMAIL));
             view.setText("Welcome " + userName + "\n" +  email);
+
         }
     }
 

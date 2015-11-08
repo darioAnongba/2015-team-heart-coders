@@ -76,8 +76,6 @@ public class FacebookActivity extends AppCompatActivity {
                                     JSONObject object,
                                     GraphResponse response) {
                                 try {
-                                    MainActivity.email = (String) object.get("email");
-                                    MainActivity.userName = (String) object.get("name");
                                     mLastName = (String) object.get("last_name");
                                     mFirstName= (String) object.get("first_name");
                                     mGender = (String) object.get("gender");
@@ -85,6 +83,8 @@ public class FacebookActivity extends AppCompatActivity {
                                     mId = (String) object.get("id");
                                     mUserName = MainActivity.userName;
                                     mEmail = MainActivity.email;
+                                    mDbHelper.createData(mId, mUserName,mEmail,true, false,mFirstName, mLastName,"",mGender, mBirthdate, "");
+                                    mDbHelper.close();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -96,9 +96,6 @@ public class FacebookActivity extends AppCompatActivity {
                 parameters.putString("fields", "id,name,first_name,last_name,email,gender, birthday");
                 request.setParameters(parameters);
                 request.executeAsync();
-                mId = loginResult.getAccessToken().getUserId();
-                mDbHelper.createData(mId, mUserName,mEmail,true, false,mFirstName, mLastName,"",mGender, mBirthdate, "");
-                mDbHelper.close();
 
                 info.setText("\n\n\n" +
                                 "User ID :" + loginResult.getAccessToken().getUserId()

@@ -81,7 +81,7 @@ public class userDBAdapter {
         initialValues.put(KEY_BIRTHDATE, birthdate);
         initialValues.put(KEY_PROFESSION, profession);
 
-        mDb.insert(DATABASE_TABLE, null, initialValues);
+        long a = mDb.insert(DATABASE_TABLE, null, initialValues);
 
     //    mDb.close();
     }
