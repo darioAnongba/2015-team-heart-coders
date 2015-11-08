@@ -20,9 +20,11 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-import ch.epfl.sweng.swissaffinity.db.UserDBAdapter;
+import ch.epfl.sweng.swissaffinity.db.userDBAdapter;
 
 
 public class FacebookActivity extends AppCompatActivity {
@@ -30,7 +32,7 @@ public class FacebookActivity extends AppCompatActivity {
     private TextView info;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
-    private UserDBAdapter mDbHelper;
+    private userDBAdapter mDbHelper;
 
     private String mId = "";
     private String mUserName= "";
@@ -47,13 +49,19 @@ public class FacebookActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDbHelper = new UserDBAdapter(this);
+        mDbHelper = new userDBAdapter(this);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_facebook);
         loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions(Arrays.asList("email", "public_profile", "user_location"));
+
+        List<String> permissions = new ArrayList<String>();
+        permissions.add("public_profile");
+        permissions.add("email");
+        permissions.add("user_birthday");
+        loginButton.setReadPermissions(permissions);
+
         info = (TextView)findViewById(R.id.info);
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -84,6 +92,9 @@ public class FacebookActivity extends AppCompatActivity {
                                 Log.v("LoginActivity", response.toString());
                             }
                         });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,first_name,last_name,email,gender, birthday");
+                request.setParameters(parameters);
                 request.executeAsync();
                 mId = loginResult.getAccessToken().getUserId();
                 mDbHelper.createData(mId, mUserName,mEmail,true, false,mFirstName, mLastName,"",mGender, mBirthdate, "");

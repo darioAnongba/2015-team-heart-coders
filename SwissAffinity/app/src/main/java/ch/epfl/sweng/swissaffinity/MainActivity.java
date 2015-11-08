@@ -14,16 +14,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
-import com.facebook.login.LoginResult;
-
 import java.util.List;
 
-import ch.epfl.sweng.swissaffinity.db.UserDBAdapter;
+import ch.epfl.sweng.swissaffinity.db.userDBAdapter;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
@@ -35,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String SERVER_URL = "http://www.beecreative.ch/api/";
     private EventClient mEventClient;
-    private UserDBAdapter mDbHelper;
+    private userDBAdapter mDbHelper;
 
     public static String email;
     public static String userName;
@@ -57,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setEventClient(new NetworkEventClient(SERVER_URL, new DefaultNetworkProvider()));
         mListAdapter = new EventExpandableListAdapter(this);
-        mDbHelper = new UserDBAdapter(this);
+        mDbHelper = new userDBAdapter(this);
 
        TextView view =(TextView) findViewById(R.id.mainWelcomeText);
         view.setText(userName + email);
