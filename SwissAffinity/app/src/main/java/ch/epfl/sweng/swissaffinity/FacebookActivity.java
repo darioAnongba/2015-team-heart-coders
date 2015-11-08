@@ -69,38 +69,14 @@ public class FacebookActivity extends AppCompatActivity {
                                     GraphResponse response) {
                                 try {
                                     MainActivity.email = (String) object.get("email");
-                                    mEmail = MainActivity.email;
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                try {
                                     MainActivity.userName = (String) object.get("name");
-                                    mUserName = MainActivity.userName;
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    mId = (String) object.get("id");
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                try {
                                     mLastName = (String) object.get("last_name");
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                try {
                                     mFirstName= (String) object.get("first_name");
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                try {
                                     mGender = (String) object.get("gender");
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                try {
                                     mBirthdate = (String) object.get("birthday");
+                                    mId = (String) object.get("id");
+                                    mUserName = MainActivity.userName;
+                                    mEmail = MainActivity.email;
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -109,7 +85,7 @@ public class FacebookActivity extends AppCompatActivity {
                             }
                         });
                 request.executeAsync();
-
+                mId = loginResult.getAccessToken().getUserId();
                 mDbHelper.createData(mId, mUserName,mEmail,true, false,mFirstName, mLastName,"",mGender, mBirthdate, "");
                 mDbHelper.close();
 
@@ -118,7 +94,7 @@ public class FacebookActivity extends AppCompatActivity {
                                 + "\n" + "Permissions" + loginResult.getAccessToken().getPermissions().toString()
                                 + "\n" + "Auth Token :" + loginResult.getAccessToken().getToken()
                 );
-
+//                String aa = (String) info.getText();
                 loginButton.setVisibility(View.INVISIBLE);
                 MainActivity.USER_REGISTERED=true;
                 Intent myIntent = new Intent( FacebookActivity.this,EventActivity.class);
