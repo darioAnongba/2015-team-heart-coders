@@ -141,7 +141,7 @@ public class AboutActivity extends AppCompatActivity {
             logged.setText("To start, you have to login:");
             logged.setTextSize(20);
         } else {
-            String loggedText = getString(R.string.about_loged);
+            String loggedText = getString(R.string.about_logged);
             logged.setText(String.format(loggedText, userName));
         }
     }

@@ -19,7 +19,7 @@ public class SpeedDatingEvent extends AbstractEvent implements Event, Serializab
     private final int mMaxAge;
     private final Establishment mEstablishment;
 
-    public SpeedDatingEvent(
+    SpeedDatingEvent(
             AbstractEvent.Builder builder,
             int mMenSeats,
             int mWomenSeats,
@@ -86,6 +86,30 @@ public class SpeedDatingEvent extends AbstractEvent implements Event, Serializab
         return mBasePrice;
     }
 
+    @Override
+    public int getMaxPeople() {
+        return mMaxPeople;
+    }
+
+    public int getMenSeats() {
+        return mMenSeats;
+    }
+
+    public int getWomenSeats() {
+        return mWomenSeats;
+    }
+
+    public int getMenRegistered() {
+        return mMenRegistered;
+    }
+
+    public int getWomenRegistered() {
+        return mWomenRegistered;
+    }
+
+    /**
+     * Builder for the speed dating event class.
+     */
     public static class Builder {
         private int mMenSeats;
         private int mWomenSeats;

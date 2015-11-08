@@ -9,7 +9,6 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
  * Event interface.
  */
 public interface Event extends Serializable {
-
     /**
      * The possible states of an event.
      */
@@ -59,4 +58,6 @@ public interface Event extends Serializable {
     String getImagePath();
 
     double getBasePrice();
+
+    int getMaxPeople();
 }

@@ -1,14 +1,15 @@
 package ch.epfl.sweng.swissaffinity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +22,6 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sweng.swissaffinity.db.UserDBAdapter;
 import ch.epfl.sweng.swissaffinity.events.Event;
@@ -33,7 +33,7 @@ import ch.epfl.sweng.swissaffinity.utilities.network.events.NetworkEventClient;
 
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_EVENT = "ch.epfl.sweng.swissaffinity.event";
-    public static final String EXTRA_IMAGE = "ch.epfl.sweng.swissaffinity.image";
+    public static final String SAVED_DATA = "ch.epfl.sweng.swissaffinity.saved_data";
     public static final String SHARED_PREF = "ch.epfl.sweng.swissaffinity.shared_pref";
     public static final String USERNAME = "user_name";
     public static final String USERID = "user_id";
@@ -66,19 +66,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setEventClient(new NetworkEventClient(SERVER_URL, new DefaultNetworkProvider()));
-        mListAdapter = new EventExpandableListAdapter(this);
         sharedPreferences = getApplicationContext().getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
+        mListAdapter = new EventExpandableListAdapter(this);
+        mDbHelper = new UserDBAdapter(this);
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        mDbHelper = new UserDBAdapter(this);
-
         String userName = sharedPreferences.getString(USERNAME, null);
         String userId = sharedPreferences.getString(USERID, null);
-        String welcomeText = getString(R.string.main_not_registered);
+        String welcomeText = getString(R.string.welcome_not_registered_text);
         if (userName == null) {
             REGISTERED = false;
         } else {
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createData() {
-        if (isNetworkConnected()) {
+        if (isNetworkConnected(this)) {
             if (mListAdapter.getGroupCount() == 0) {
                 new DownloadEventsTask().execute();
                 mDbHelper.open();
@@ -130,9 +130,9 @@ public class MainActivity extends AppCompatActivity {
         if (dataCursor != null && dataCursor.getCount() > 2) {
             dataCursor.moveToFirst();
             TextView view = (TextView) findViewById(R.id.mainWelcomeText);
-            userName = dataCursor.getString(2);
+            userName = dataCursor.getString(dataCursor.getColumnIndex(mDbHelper.KEY_USER_NAME));
             email = dataCursor.getString(dataCursor.getColumnIndex(mDbHelper.KEY_EMAIL));
-            view.setText("Welcome " + userName + "\n" + email);
+            Log.v("DataBase", userName + " :: " + email);
         }
     }
 
@@ -156,18 +156,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class DownloadImageTask extends AsyncTask<Event, Void, Bitmap> {
-
-        @Override
-        protected Bitmap doInBackground(Event... params) {
-            Bitmap image = null;
-            try {
-                image = mEventClient.imageFor(params[0]);
-            } catch (EventClientException e) {
-            }
-            return image;
-        }
-    }
 
     private void fillEvents(List<Event> result) {
         String myEvents = getResources().getString(R.string.my_events);
@@ -205,16 +193,6 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(getApplicationContext(), EventActivity.class);
                         Event event = (Event) mListAdapter.getChild(groupPosition, childPosition);
                         intent.putExtra(EXTRA_EVENT, event);
-                        Bitmap image = null;
-                        try {
-                            image = new DownloadImageTask().execute(event).get();
-                            if (image != null) {
-                                image = Bitmap.createScaledBitmap(image, 128, 128, true);
-                            }
-                        } catch (InterruptedException | ExecutionException e) {
-                            // no image...
-                        }
-                        intent.putExtra(EXTRA_IMAGE, image);
                         startActivity(intent);
                         return true;
                     }
@@ -226,9 +204,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isNetworkConnected() {
+    public static boolean isNetworkConnected(Context context) {
         ConnectivityManager connectivityManager =
-                (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo network = connectivityManager.getActiveNetworkInfo();
         return network != null && network.isConnected();
     }
