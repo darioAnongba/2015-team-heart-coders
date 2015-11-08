@@ -31,6 +31,19 @@ public class FacebookActivity extends AppCompatActivity {
     private LoginButton loginButton;
     private CallbackManager callbackManager;
     private UserDBAdapter mDbHelper;
+
+    private String mId = "";
+    private String mUserName= "";
+    private String mEmail= "";
+    private String mEnabled= "";
+    private String mLocked= "";
+    private String mLastName= "";
+    private String mFirstName= "";
+    private String mPhone= "";
+    private String mGender= "";
+    private String mBirthdate= "";
+    private String mProfession= "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,20 +69,48 @@ public class FacebookActivity extends AppCompatActivity {
                                     GraphResponse response) {
                                 try {
                                     MainActivity.email = (String) object.get("email");
-                                    mDbHelper.createData("Furkan", "sahinffurkan[at]gmail[dot]com", "123456", "male");
+                                    mEmail = MainActivity.email;
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                                 try {
                                     MainActivity.userName = (String) object.get("name");
+                                    mUserName = MainActivity.userName;
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+                                try {
+                                    mId = (String) object.get("id");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    mLastName = (String) object.get("last_name");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    mFirstName= (String) object.get("first_name");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    mGender = (String) object.get("gender");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    mBirthdate = (String) object.get("birthday");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
                                 Log.v("LoginActivity", response.toString());
                             }
                         });
                 request.executeAsync();
 
+                mDbHelper.createData(mId, mUserName,mEmail,true, false,mFirstName, mLastName,"",mGender, mBirthdate, "");
                 mDbHelper.close();
 
                 info.setText("\n\n\n" +

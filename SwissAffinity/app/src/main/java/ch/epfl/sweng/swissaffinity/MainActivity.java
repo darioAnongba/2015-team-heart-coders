@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static String email;
     public static String userName;
-    public static boolean USER_REGISTERED = true;
+    public static boolean USER_REGISTERED = false;
 
     private EventExpandableListAdapter mListAdapter;
 
@@ -58,10 +58,6 @@ public class MainActivity extends AppCompatActivity {
         setEventClient(new NetworkEventClient(SERVER_URL, new DefaultNetworkProvider()));
         mListAdapter = new EventExpandableListAdapter(this);
         mDbHelper = new UserDBAdapter(this);
-        mDbHelper.open();
-        mDbHelper.createData("Furkan", "sahinffurkan@gmail.com", "123456", "male");
-        fillData();
-        mDbHelper.close();
 
        TextView view =(TextView) findViewById(R.id.mainWelcomeText);
         view.setText(userName + email);
@@ -116,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
             new DownloadEventsTask().execute();
             mDbHelper.open();
             fillData();
+            mDbHelper.close();
         } else {
             // display error
             Toast.makeText(MainActivity.this, "No Network", Toast.LENGTH_LONG).show();
@@ -132,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             dataCursor.getColumnName(0);
             dataCursor.getColumnName(1);
             dataCursor.moveToFirst();
-            userName = dataCursor.getString(dataCursor.getColumnIndex(mDbHelper.KEY_NAME));
+            userName = dataCursor.getString(dataCursor.getColumnIndex(mDbHelper.KEY_USER_NAME));
             email = dataCursor.getString(dataCursor.getColumnIndex(mDbHelper.KEY_EMAIL));
             view.setText("Welcome " + userName + "\n" +  email);
         }
