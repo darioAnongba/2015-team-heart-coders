@@ -15,8 +15,8 @@ public class Location implements Serializable {
      * @param name the name of the location.
      */
     public Location(String name) {
-        if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("The location name is invalid");
+        if (name == null) {
+            throw new NullPointerException();
         }
         mName = name;
     }
