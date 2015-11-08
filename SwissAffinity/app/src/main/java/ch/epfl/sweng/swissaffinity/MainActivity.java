@@ -2,6 +2,7 @@ package ch.epfl.sweng.swissaffinity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -16,11 +17,13 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import ch.epfl.sweng.swissaffinity.db.UserDBAdapter;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
@@ -35,11 +38,17 @@ public class MainActivity extends AppCompatActivity {
     public static final String USERNAME = "user_name";
     public static final String USERID = "user_id";
 
+    private UserDBAdapter mDbHelper;
+
+    public static String email;
+    public static String userName;
+
     public static boolean REGISTERED = false;
 
     public static final String SERVER_URL = "http://www.beecreative.ch";
 
     private static EventClient mEventClient;
+
     private EventExpandableListAdapter mListAdapter;
     private SharedPreferences sharedPreferences;
 
@@ -65,9 +74,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        mDbHelper = new UserDBAdapter(this);
+
         String userName = sharedPreferences.getString(USERNAME, null);
         String userId = sharedPreferences.getString(USERID, null);
-        String welcomeText = "You're not registered yet!";
+        String welcomeText = getString(R.string.main_not_registered);
         if (userName == null) {
             REGISTERED = false;
         } else {
@@ -98,10 +109,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createData() {
-        if (isNetworkConnected() && mListAdapter.getGroupCount() == 0) {
-            new DownloadEventsTask().execute();
+        if (isNetworkConnected()) {
+            if (mListAdapter.getGroupCount() == 0) {
+                new DownloadEventsTask().execute();
+                mDbHelper.open();
+                try {
+                    fillData();
+                } catch (SQLException e) {
+                    // TODO: handle exception here
+                }
+                mDbHelper.close();
+            }
+        } else {
+            Toast.makeText(MainActivity.this, "No Network", Toast.LENGTH_LONG).show();
         }
     }
+
+    private void fillData() throws SQLException {
+        Cursor dataCursor = mDbHelper.fetchAllData();
+        if (dataCursor != null && dataCursor.getCount() > 2) {
+            dataCursor.moveToFirst();
+            TextView view = (TextView) findViewById(R.id.mainWelcomeText);
+            userName = dataCursor.getString(2);
+            email = dataCursor.getString(dataCursor.getColumnIndex(mDbHelper.KEY_EMAIL));
+            view.setText("Welcome " + userName + "\n" + email);
+        }
+    }
+
 
     private class DownloadEventsTask extends AsyncTask<Void, Void, List<Event>> {
 
@@ -193,19 +227,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean isNetworkConnected() {
-        boolean connected = false;
-
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-
         NetworkInfo network = connectivityManager.getActiveNetworkInfo();
-
-        if (network != null && network.isConnected()) {
-            connected = true;
-        } else {
-            Toast.makeText(MainActivity.this, "No Network connection", Toast.LENGTH_LONG).show();
-        }
-
-        return connected;
+        return network != null && network.isConnected();
     }
 }
