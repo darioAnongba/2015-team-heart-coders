@@ -76,6 +76,16 @@ public class SpeedDatingEvent extends AbstractEvent implements Event, Serializab
         return mLocation;
     }
 
+    @Override
+    public String getImagePath() {
+        return mImagePath;
+    }
+
+    @Override
+    public double getBasePrice() {
+        return mBasePrice;
+    }
+
     public static class Builder {
         private int mMenSeats;
         private int mWomenSeats;

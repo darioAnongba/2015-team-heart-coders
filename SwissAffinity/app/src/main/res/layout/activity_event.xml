@@ -19,12 +19,12 @@
 
     <ImageView
         android:id="@+id/eventPicture"
-        android:layout_width="wrap_content"
+        android:layout_width="128dp"
         android:layout_height="wrap_content"
-        android:contentDescription="picture of the event"
-        android:contextClickable="false"
-        android:src="@drawable/couple"
-        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:src="@android:drawable/ic_menu_mapmode"
+        android:layout_above="@+id/eventRegistration"
         android:layout_alignParentEnd="true"/>
 
     <TextView
@@ -46,60 +46,24 @@
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <TextView
-        android:id="@+id/eventAgeRange"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="false"
-        android:text="Age Range"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_below="@+id/eventDateBegin"
-        android:layout_alignParentLeft="true"/>
-
-    <TextView
-        android:id="@+id/eventParticipants"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Male / Female"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/eventAgeRange"
-        android:layout_alignParentLeft="true"/>
-
-    <TextView
-        android:id="@+id/eventMaleNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:text="Males"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_below="@+id/eventParticipants"
-        android:layout_alignParentLeft="true"/>
-
-    <TextView
-        android:id="@+id/eventFemaleNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Females"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_below="@+id/eventMaleNumber"
-        android:layout_alignParentLeft="true"/>
-
-    <TextView
         android:id="@+id/eventDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Description"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_below="@+id/eventLocation"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
 
     <Button
         android:id="@+id/eventRegistration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/eventPicture"
+        android:text="Register"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="Register"/>
+        android:onClick="register"/>
 
     <TextView
         android:id="@+id/eventDateEnd"
@@ -107,7 +71,18 @@
         android:layout_height="wrap_content"
         android:text="Date End"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_alignTop="@+id/eventDateBegin"
-        android:layout_toEndOf="@+id/eventDateBegin"/>
+        android:layout_below="@+id/eventDateBegin"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/envent_price"
+        android:id="@+id/eventPrice"
+        android:layout_below="@+id/eventDateEnd"
+        android:layout_alignParentStart="true"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
 
 </RelativeLayout>

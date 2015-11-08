@@ -46,7 +46,6 @@ public interface Event extends Serializable {
         }
     }
 
-
     String getName();
 
     String getDesription();
@@ -56,4 +55,8 @@ public interface Event extends Serializable {
     Date getDateEnd();
 
     Location getLocation();
+
+    String getImagePath();
+
+    double getBasePrice();
 }

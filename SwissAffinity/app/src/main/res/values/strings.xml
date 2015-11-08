@@ -15,6 +15,8 @@
     <string name="welcome_not_registered_text">To start, you need to login</string>
     <string name="about_text_link">http://swiss-affinity.ch</string>
     <string name="about_info_text">Pour de plus amples informations:</string>
+    <string name="about_loged">You\'re loged in as %s</string>
+    <string name="envent_price">Price : %.2f CHF</string>
 
     <!-- Strings related to Settings -->
 
@@ -62,7 +64,5 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
-    <string name="about_loged">You\'re loged in as %s</string>
-
-
+    <string name="main_not_registered">You\'re not registered yet!</string>
 </resources>

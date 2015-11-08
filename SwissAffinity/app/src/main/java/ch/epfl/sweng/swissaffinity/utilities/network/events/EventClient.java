@@ -1,5 +1,7 @@
 package ch.epfl.sweng.swissaffinity.utilities.network.events;
 
+import android.graphics.Bitmap;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -12,4 +14,6 @@ public interface EventClient {
     List<Event> fetchAllFor(Collection<Location> locations) throws EventClientException;
 
     Event fetchBy(int id) throws EventClientException;
+
+    Bitmap imageFor(Event event) throws EventClientException;
 }

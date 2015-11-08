@@ -2,16 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:padding="10dp">
-
-    <ImageView
-        android:id="@+id/rowEventImage"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:contentDescription="event logo"
-        android:src="@android:drawable/ic_menu_mapmode"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+    android:padding="10dp"
+    >
 
     <TextView
         android:id="@+id/rowEventName"
@@ -23,7 +15,7 @@
         android:paddingLeft="5dp"
         android:paddingTop="5dp"
         android:layout_alignParentLeft="false"
-        android:layout_toRightOf="@+id/rowEventImage" />
+        />
 
     <TextView
         android:id="@+id/rowEventDetails"
@@ -33,5 +25,25 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:paddingLeft="5dp"
         android:layout_below="@+id/rowEventName"
-        android:layout_toRightOf="@+id/rowEventImage" />
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:id="@+id/rowEventLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Location"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:paddingLeft="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"/>
+
+    <TextView
+        android:id="@+id/rowEventDateBegin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date begin"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:paddingLeft="5dp"
+        android:layout_below="@+id/rowEventDetails"
+        android:layout_alignParentStart="true"/>
 </RelativeLayout>
