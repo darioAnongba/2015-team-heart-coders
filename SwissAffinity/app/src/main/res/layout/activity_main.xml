@@ -1,17 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    tools:context="ch.epfl.sweng.swissaffinity.MainActivity">
-
-    <ImageView
-        android:id="@+id/mainLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/logo" />
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_horizontal"
+              android:orientation="vertical"
+              tools:context="ch.epfl.sweng.swissaffinity.MainActivity">
 
     <TextView
         android:id="@+id/mainWelcomeText"
@@ -19,21 +12,13 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:text="@string/welcome_registered_text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Register"
-        android:id="@+id/mainRegisterButton"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone" />
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <ExpandableListView
         android:id="@+id/mainEventListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:choiceMode="singleChoice" />
+        android:choiceMode="singleChoice"/>
 
 </LinearLayout>
 

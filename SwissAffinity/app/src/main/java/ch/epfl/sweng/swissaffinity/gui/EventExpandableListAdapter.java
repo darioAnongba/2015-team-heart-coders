@@ -6,8 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Date;
+
 import ch.epfl.sweng.swissaffinity.R;
 import ch.epfl.sweng.swissaffinity.events.Event;
+import ch.epfl.sweng.swissaffinity.utilities.Location;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
 
 /**
  * Created by Lionel on 05/11/15.
@@ -19,14 +23,9 @@ public class EventExpandableListAdapter extends AbstractExpandableListAdapter<St
     }
 
     @Override
-    public View getGroupView(int groupPosition,
-                             boolean isExpanded,
-                             View convertView,
-                             ViewGroup parent)
+    public View getGroupView(
+            int groupPosition, boolean isExpanded, View convertView, ViewGroup parent)
     {
-
-        // TODO: change it to reflect group display (ev. hard code for 2 groups.)
-
         String headerTitle = (String) getGroup(groupPosition);
 
         if (convertView == null) {
@@ -42,18 +41,29 @@ public class EventExpandableListAdapter extends AbstractExpandableListAdapter<St
     }
 
     @Override
-    public View getChildView(int groupPosition,
-                             final int childPosition,
-                             boolean isLastChild,
-                             View convertView,
-                             ViewGroup parent)
+    public View getChildView(
+            int groupPosition,
+            final int childPosition,
+            boolean isLastChild,
+            View convertView,
+            ViewGroup parent)
     {
 
         // TODO: change it to reflect event display.
         Event event = (Event) getChild(groupPosition, childPosition);
 
-        final String eventName = event.getName();
-        final String eventDescription = event.getDesription();
+        String eventName = event.getName();
+        String eventDescription = event.getDesription();
+        Location location = event.getLocation();
+        String eventLocation = "";
+        if (location != null) {
+            eventLocation = location.getName();
+        }
+        Date dateBegin = event.getDateBegin();
+        String eventDateBegin = "";
+        if (dateBegin != null) {
+            eventDateBegin = DateParser.dateToString(dateBegin);
+        }
 
         if (convertView == null) {
             LayoutInflater inflater =
@@ -63,6 +73,8 @@ public class EventExpandableListAdapter extends AbstractExpandableListAdapter<St
 
         ((TextView) convertView.findViewById(R.id.rowEventName)).setText(eventName);
         ((TextView) convertView.findViewById(R.id.rowEventDetails)).setText(eventDescription);
+        ((TextView) convertView.findViewById(R.id.rowEventLocation)).setText(eventLocation);
+        ((TextView) convertView.findViewById(R.id.rowEventDateBegin)).setText(eventDateBegin);
 
         return convertView;
     }

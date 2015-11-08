@@ -27,4 +27,20 @@ public class DateParser {
             throw new ParserException(e);
         }
     }
+
+    /**
+     * Get a string representation of a given date.
+     *
+     * @param date the date instance. {@link Date}
+     *
+     * @return the string representation of the date. "dd MMMM yyyy - HH:mm"
+     */
+    public static String dateToString(Date date) {
+        if (date == null) {
+            return "";
+        }
+        SimpleDateFormat dateFormat =
+                new SimpleDateFormat("dd MMMM yyyy - HH:mm", Locale.getDefault());
+        return dateFormat.format(date.getTime());
+    }
 }
