@@ -19,7 +19,7 @@
     <string name="upcoming_events">Upcoming events :</string>
     <string name="event_price">Price : %.2f CHF</string>
     <string name="event_max_people">Max people : %d</string>
-    <string name="event_registered_people">"\uD83D\uDEBA" %1$d/%2$d "\uD83D\uDEB9" %3$d/%4$d</string>
+    <string name="event_registered_people">\u2640 %1$d/%2$d \u2642 %3$d/%4$d</string>
 
     <!-- Strings related to Settings -->
     <string name="title_activity_settings">Settings</string>

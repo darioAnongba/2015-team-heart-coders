@@ -12,7 +12,7 @@ import java.sql.SQLException;
  * Created by sahinfurkan on 06/11/15.
  */
 
-public class UserDBAdapter {
+public class userDBAdapter {
     private static final String DATABASE_NAME = "user";
     private static final String DATABASE_TABLE = "user_data";
     private static final int DATABASE_VERSION = 1;
@@ -73,11 +73,11 @@ public class UserDBAdapter {
             KEY_BIRTHDATE,
             KEY_PROFESSION};
 
-    public UserDBAdapter(Context ctx) {
+    public userDBAdapter(Context ctx) {
         this.mCtx = ctx;
     }
 
-    public UserDBAdapter open() throws android.database.SQLException {
+    public userDBAdapter open() throws android.database.SQLException {
         mDbHelper = new DatabaseHelper(mCtx);
         mDb = mDbHelper.getWritableDatabase();
         return this;
