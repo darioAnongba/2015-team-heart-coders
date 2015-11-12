@@ -180,7 +180,9 @@ public class userDBAdapter {
             String phone,
             String gender,
             String birthdate,
-            String profession)
+            String profession,
+            ArrayList<String> locationPreferences,
+            ArrayList<String> eventPreferences)
     {
         ContentValues args = new ContentValues();
         args.put(KEY_ID, id);
@@ -194,6 +196,8 @@ public class userDBAdapter {
         args.put(KEY_GENDER, gender);
         args.put(KEY_BIRTHDATE, birthdate);
         args.put(KEY_PROFESSION, profession);
+        args.put(KEY_LOCATION_PREFERENCES, concatinateArrayToString(locationPreferences));
+        args.put(KEY_EVENT_PREFERENCES, concatinateArrayToString(eventPreferences));
         return mDb.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
 

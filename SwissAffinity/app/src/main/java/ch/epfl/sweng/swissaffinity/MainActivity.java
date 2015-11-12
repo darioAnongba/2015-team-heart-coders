@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         createData();
 
         String welcomeText = getString(R.string.welcome_not_registered_text);
