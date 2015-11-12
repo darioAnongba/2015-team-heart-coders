@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private static userDBAdapter mDbHelper;
 
     public static String email;
-    public static String userName;
+    public static String firstName;
+    public static String id;
 
     public static boolean REGISTERED = false;
 
@@ -75,18 +76,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        createData();
 
-        String userName = sharedPreferences.getString(USERNAME, null);
-        String userId = sharedPreferences.getString(USERID, null);
         String welcomeText = getString(R.string.welcome_not_registered_text);
-        if (userName == null) {
+        if (firstName == null) {
             REGISTERED = false;
         } else {
             REGISTERED = true;
-            welcomeText = String.format(getString(R.string.welcome_registered_text), userName);
+            welcomeText = String.format(getString(R.string.welcome_registered_text), firstName);
         }
         ((TextView) findViewById(R.id.mainWelcomeText)).setText(welcomeText);
-        createData();
+
     }
 
     @Override
@@ -109,19 +109,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createData() {
-
+        if(mDbHelper!=null) {
+            mDbHelper.open();
+            try {
+                fillData();
+            } catch (SQLException e) {
+                // TODO: handle exception here
+            }
+            mDbHelper.close();
+        }
         if (isNetworkConnected(this)) {
             if (mListAdapter.getGroupCount() == 0) {
                 new DownloadEventsTask().execute();
-                if(mDbHelper!=null) {
-                    mDbHelper.open();
-                    try {
-                        fillData();
-                    } catch (SQLException e) {
-                        // TODO: handle exception here
-                    }
-                    mDbHelper.close();
-                }
+
             }
         } else {
             Toast.makeText(MainActivity.this, "No Network", Toast.LENGTH_LONG).show();
@@ -133,10 +133,11 @@ public class MainActivity extends AppCompatActivity {
         if (dataCursor != null && dataCursor.getCount() > 0) {
             dataCursor.moveToFirst();
             TextView view = (TextView) findViewById(R.id.mainWelcomeText);
-            userName = dataCursor.getString(dataCursor.getColumnIndex(mDbHelper.KEY_USER_NAME));
+            firstName = dataCursor.getString(dataCursor.getColumnIndex(mDbHelper.KEY_FIRST_NAME));
+            id = dataCursor.getString(dataCursor.getColumnIndex(mDbHelper.KEY_ID));
             email = dataCursor.getString(dataCursor.getColumnIndex(mDbHelper.KEY_EMAIL));
 
-            Log.v("DataBase", userName + " :: " + email);
+            Log.v("DataBase", firstName + " :: " + email);
         }
     }
 
