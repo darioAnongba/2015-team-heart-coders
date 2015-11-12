@@ -3,7 +3,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="@dimen/activity_horizontal_margin"
+                android:padding="16dp"
                 tools:context="ch.epfl.sweng.swissaffinity.AboutActivity">
 
     <ImageView
@@ -62,9 +62,9 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/login_button"
         android:layout_centerHorizontal="true"
-        android:text="@string/about_loged"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        android:text="@string/about_logged"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"

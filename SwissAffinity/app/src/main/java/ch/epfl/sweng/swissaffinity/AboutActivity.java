@@ -23,7 +23,7 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ch.epfl.sweng.swissaffinity.db.UserDBAdapter;
+import ch.epfl.sweng.swissaffinity.db.userDBAdapter;
 
 import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREF;
 import static ch.epfl.sweng.swissaffinity.MainActivity.USERID;
@@ -35,14 +35,14 @@ public class AboutActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private LoginButton loginBtn;
     private CallbackManager callbackManager;
-    private UserDBAdapter mDbHelper;
+    private userDBAdapter mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Context context = getApplicationContext();
         FacebookSdk.sdkInitialize(context);
-        mDbHelper = new UserDBAdapter(this);
+        mDbHelper = new userDBAdapter(this);
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_about);
         sharedPreferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
@@ -141,7 +141,7 @@ public class AboutActivity extends AppCompatActivity {
             logged.setText("To start, you have to login:");
             logged.setTextSize(20);
         } else {
-            String loggedText = getString(R.string.about_loged);
+            String loggedText = getString(R.string.about_logged);
             logged.setText(String.format(loggedText, userName));
         }
     }
