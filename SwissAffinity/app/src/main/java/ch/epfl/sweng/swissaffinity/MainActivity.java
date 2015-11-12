@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String USERNAME = "user_name";
     public static final String USERID = "user_id";
 
-    private userDBAdapter mDbHelper;
+    private static userDBAdapter mDbHelper;
 
     public static String email;
     public static String userName;
@@ -109,16 +109,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createData() {
+
         if (isNetworkConnected(this)) {
             if (mListAdapter.getGroupCount() == 0) {
                 new DownloadEventsTask().execute();
-                mDbHelper.open();
-                try {
-                    fillData();
-                } catch (SQLException e) {
-                    // TODO: handle exception here
+                if(mDbHelper!=null) {
+                    mDbHelper.open();
+                    try {
+                        fillData();
+                    } catch (SQLException e) {
+                        // TODO: handle exception here
+                    }
+                    mDbHelper.close();
                 }
-                mDbHelper.close();
             }
         } else {
             Toast.makeText(MainActivity.this, "No Network", Toast.LENGTH_LONG).show();
@@ -127,11 +130,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void fillData() throws SQLException {
         Cursor dataCursor = mDbHelper.fetchAllData();
-        if (dataCursor != null && dataCursor.getCount() > 2) {
+        if (dataCursor != null && dataCursor.getCount() > 0) {
             dataCursor.moveToFirst();
             TextView view = (TextView) findViewById(R.id.mainWelcomeText);
             userName = dataCursor.getString(dataCursor.getColumnIndex(mDbHelper.KEY_USER_NAME));
             email = dataCursor.getString(dataCursor.getColumnIndex(mDbHelper.KEY_EMAIL));
+
             Log.v("DataBase", userName + " :: " + email);
         }
     }

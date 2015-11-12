@@ -23,6 +23,8 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import ch.epfl.sweng.swissaffinity.db.userDBAdapter;
 
 import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREF;
@@ -35,7 +37,7 @@ public class AboutActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private LoginButton loginBtn;
     private CallbackManager callbackManager;
-    private userDBAdapter mDbHelper;
+    public static userDBAdapter mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,12 @@ public class AboutActivity extends AppCompatActivity {
                                                                  .putString(USERNAME, firstName)
                                                                  .putString(USERID, userId)
                                                                  .apply();
+                                                ArrayList<String> arr1 = new ArrayList<String>();
+                                                arr1.add("Furkan");
+                                                arr1.add("Ilkay");
+                                                ArrayList<String> arr2 = new ArrayList<String>();
+                                                arr2.add("Sahin");
+                                                arr2.add("Yildiz");
                                                 mDbHelper.createData(
                                                         userId,
                                                         name,
@@ -86,7 +94,9 @@ public class AboutActivity extends AppCompatActivity {
                                                         "",
                                                         gender,
                                                         birthday,
-                                                        "");
+                                                        "",
+                                                        arr1,
+                                                        arr2);
                                                 mDbHelper.close();
                                                 Log.v("LoginActivity", response.toString());
                                                 finish();
