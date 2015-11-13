@@ -1,16 +1,16 @@
 package ch.epfl.sweng.swissaffinity.events;
 
-import junit.framework.TestCase;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import ch.epfl.sweng.swissaffinity.DataForTesting;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Created by yannick on 13.11.15.
  */
-public class EstablishmentTest extends TestCase {
+public class EstablishmentTest {
 
     private Establishment establishment;
 
