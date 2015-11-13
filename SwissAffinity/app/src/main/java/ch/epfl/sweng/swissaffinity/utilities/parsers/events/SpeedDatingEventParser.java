@@ -55,7 +55,7 @@ public class SpeedDatingEventParser implements Parsable<SpeedDatingEvent> {
             int womenRegistered = jsonObject.getInt(WOMEN_REGISTERED.get());
             int minAge = jsonObject.getInt(MIN_AGE.get());
             int maxAge = jsonObject.getInt(MAX_AGE.get());
-            // TODO : parse establishement.
+            
             Establishment establishment = (new EstablishmentParser()).
                                             parseFromJSON(jsonObject.getJSONObject("establishment"));
 
