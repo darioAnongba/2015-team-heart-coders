@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * Created by sahinfurkan on 06/11/15.
  */
 
-public class userDBAdapter {
+public class UserDBAdapter {
     private static final String DATABASE_NAME = "user";
     private static final String DATABASE_TABLE = "user_data";
     private static final int DATABASE_VERSION = 1;
@@ -82,11 +82,11 @@ public class userDBAdapter {
             KEY_LOCATION_PREFERENCES,
             KEY_EVENT_PREFERENCES};
 
-    public userDBAdapter(Context ctx) {
+    public UserDBAdapter(Context ctx) {
         this.mCtx = ctx;
     }
 
-    public userDBAdapter open() throws android.database.SQLException {
+    public UserDBAdapter open() throws android.database.SQLException {
         mDbHelper = new DatabaseHelper(mCtx);
         mDb = mDbHelper.getWritableDatabase();
         return this;

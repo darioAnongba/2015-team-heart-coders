@@ -25,7 +25,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import ch.epfl.sweng.swissaffinity.db.userDBAdapter;
+import ch.epfl.sweng.swissaffinity.db.UserDBAdapter;
 
 import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREF;
 import static ch.epfl.sweng.swissaffinity.MainActivity.USERID;
@@ -37,14 +37,14 @@ public class AboutActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private LoginButton loginBtn;
     private CallbackManager callbackManager;
-    public static userDBAdapter mDbHelper;
+    public static UserDBAdapter mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Context context = getApplicationContext();
         FacebookSdk.sdkInitialize(context);
-        mDbHelper = new userDBAdapter(this);
+        mDbHelper = new UserDBAdapter(this);
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_about);
         sharedPreferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);

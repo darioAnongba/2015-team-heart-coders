@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import ch.epfl.sweng.swissaffinity.db.userDBAdapter;
+import ch.epfl.sweng.swissaffinity.db.UserDBAdapter;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String USERNAME = "user_name";
     public static final String USERID = "user_id";
 
-    private static userDBAdapter mDbHelper;
+    private static UserDBAdapter mDbHelper;
 
     public static String email;
     public static String firstName;
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         setEventClient(new NetworkEventClient(SERVER_URL, new DefaultNetworkProvider()));
         sharedPreferences = getApplicationContext().getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
         mListAdapter = new EventExpandableListAdapter(this);
-        mDbHelper = new userDBAdapter(this);
+        mDbHelper = new UserDBAdapter(this);
     }
 
 
