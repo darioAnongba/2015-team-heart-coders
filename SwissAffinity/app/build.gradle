@@ -24,6 +24,5 @@ android {
         androidTestCompile 'com.android.support.test:rules:0.3'
         androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
         androidTestCompile 'junit:junit:4.12'
-        testCompile 'junit:junit:4.12'
     }
 }

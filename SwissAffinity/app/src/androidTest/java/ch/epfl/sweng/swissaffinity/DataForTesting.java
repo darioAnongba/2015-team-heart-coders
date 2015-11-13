@@ -69,21 +69,14 @@ public class DataForTesting {
 
     public static SpeedDatingEvent speedDatingEventCreator() throws ParserException {
 
-        Date date1;
-        Date date2;
-
-        try {
-            date1 = DateParser.parseFromString("2015-10-31T20:00:00");
-            date2 = DateParser.parseFromString("2015-10-31T23:59:59");
-        } catch (ParserException e) {
-            throw new ParserException("Problem with AbstractEvent");
-        }
+        Date date1 = DateParser.parseFromString("2015-10-31T20:00:00+0100");
+        Date date2 = DateParser.parseFromString("2015-10-31T23:59:59+0100");
 
         SpeedDatingEvent.Builder builder = new SpeedDatingEvent.Builder();
 
         builder.setId(1);
         builder.setName("Halloween Speed Dating Geneva");
-        builder.setLocation(new Location("Geneve"));
+        builder.setLocation(new Location("Genève"));
         builder.setMaxPeople(20);
         builder.setDateBegin(date1).setDateEnd(date2);
         builder.setBasePrice(49.95);
@@ -103,8 +96,9 @@ public class DataForTesting {
     }
 
     public static User userCreator() throws MalformedURLException, ParserException {
+        Date birthday = DateParser.parseFromString("1983-11-16T16:00:00+0100");
         return new User(1,2001,"testUsername","testEmail","testLastName","testFirstName","testPhone","testHomePhone",
-                new Address("Switzerland",1000,"Lausanne","Vaud",1,"Rue du Test"),false,true,User.Gender.MALE,new Date(),"testProfession",new URL("htt://testUrl.com"),
+                new Address("Switzerland",1000,"Lausanne","Vaud",1,"Rue du Test"),false,true,User.Gender.MALE,birthday,"testProfession",new URL("http://testUrl.com"),
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0),LOCATIONS.get(1))), new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
     }
 
