@@ -7,12 +7,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Created by sahinfurkan on 06/11/15.
  */
 
-public class userDBAdapter {
+public class UserDBAdapter {
     private static final String DATABASE_NAME = "user";
     private static final String DATABASE_TABLE = "user_data";
     private static final int DATABASE_VERSION = 1;
@@ -27,6 +28,8 @@ public class userDBAdapter {
     public static final String KEY_GENDER = "Gender";
     public static final String KEY_BIRTHDATE = "Birthdate";
     public static final String KEY_PROFESSION = "Profession";
+    public static final String KEY_LOCATION_PREFERENCES = "LocationPreferences";
+    public static final String KEY_EVENT_PREFERENCES = "EventPreferences";
 
     public static final String KEY_ROWID = "_id";
     private DatabaseHelper mDbHelper;
@@ -57,6 +60,10 @@ public class userDBAdapter {
                                                   KEY_BIRTHDATE +
                                                   " TEXT, " +
                                                   KEY_PROFESSION +
+                                                  " TEXT, " +
+                                                  KEY_LOCATION_PREFERENCES+
+                                                  " TEXT, " +
+                                                  KEY_EVENT_PREFERENCES+
                                                   " TEXT);";
     private final Context mCtx;
     private String[] columns = new String[]{
@@ -71,13 +78,15 @@ public class userDBAdapter {
             KEY_PHONE,
             KEY_GENDER,
             KEY_BIRTHDATE,
-            KEY_PROFESSION};
+            KEY_PROFESSION,
+            KEY_LOCATION_PREFERENCES,
+            KEY_EVENT_PREFERENCES};
 
-    public userDBAdapter(Context ctx) {
+    public UserDBAdapter(Context ctx) {
         this.mCtx = ctx;
     }
 
-    public userDBAdapter open() throws android.database.SQLException {
+    public UserDBAdapter open() throws android.database.SQLException {
         mDbHelper = new DatabaseHelper(mCtx);
         mDb = mDbHelper.getWritableDatabase();
         return this;
@@ -98,7 +107,9 @@ public class userDBAdapter {
             String phone,
             String gender,
             String birthdate,
-            String profession)
+            String profession,
+            ArrayList<String> locationPreferences,
+            ArrayList<String> eventPreferences)
     {
         mDb = mDbHelper.getWritableDatabase();
         ContentValues initialValues = new ContentValues();
@@ -113,10 +124,23 @@ public class userDBAdapter {
         initialValues.put(KEY_GENDER, gender);
         initialValues.put(KEY_BIRTHDATE, birthdate);
         initialValues.put(KEY_PROFESSION, profession);
+        initialValues.put(KEY_LOCATION_PREFERENCES, concatinateArrayToString(locationPreferences));
+        initialValues.put(KEY_EVENT_PREFERENCES, concatinateArrayToString(eventPreferences));
 
-        long a = mDb.insert(DATABASE_TABLE, null, initialValues);
+        mDb.insert(DATABASE_TABLE, null, initialValues);
+    }
 
-        //    mDb.close();
+    private String concatinateArrayToString(ArrayList<String> arr){
+        String res = "";
+        String seperator = ",";
+
+        if(arr == null || arr.size() == 0)
+            return res;
+
+        for (String str : arr){
+            res += str + seperator;
+        }
+        return res.substring(0, res.length()-1);
     }
 
     public boolean deleteData(long rowId) {
@@ -156,7 +180,9 @@ public class userDBAdapter {
             String phone,
             String gender,
             String birthdate,
-            String profession)
+            String profession,
+            ArrayList<String> locationPreferences,
+            ArrayList<String> eventPreferences)
     {
         ContentValues args = new ContentValues();
         args.put(KEY_ID, id);
@@ -170,6 +196,8 @@ public class userDBAdapter {
         args.put(KEY_GENDER, gender);
         args.put(KEY_BIRTHDATE, birthdate);
         args.put(KEY_PROFESSION, profession);
+        args.put(KEY_LOCATION_PREFERENCES, concatinateArrayToString(locationPreferences));
+        args.put(KEY_EVENT_PREFERENCES, concatinateArrayToString(eventPreferences));
         return mDb.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
