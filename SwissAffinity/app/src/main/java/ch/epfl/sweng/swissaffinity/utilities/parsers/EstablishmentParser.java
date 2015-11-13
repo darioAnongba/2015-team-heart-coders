@@ -16,24 +16,26 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
 public class EstablishmentParser implements Parsable<Establishment> {
     @Override
     public Establishment parseFromJSON(JSONObject jsonObject) throws ParserException {
+        Establishment est = null;
         try {
-            int id = jsonObject.getInt("id");
-            String name = jsonObject.getString("name");
-            Type type = Type.valueOf(jsonObject.getString("type"));
-            Address address = (new AddressParser()).parseFromJSON(jsonObject.getJSONObject("address"));
-            String phoneNum = jsonObject.getString("phone_number");
-            String description = jsonObject.getString("description");
-            URL url = new URL(jsonObject.getString("url"));
-            int maxSeats = jsonObject.getInt("max_seats");
-            String logoPath = jsonObject.getString("logo_path");
+            JSONObject estJson = jsonObject.getJSONObject("establishment");
+            int id = estJson.getInt("id");
+            String name = estJson.getString("name");
+            Type type = Type.valueOf(estJson.getString("type").toUpperCase());
+            Address address = (new AddressParser()).parseFromJSON(estJson.getJSONObject("address"));
+            String phoneNum = estJson.getString("phone_number");
+            String description = estJson.getString("description");
+            URL url = new URL(estJson.getString("url"));
+            int maxSeats = estJson.getInt("max_seats");
+            String logoPath = estJson.getString("logo_path");
             Location location = new LocationParser().parseFromJSON(jsonObject.getJSONObject("location"));
-            return new Establishment(id, name, type, address, phoneNum, description, url, maxSeats,
+            est =  new Establishment(id, name, type, address, phoneNum, description, url, maxSeats,
                                      logoPath, location);
         }
         catch (Exception e){
             new ParserException();
         }
-        return null;
+        return est;
     }
 
 

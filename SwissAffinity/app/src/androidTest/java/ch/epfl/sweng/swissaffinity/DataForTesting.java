@@ -104,7 +104,21 @@ public class DataForTesting {
 
     public JSONObject createJSONEvent() {
 
-        String content = "{\"id\":4,\"name\":\"First Speed Dating Event !\",\"location\":{\"id\":3,\"name\":\"Lausanne\"},\"max_people\":30,\"date_start\":\"2015-11-19T20:00:00+0100\",\"date_end\":\"2015-11-19T22:00:00+0100\",\"base_price\":49.5,\"state\":\"pending\",\"description\":\"The super description\",\"image_path\":\"563c01a709848.jpg\",\"updated_at\":\"2015-11-06T02:25:59+0100\",\"men_seats\":15,\"women_seats\":15,\"num_men_registered\":0,\"num_women_registered\":0,\"min_age\":25,\"max_age\":45,\"establishment\":{\"id\":1,\"name\":\"King Size Pub\",\"address\":{\"id\":20,\"street\":\"Lausanne Flon\",\"street_number\":27,\"province\":\"Vaud\",\"city\":\"Lausanne\",\"zip_code\":1004,\"country\":\"CH\"},\"phone_number\":\"079 000 00 00\",\"type\":\"bar\",\"description\":\"Irish Pub in Lausanne !\",\"url\":\"http:\\/\\/kingsizepub.com\",\"max_seats\":200,\"logo_path\":\"563c0126e5dea.jpg\",\"updated_at\":\"2015-11-06T02:23:50+0100\"},\"discr\":\"speed_dating\"}";
+        String content = "{\"id\":4,\"name\":\"First Speed Dating Event !\",\"location\":{\"id\":3,\"name\":\"Lausanne\"}," +
+                "\"max_people\":30,\"date_start\":\"2015-11-19T20:00:00+0100\"," +
+                "\"date_end\":\"2015-11-19T22:00:00+0100\",\"base_price\":49.5," +
+                "\"state\":\"pending\",\"description\":\"The super description\"," +
+                "\"image_path\":\"563c01a709848.jpg\",\"updated_at\":\"2015-11-06T02:25:59+0100\"," +
+                "\"men_seats\":15,\"women_seats\":15,\"num_men_registered\":0," +
+                "\"num_women_registered\":0,\"min_age\":25,\"max_age\":45," +
+                "\"establishment\":{\"id\":1,\"name\":\"King Size Pub\"," +
+                    "\"address\":{\"id\":20,\"street\":\"Lausanne Flon\"," +
+                        "\"street_number\":27,\"province\":\"Vaud\",\"city\":\"Lausanne\"," +
+                        "\"zip_code\":1004,\"country\":\"CH\"}," +
+                    "\"phone_number\":\"079 000 00 00\",\"type\":\"bar\"," +
+                    "\"description\":\"Irish Pub in Lausanne !\",\"url\":\"http:\\/\\/kingsizepub.com\"," +
+                    "\"max_seats\":200,\"logo_path\":\"563c0126e5dea.jpg\"," +
+                    "\"updated_at\":\"2015-11-06T02:23:50+0100\"},\"discr\":\"speed_dating\"}";
 
         try {
             JSONObject jsonObject = new JSONObject(content);
