@@ -19,8 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.db.UserDBAdapter;
@@ -48,25 +46,28 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String SERVER_URL = "http://www.beecreative.ch";
 
-    private static EventClient mEventClient;
+    private static EventClient EVENT_CLIENT;
 
     private EventExpandableListAdapter mListAdapter;
     private SharedPreferences sharedPreferences;
 
 
     public static EventClient getEventClient() {
-        return mEventClient;
+        if (EVENT_CLIENT == null) {
+            setEventClient(new NetworkEventClient(SERVER_URL, new DefaultNetworkProvider()));
+        }
+        return EVENT_CLIENT;
     }
 
     public static void setEventClient(EventClient eventClient) {
-        mEventClient = eventClient;
+        EVENT_CLIENT = eventClient;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setEventClient(new NetworkEventClient(SERVER_URL, new DefaultNetworkProvider()));
+        EVENT_CLIENT = getEventClient();
         sharedPreferences = getApplicationContext().getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
         mListAdapter = new EventExpandableListAdapter(this);
         mDbHelper = new UserDBAdapter(this);
@@ -149,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         protected List<Event> doInBackground(Void... args) {
             List<Event> result = null;
             try {
-                result = mEventClient.fetchAll();
+                result = EVENT_CLIENT.fetchAll();
             } catch (EventClientException e) {
                 // TODO: check for an error handling
             }
@@ -172,13 +173,6 @@ public class MainActivity extends AppCompatActivity {
         }
         mListAdapter.addGroup(upcomingEvents);
         if (result != null) {
-            Collections.sort(
-                    result, new Comparator<Event>() {
-                        @Override
-                        public int compare(Event lhs, Event rhs) {
-                            return lhs.getDateBegin().compareTo(rhs.getDateBegin());
-                        }
-                    });
             for (Event e : result) {
                 mListAdapter.addChild(upcomingEvents, e);
             }

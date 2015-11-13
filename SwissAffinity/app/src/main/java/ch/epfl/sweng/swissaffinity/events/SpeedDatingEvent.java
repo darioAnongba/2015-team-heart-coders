@@ -19,36 +19,15 @@ public class SpeedDatingEvent extends AbstractEvent implements Event, Serializab
     private final int mMaxAge;
     private final Establishment mEstablishment;
 
-    SpeedDatingEvent(
-            AbstractEvent.Builder builder,
-            int mMenSeats,
-            int mWomenSeats,
-            int mMenRegistered,
-            int mWomenRegistered,
-            int mMinAge,
-            int mMaxAge,
-            Establishment mEstablishment)
-    {
+    private SpeedDatingEvent(Builder builder) {
         super(builder);
-        this.mMenSeats = mMenSeats;
-        this.mWomenSeats = mWomenSeats;
-        this.mMenRegistered = mMenRegistered;
-        this.mWomenRegistered = mWomenRegistered;
-        this.mMinAge = mMinAge;
-        this.mMaxAge = mMaxAge;
-        this.mEstablishment = mEstablishment;
-    }
-
-    private SpeedDatingEvent(AbstractEvent.Builder abstractEventBuilder, Builder builder) {
-        this(
-                abstractEventBuilder,
-                builder.mMenSeats,
-                builder.mWomenSeats,
-                builder.mMenRegistered,
-                builder.mWomenRegistered,
-                builder.mMinAge,
-                builder.mMaxAge,
-                builder.mEstablishment);
+        this.mMenSeats = builder.mMenSeats;
+        this.mWomenSeats = builder.mWomenSeats;
+        this.mMenRegistered = builder.mMenRegistered;
+        this.mWomenRegistered = builder.mWomenRegistered;
+        this.mMinAge = builder.mMinAge;
+        this.mMaxAge = builder.mMaxAge;
+        this.mEstablishment = builder.mEstablishment;
     }
 
     @Override
@@ -110,7 +89,8 @@ public class SpeedDatingEvent extends AbstractEvent implements Event, Serializab
     /**
      * Builder for the speed dating event class.
      */
-    public static class Builder {
+    public static class Builder extends AbstractEvent.Builder {
+
         private int mMenSeats;
         private int mWomenSeats;
         private int mMenRegistered;
@@ -155,8 +135,8 @@ public class SpeedDatingEvent extends AbstractEvent implements Event, Serializab
             return this;
         }
 
-        public SpeedDatingEvent build(AbstractEvent.Builder abstractEventBuilder) {
-            return new SpeedDatingEvent(abstractEventBuilder, this);
+        public SpeedDatingEvent build() {
+            return new SpeedDatingEvent(this);
         }
     }
 }

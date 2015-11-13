@@ -23,63 +23,22 @@ public abstract class AbstractEvent implements Serializable {
     protected final String mImagePath;
     protected final Date mLastUpdate;
 
-    /**
-     * The constructor of the class
-     *
-     * @param id          it's unique id
-     * @param name        it's name (a good one for title)
-     * @param location    it's location {@link Location}
-     * @param maxPeople   the max number of people allowed
-     * @param dateBegin   the beginning date and time
-     * @param dateEnd     the ending date and time
-     * @param basePrice   the price
-     * @param state       the actual state of the event {@link Event.State}
-     * @param description a description of the event
-     * @param imagePath   the relative path to an image
-     * @param lastUpdate  the last time the event was updated
-     */
-    private AbstractEvent(
-            int id,
-            String name,
-            Location location,
-            int maxPeople,
-            Date dateBegin,
-            Date dateEnd,
-            double basePrice,
-            Event.State state,
-            String description,
-            String imagePath,
-            Date lastUpdate)
-    {
-        mId = id;
-        mLocation = location;
-        mName = name;
-        mMaxPeople = maxPeople;
-        mDateBegin = dateBegin;
-        mDateEnd = dateEnd;
-        mBasePrice = basePrice;
-        mState = state;
-        mDescription = description;
-        mImagePath = imagePath;
-        mLastUpdate = lastUpdate;
-    }
-
     protected AbstractEvent(Builder builder) {
-        this(
-                builder.mId,
-                builder.mName,
-                builder.mLocation,
-                builder.mMaxPeople,
-                builder.mDateBegin,
-                builder.mDateEnd,
-                builder.mBasePrice,
-                builder.mState,
-                builder.mDescription,
-                builder.mImagePath,
-                builder.mLastUpdate);
+        mId = builder.mId;
+        mLocation = builder.mLocation;
+        mName = builder.mName;
+        mMaxPeople = builder.mMaxPeople;
+        mDateBegin = builder.mDateBegin;
+        mDateEnd = builder.mDateEnd;
+        mBasePrice = builder.mBasePrice;
+        mState = builder.mState;
+        mDescription = builder.mDescription;
+        mImagePath = builder.mImagePath;
+        mLastUpdate = builder.mLastUpdate;
     }
 
     public static class Builder {
+
         private int mId;
         private String mName;
         private Location mLocation;
@@ -102,8 +61,8 @@ public abstract class AbstractEvent implements Serializable {
             return this;
         }
 
-        public Builder setLocation(String location) {
-            mLocation = new Location(location);
+        public Builder setLocation(Location location) {
+            mLocation = location;
             return this;
         }
 
@@ -142,7 +101,7 @@ public abstract class AbstractEvent implements Serializable {
             return this;
         }
 
-        public Builder setmLastUpdate(Date lastUpdate) {
+        public Builder setLastUpdate(Date lastUpdate) {
             mLastUpdate = lastUpdate;
             return this;
         }
