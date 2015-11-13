@@ -37,7 +37,7 @@ public class DateParser {
      */
     public static String dateToString(Date date) {
         if (date == null) {
-            return "";
+            return ""; //TODO: maybe it should throw an exception
         }
         SimpleDateFormat dateFormat =
                 new SimpleDateFormat("dd MMMM yyyy - HH:mm", Locale.getDefault());
