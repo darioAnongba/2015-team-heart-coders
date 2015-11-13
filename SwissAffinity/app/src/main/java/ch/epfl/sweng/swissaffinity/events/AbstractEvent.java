@@ -37,6 +37,9 @@ public abstract class AbstractEvent implements Serializable {
         mLastUpdate = builder.mLastUpdate;
     }
 
+    /**
+     * Builder for the abstract event class.
+     */
     public static class Builder {
 
         private int mId;
@@ -51,41 +54,81 @@ public abstract class AbstractEvent implements Serializable {
         private String mImagePath;
         private Date mLastUpdate;
 
+        /**
+         * Setter for ID.
+         * @param id
+         * @return this
+         */
         public Builder setId(int id) {
             mId = id;
             return this;
         }
 
+        /**
+         * Setter for name.
+         * @param name
+         * @return this
+         */
         public Builder setName(String name) {
             mName = name;
             return this;
         }
 
+        /**
+         * Setter for location.
+         * @param location
+         * @return this
+         */
         public Builder setLocation(Location location) {
             mLocation = location;
             return this;
         }
 
+        /**
+         * Setter for maximum number of people.
+         * @param maxPeople
+         * @return this
+         */
         public Builder setMaxPeople(int maxPeople) {
             mMaxPeople = maxPeople;
             return this;
         }
 
+        /**
+         * Setter for starting date and time.
+         * @param dateBegin
+         * @return this
+         */
         public Builder setDateBegin(Date dateBegin) {
             mDateBegin = dateBegin;
             return this;
         }
 
+        /**
+         * Setter for ending date and time
+         * @param dateEnd
+         * @return this
+         */
         public Builder setDateEnd(Date dateEnd) {
             mDateEnd = dateEnd;
             return this;
         }
 
+        /**
+         * Setter for price.
+         * @param basePrice
+         * @return this
+         */
         public Builder setBasePrice(double basePrice) {
             mBasePrice = basePrice;
             return this;
         }
 
+        /**
+         *
+         * @param state
+         * @return
+         */
         public Builder setState(String state) {
             mState = Event.State.getState(state);
             return this;
