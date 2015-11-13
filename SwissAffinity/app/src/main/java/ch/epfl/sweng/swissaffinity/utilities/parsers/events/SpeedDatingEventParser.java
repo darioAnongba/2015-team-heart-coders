@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import ch.epfl.sweng.swissaffinity.events.AbstractEvent;
 import ch.epfl.sweng.swissaffinity.events.Establishment;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.EstablishmentParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.Parsable;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 
@@ -35,7 +36,8 @@ public class SpeedDatingEventParser implements Parsable<SpeedDatingEvent> {
             int minAge = jsonObject.getInt(MIN_AGE.get());
             int maxAge = jsonObject.getInt(MAX_AGE.get());
             // TODO : parse establishement.
-            Establishment establishment = null;
+            Establishment establishment = (new EstablishmentParser()).
+                                            parseFromJSON(jsonObject.getJSONObject("establishment"));
 
             return builder.setMenSeats(menSeats)
                           .setWomenSeats(womenSeats)
