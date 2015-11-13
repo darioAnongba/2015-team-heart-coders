@@ -11,6 +11,9 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
  */
 public class Establishment implements Serializable {
 
+    /**
+     * Type of establishment.
+     */
     public enum Type implements Serializable {
         BAR("bar"),
         RESTAURANT("restaurant"),
@@ -22,6 +25,11 @@ public class Establishment implements Serializable {
             mType = type;
         }
 
+        /**
+         * Getter for the string representation of the type.
+         *
+         * @return its type
+         */
         public String get() {
             return mType;
         }
@@ -76,27 +84,57 @@ public class Establishment implements Serializable {
         mLocation = location;
     }
 
-    public String getmName() {
+    /**
+     * Getter for the name.
+     *
+     * @return its name
+     */
+    public String getName() {
         return mName;
     }
 
-    public String getmLogoPath() {
+    /**
+     * Getter for the logo path.
+     *
+     * @return the relative path
+     */
+    public String getLogoPath() {
         return mLogoPath;
     }
 
-    public URL getmUrl() {
+    /**
+     * Getter for the URL.
+     *
+     * @return the URL
+     */
+    public URL getUrl() {
         return mUrl;
     }
 
-    public String getmDescription() {
+    /**
+     * Getter for the description.
+     *
+     * @return the description
+     */
+    public String getDescription() {
         return mDescription;
     }
 
-    public Address getmAddress() {
+    /**
+     * Getter for its address.
+     *
+     * @return the address
+     */
+    public Address getAddress() {
         return mAddress;
     }
 
-    public Type getmType() {
+    /**
+     * Getter for the type {@link Type}
+     *
+     * @return the type
+     */
+    public Type getType() {
         return mType;
     }
 }
