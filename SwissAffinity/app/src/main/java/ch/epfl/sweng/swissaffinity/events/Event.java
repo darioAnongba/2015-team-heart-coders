@@ -19,11 +19,6 @@ public interface Event extends Serializable {
 
         private String mState;
 
-        /**
-         * Internal contructor of the enum.
-         *
-         * @param state the string representing the state.
-         */
         State(String state) {
             mState = state;
         }

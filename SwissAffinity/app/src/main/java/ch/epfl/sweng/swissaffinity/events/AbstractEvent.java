@@ -56,7 +56,9 @@ public abstract class AbstractEvent implements Serializable {
 
         /**
          * Setter for ID.
+         *
          * @param id
+         *
          * @return this
          */
         public Builder setId(int id) {
@@ -66,7 +68,9 @@ public abstract class AbstractEvent implements Serializable {
 
         /**
          * Setter for name.
+         *
          * @param name
+         *
          * @return this
          */
         public Builder setName(String name) {
@@ -76,7 +80,9 @@ public abstract class AbstractEvent implements Serializable {
 
         /**
          * Setter for location.
+         *
          * @param location
+         *
          * @return this
          */
         public Builder setLocation(Location location) {
@@ -86,7 +92,9 @@ public abstract class AbstractEvent implements Serializable {
 
         /**
          * Setter for maximum number of people.
+         *
          * @param maxPeople
+         *
          * @return this
          */
         public Builder setMaxPeople(int maxPeople) {
@@ -96,7 +104,9 @@ public abstract class AbstractEvent implements Serializable {
 
         /**
          * Setter for starting date and time.
+         *
          * @param dateBegin
+         *
          * @return this
          */
         public Builder setDateBegin(Date dateBegin) {
@@ -106,7 +116,9 @@ public abstract class AbstractEvent implements Serializable {
 
         /**
          * Setter for ending date and time
+         *
          * @param dateEnd
+         *
          * @return this
          */
         public Builder setDateEnd(Date dateEnd) {
@@ -116,7 +128,9 @@ public abstract class AbstractEvent implements Serializable {
 
         /**
          * Setter for price.
+         *
          * @param basePrice
+         *
          * @return this
          */
         public Builder setBasePrice(double basePrice) {
@@ -125,25 +139,48 @@ public abstract class AbstractEvent implements Serializable {
         }
 
         /**
+         * Setter for event state.
          *
          * @param state
-         * @return
+         *
+         * @return this
          */
         public Builder setState(String state) {
             mState = Event.State.getState(state);
             return this;
         }
 
+        /**
+         * Setter for the description
+         *
+         * @param descrition
+         *
+         * @return this
+         */
         public Builder setDescrition(String descrition) {
             mDescription = descrition;
             return this;
         }
 
+        /**
+         * Setter for the image path.
+         *
+         * @param imagePath
+         *
+         * @return this
+         */
         public Builder setImagePath(String imagePath) {
             mImagePath = imagePath;
             return this;
         }
 
+        /**
+         * Setter for the last update date and time.
+         *
+         * @param lastUpdate
+         *
+         * @return this
+         */
         public Builder setLastUpdate(Date lastUpdate) {
             mLastUpdate = lastUpdate;
             return this;
