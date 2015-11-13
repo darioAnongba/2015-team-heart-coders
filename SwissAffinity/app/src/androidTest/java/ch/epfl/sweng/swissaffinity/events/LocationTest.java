@@ -1,15 +1,14 @@
 package ch.epfl.sweng.swissaffinity.events;
 
-import junit.framework.TestCase;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 
 import static ch.epfl.sweng.swissaffinity.DataForTesting.*;
+import static org.junit.Assert.assertEquals;
 
-public class LocationTest extends TestCase {
+public class LocationTest {
 
     private Location location;
 
@@ -21,10 +20,5 @@ public class LocationTest extends TestCase {
     @Test
     public void testGetName() throws Exception {
         assertEquals("Lausanne", location.getName());
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testGetNameException() throws Exception {
-        location = null;
     }
 }
