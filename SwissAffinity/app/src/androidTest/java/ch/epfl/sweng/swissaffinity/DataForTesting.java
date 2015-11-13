@@ -67,8 +67,7 @@ public class DataForTesting {
             new GregorianCalendar(2015, 11, 30, 23, 59)
     ));
 
-    public static AbstractEvent.Builder abstractEventCreator() throws ParserException {
-        AbstractEvent.Builder abstractEventBuilder = new AbstractEvent.Builder();
+    public static SpeedDatingEvent speedDatingEventCreator() throws ParserException {
 
         Date date1;
         Date date2;
@@ -80,33 +79,27 @@ public class DataForTesting {
             throw new ParserException("Problem with AbstractEvent");
         }
 
-        abstractEventBuilder.setId(1);
-        abstractEventBuilder.setName("Halloween Speed Dating Geneva");
-        abstractEventBuilder.setLocation("Genève");
-        abstractEventBuilder.setMaxPeople(20);
-        abstractEventBuilder.setDateBegin(date1).setDateEnd(date2);
-        abstractEventBuilder.setBasePrice(49.95);
-        abstractEventBuilder.setState("confirmed");
-        abstractEventBuilder.setDescrition("test description for Halloween");
-        abstractEventBuilder.setImagePath("image test Path");
-        abstractEventBuilder.setmLastUpdate(new Date());
+        SpeedDatingEvent.Builder builder = new SpeedDatingEvent.Builder();
 
-        return abstractEventBuilder;
-    }
+        builder.setId(1);
+        builder.setName("Halloween Speed Dating Geneva");
+        builder.setLocation(new Location("Geneve"));
+        builder.setMaxPeople(20);
+        builder.setDateBegin(date1).setDateEnd(date2);
+        builder.setBasePrice(49.95);
+        builder.setState("confirmed");
+        builder.setDescrition("test description for Halloween");
+        builder.setImagePath("image test Path");
+        builder.setLastUpdate(new Date());
+        builder.setMenSeats(10);
+        builder.setWomenSeats(10);
+        builder.setMenRegistered(0);
+        builder.setWomenRegistered(0);
+        builder.setMinAge(20);
+        builder.setMaxAge(30);
+        builder.setEstablishment(ESTABLISHMENTS.get(1));
 
-    public static SpeedDatingEvent speedDatingEventCreator() throws ParserException {
-
-        SpeedDatingEvent.Builder speedDatingEventBuilder = new SpeedDatingEvent.Builder();
-
-        speedDatingEventBuilder.setMenSeats(10);
-        speedDatingEventBuilder.setWomenSeats(10);
-        speedDatingEventBuilder.setMenRegistered(0);
-        speedDatingEventBuilder.setWomenRegistered(0);
-        speedDatingEventBuilder.setMinAge(20);
-        speedDatingEventBuilder.setMaxAge(30);
-        speedDatingEventBuilder.setEstablishment(ESTABLISHMENTS.get(1));
-
-        return speedDatingEventBuilder.build(abstractEventCreator());
+        return builder.build();
     }
 
     public static User userCreator() throws MalformedURLException, ParserException {

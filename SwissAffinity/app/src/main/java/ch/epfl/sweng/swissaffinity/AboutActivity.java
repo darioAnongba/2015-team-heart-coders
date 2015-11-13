@@ -23,10 +23,6 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
-import ch.epfl.sweng.swissaffinity.db.UserDBAdapter;
-
 import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREF;
 import static ch.epfl.sweng.swissaffinity.MainActivity.USERID;
 import static ch.epfl.sweng.swissaffinity.MainActivity.USERNAME;
@@ -37,14 +33,12 @@ public class AboutActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private LoginButton loginBtn;
     private CallbackManager callbackManager;
-    public static UserDBAdapter mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Context context = getApplicationContext();
         FacebookSdk.sdkInitialize(context);
-        mDbHelper = new UserDBAdapter(this);
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_about);
         sharedPreferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
@@ -55,7 +49,6 @@ public class AboutActivity extends AppCompatActivity {
                 callbackManager, new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        mDbHelper.open();
                         GraphRequest request = newMeRequest(
                                 getCurrentAccessToken(),
                                 new GraphRequest.GraphJSONObjectCallback() {
@@ -77,27 +70,6 @@ public class AboutActivity extends AppCompatActivity {
                                                                  .putString(USERNAME, firstName)
                                                                  .putString(USERID, userId)
                                                                  .apply();
-                                                ArrayList<String> arr1 = new ArrayList<String>();
-                                                arr1.add("Furkan");
-                                                arr1.add("Ilkay");
-                                                ArrayList<String> arr2 = new ArrayList<String>();
-                                                arr2.add("Sahin");
-                                                arr2.add("Yildiz");
-                                                mDbHelper.createData(
-                                                        userId,
-                                                        name,
-                                                        email,
-                                                        true,
-                                                        false,
-                                                        firstName,
-                                                        lastName,
-                                                        "",
-                                                        gender,
-                                                        birthday,
-                                                        "",
-                                                        arr1,
-                                                        arr2);
-                                                mDbHelper.close();
                                                 Log.v("LoginActivity", response.toString());
                                                 finish();
                                             } catch (JSONException e) {

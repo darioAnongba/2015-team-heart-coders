@@ -56,7 +56,6 @@ public class EventExpandableListAdapter extends AbstractExpandableListAdapter<St
         Event event = (Event) getChild(groupPosition, childPosition);
 
         String eventName = event.getName();
-        String eventDescription = event.getDesription();
         Location location = event.getLocation();
         String eventLocation = "";
         if (location != null) {
@@ -74,7 +73,6 @@ public class EventExpandableListAdapter extends AbstractExpandableListAdapter<St
         }
 
         ((TextView) convertView.findViewById(R.id.rowEventName)).setText(eventName);
-        ((TextView) convertView.findViewById(R.id.rowEventDetails)).setText(eventDescription);
         ((TextView) convertView.findViewById(R.id.rowEventLocation)).setText(eventLocation);
         ((TextView) convertView.findViewById(R.id.rowEventDateBegin)).setText(eventDateBegin);
 

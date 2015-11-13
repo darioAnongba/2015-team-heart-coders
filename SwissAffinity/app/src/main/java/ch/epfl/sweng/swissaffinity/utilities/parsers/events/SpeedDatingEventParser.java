@@ -3,17 +3,29 @@ package ch.epfl.sweng.swissaffinity.utilities.parsers.events;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ch.epfl.sweng.swissaffinity.events.AbstractEvent;
 import ch.epfl.sweng.swissaffinity.events.Establishment;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.EstablishmentParser;
+import ch.epfl.sweng.swissaffinity.utilities.Location;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.Parsable;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BASE_PRICE;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.DATE_BEGIN;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.DATE_END;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.DESCRIPTION;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ID;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.IMAGE_PATH;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_UPDATE;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LOCATION;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.MAX_AGE;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.MAX_PEOPLE;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.MEN_REGISTERED;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.MEN_SEATS;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.MIN_AGE;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.NAME;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.STATE;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.WOMEN_REGISTERED;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.WOMEN_SEATS;
 
@@ -26,9 +38,17 @@ public class SpeedDatingEventParser implements Parsable<SpeedDatingEvent> {
     public SpeedDatingEvent parseFromJSON(JSONObject jsonObject) throws ParserException {
         SpeedDatingEvent.Builder builder = new SpeedDatingEvent.Builder();
         try {
-            AbstractEvent.Builder abstractEventBuilder =
-                    new AbstractEventParser().parseFromJSON(jsonObject);
-
+            int id = jsonObject.getInt(ID.get());
+            String name = jsonObject.getString(NAME.get());
+            String location = jsonObject.getJSONObject(LOCATION.get()).getString(NAME.get());
+            int maxPeople = jsonObject.getInt(MAX_PEOPLE.get());
+            String dateBegin = jsonObject.getString(DATE_BEGIN.get());
+            String dateEnd = jsonObject.getString(DATE_END.get());
+            double basePrice = jsonObject.getDouble(BASE_PRICE.get());
+            String state = jsonObject.getString(STATE.get());
+            String description = jsonObject.getString(DESCRIPTION.get());
+            String imageUrl = jsonObject.getString(IMAGE_PATH.get());
+            String lastUpdate = jsonObject.getString(LAST_UPDATE.get());
             int menSeats = jsonObject.getInt(MEN_SEATS.get());
             int womenSeats = jsonObject.getInt(WOMEN_SEATS.get());
             int menRegistered = jsonObject.getInt(MEN_REGISTERED.get());
@@ -39,6 +59,17 @@ public class SpeedDatingEventParser implements Parsable<SpeedDatingEvent> {
             Establishment establishment = (new EstablishmentParser()).
                                             parseFromJSON(jsonObject.getJSONObject("establishment"));
 
+            builder.setId(id)
+                   .setName(name)
+                   .setLocation(new Location(location))
+                   .setMaxPeople(maxPeople)
+                   .setDateBegin(DateParser.parseFromString(dateBegin))
+                   .setDateEnd(DateParser.parseFromString(dateEnd))
+                   .setBasePrice(basePrice)
+                   .setState(state)
+                   .setDescrition(description)
+                   .setImagePath(imageUrl)
+                   .setLastUpdate(DateParser.parseFromString(lastUpdate));
             return builder.setMenSeats(menSeats)
                           .setWomenSeats(womenSeats)
                           .setMenRegistered(menRegistered)
@@ -46,7 +77,7 @@ public class SpeedDatingEventParser implements Parsable<SpeedDatingEvent> {
                           .setMinAge(minAge)
                           .setMaxAge(maxAge)
                           .setEstablishment(establishment)
-                          .build(abstractEventBuilder);
+                          .build();
         } catch (JSONException e) {
             throw new ParserException(e);
         }
