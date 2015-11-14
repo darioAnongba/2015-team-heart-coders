@@ -89,6 +89,14 @@ public class Establishment implements Serializable {
      *
      * @return its name
      */
+    public int getId() {
+        return mId;
+    }
+    /**
+     * Getter for the name.
+     *
+     * @return its name
+     */
     public String getName() {
         return mName;
     }
