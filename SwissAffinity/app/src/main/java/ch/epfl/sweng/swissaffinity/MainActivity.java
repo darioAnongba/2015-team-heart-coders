@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         createData();
 
         String welcomeText = getString(R.string.welcome_not_registered_text);
-        String firstName = sharedPreferences.getString(USERNAME,null);
+        String firstName = sharedPreferences.getString(USERNAME, null);
         if (firstName == null) {
             REGISTERED = false;
         } else {
@@ -151,8 +151,7 @@ public class MainActivity extends AppCompatActivity {
                             View v,
                             int groupPosition,
                             int childPosition,
-                            long id)
-                    {
+                            long id) {
                         Intent intent = new Intent(getApplicationContext(), EventActivity.class);
                         Event event = (Event) mListAdapter.getChild(groupPosition, childPosition);
                         intent.putExtra(EXTRA_EVENT, event);

@@ -73,7 +73,7 @@ public class NetworkEventClient implements EventClient {
             URL url = new URL(imagePath);
             image = BitmapFactory.decodeStream(
                     mNetworkProvider.getConnection(url)
-                                    .getInputStream());
+                            .getInputStream());
         } catch (IOException e) {
             throw new EventClientException(e);
         }

@@ -33,7 +33,7 @@ public class SpeedDatingEventTest {
 
     @Test
     public void testGetDescription() {
-        assertEquals("test description for Halloween", speedDatingEvent.getDesription());
+        assertEquals("test description for Halloween", speedDatingEvent.getDescription());
     }
 
     @Test
