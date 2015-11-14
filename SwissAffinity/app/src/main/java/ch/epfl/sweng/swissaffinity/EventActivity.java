@@ -45,7 +45,7 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void fillEventData() {
-        ((TextView) findViewById(R.id.eventNameTextView)).setText(mEvent.getName());
+        ((TextView) findViewById(R.id.eventName)).setText(mEvent.getName());
         ((TextView) findViewById(R.id.eventDateBegin)).setText(dateToString(mEvent.getDateBegin()));
         ((TextView) findViewById(R.id.eventDateEnd)).setText(dateToString(mEvent.getDateEnd()));
         ((TextView) findViewById(R.id.eventLocation)).setText(mEvent.getLocation().getName());

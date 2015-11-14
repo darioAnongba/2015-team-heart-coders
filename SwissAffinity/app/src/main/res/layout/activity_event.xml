@@ -15,17 +15,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
             android:id="@+id/eventRelativeLayout">
 
 
             <TextView
-                android:id="@+id/eventNameTextView"
+                android:id="@+id/eventName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
+
                 android:text="@string/event_name"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@android:color/black" />
@@ -35,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/eventNameTextView"
+                android:layout_below="@+id/eventName"
                 android:text="Location"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/black" />
@@ -45,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/eventLocation"
+                android:layout_below="@+id/eventPicture"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:text="Description"
@@ -74,15 +71,14 @@
 
             <ImageView
                 android:id="@+id/eventPicture"
-                android:layout_width="128dp"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/eventPrice"
-                android:layout_gravity="right"
                 android:adjustViewBounds="true"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
-                android:src="@android:drawable/ic_menu_mapmode" />
+                android:src="@android:drawable/ic_menu_mapmode"
+                android:layout_below="@+id/eventLocation"
+                android:layout_alignParentStart="true" />
 
             <TextView
                 android:id="@+id/eventPrice"
