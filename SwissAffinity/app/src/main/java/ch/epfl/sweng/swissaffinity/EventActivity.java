@@ -46,7 +46,7 @@ public class EventActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.eventDateBegin)).setText(dateToString(mEvent.getDateBegin()));
         ((TextView) findViewById(R.id.eventDateEnd)).setText(dateToString(mEvent.getDateEnd()));
         ((TextView) findViewById(R.id.eventLocation)).setText(mEvent.getLocation().getName());
-        ((TextView) findViewById(R.id.eventDescription)).setText(mEvent.getDesription());
+        ((TextView) findViewById(R.id.eventDescription)).setText(mEvent.getDescription());
         String price = String.format(getString(R.string.event_price), mEvent.getBasePrice());
         ((TextView) findViewById(R.id.eventPrice)).setText(price);
         String maxPeople =

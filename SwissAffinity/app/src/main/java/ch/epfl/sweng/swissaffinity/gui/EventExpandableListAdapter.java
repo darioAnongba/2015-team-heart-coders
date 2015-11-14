@@ -1,21 +1,17 @@
 package ch.epfl.sweng.swissaffinity.gui;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import ch.epfl.sweng.swissaffinity.R;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
-
-import static android.support.v7.widget.RecyclerView.*;
 
 /**
  * Created by Lionel on 05/11/15.
