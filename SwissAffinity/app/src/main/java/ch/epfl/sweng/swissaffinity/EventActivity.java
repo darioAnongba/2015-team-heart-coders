@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
+import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClientException;
@@ -24,6 +25,7 @@ import static ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser.dateToStr
 public class EventActivity extends AppCompatActivity {
 
     private Event mEvent;
+    private User mUser;
     private Bitmap mImage;
 
     @Override
@@ -33,6 +35,7 @@ public class EventActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mEvent = (Event) intent.getSerializableExtra(MainActivity.EXTRA_EVENT);
+        mUser = (User) intent.getSerializableExtra(MainActivity.EXTRA_USER);
         try {
             mImage = new DownloadImageTask().execute().get();
         } catch (InterruptedException | ExecutionException e) {
@@ -69,7 +72,7 @@ public class EventActivity extends AppCompatActivity {
     }
 
     public void register(View view) {
-        if (!MainActivity.REGISTERED) {
+        if (mUser != null) {
             startActivity(new Intent(EventActivity.this, AboutActivity.class));
         } else {
             Toast.makeText(EventActivity.this, "Not implemented yet :(", Toast.LENGTH_SHORT).show();

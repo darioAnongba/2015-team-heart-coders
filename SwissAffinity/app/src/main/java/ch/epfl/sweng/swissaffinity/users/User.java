@@ -1,5 +1,6 @@
 package ch.epfl.sweng.swissaffinity.users;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,12 +13,29 @@ import ch.epfl.sweng.swissaffinity.utilities.Address;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 
 /**
- * Class that represents a client User
- * <p/>
- * Created by dario on 17.10.2015.
+ * Representation of a user.
  */
-public final class User {
-    public enum Gender {MALE, FEMALE}
+public final class User implements Serializable {
+
+    public enum Gender implements Serializable {
+        MALE("male"),
+        FEMALE("female");
+
+        private String mGender;
+
+        Gender(String gender) {
+            mGender = gender;
+        }
+
+        public static Gender getGender(String gender) {
+            for (Gender g : Gender.values()) {
+                if (g.mGender.equalsIgnoreCase(gender)) {
+                    return g;
+                }
+            }
+            return null;
+        }
+    }
 
     private int mId;
     private int mfacebookId;
@@ -68,8 +86,7 @@ public final class User {
             String profession,
             URL profilePicture,
             Collection<Location> areasOfInterest,
-            List<Event> eventsAttended)
-    {
+            List<Event> eventsAttended) {
 
         mId = id;
         mfacebookId = facebookId;

@@ -9,6 +9,10 @@ import org.json.JSONObject;
  */
 public class SafeJSONObject extends JSONObject {
 
+    public SafeJSONObject(String jsonString) throws JSONException {
+        super(jsonString);
+    }
+
     private <A> A get(String name, A defaultValue) {
         A value = defaultValue;
         try {
@@ -26,15 +30,15 @@ public class SafeJSONObject extends JSONObject {
         return get(name, defaultValue);
     }
 
-    public String getString(String name, String defaultValue) throws JSONException {
+    public String getString(String name, String defaultValue) {
         return get(name, defaultValue);
     }
 
-    public JSONArray getJSONArray(String name, JSONArray defaultValue) throws JSONException {
+    public JSONArray getJSONArray(String name, JSONArray defaultValue) {
         return get(name, defaultValue);
     }
 
-    public JSONObject getJSONObject(String name, JSONObject defaultValue) throws JSONException {
+    public JSONObject getJSONObject(String name, JSONObject defaultValue) {
         return get(name, defaultValue);
     }
 }
