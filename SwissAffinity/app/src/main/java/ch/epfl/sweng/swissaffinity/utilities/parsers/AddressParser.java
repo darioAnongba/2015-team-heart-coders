@@ -9,9 +9,9 @@ import ch.epfl.sweng.swissaffinity.utilities.Address;
  */
 
 
-public class AddressParser implements Parsable<Address> {
-    @Override
-    public Address parseFromJSON(JSONObject jsonObject) throws ParserException {
+public class AddressParser {
+
+    public static Address parseFromJSON(JSONObject jsonObject) throws ParserException {
         try {
             String street = jsonObject.getString("street");
             int streetNum = jsonObject.getInt("street_number");

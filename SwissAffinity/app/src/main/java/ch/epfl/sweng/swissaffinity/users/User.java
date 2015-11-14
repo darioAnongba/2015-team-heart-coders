@@ -13,12 +13,29 @@ import ch.epfl.sweng.swissaffinity.utilities.Address;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 
 /**
- * Class that represents a client User
- * <p/>
- * Created by dario on 17.10.2015.
+ * Representation of a user.
  */
 public final class User implements Serializable {
-    public enum Gender {MALE, FEMALE}
+
+    public enum Gender implements Serializable {
+        MALE("male"),
+        FEMALE("female");
+
+        private String mGender;
+
+        Gender(String gender) {
+            mGender = gender;
+        }
+
+        public static Gender getGender(String gender) {
+            for (Gender g : Gender.values()) {
+                if (g.mGender.equalsIgnoreCase(gender)) {
+                    return g;
+                }
+            }
+            return null;
+        }
+    }
 
     private int mId;
     private int mfacebookId;
