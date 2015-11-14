@@ -21,7 +21,7 @@ public class LocationParserTest {
     @Before
     public void setUp() throws ParserException, JSONException {
         json = (new DataForTesting()).createJSONEvent().getJSONObject("location");
-        location = new LocationParser().parseFromJSON(json);
+        location = new LocationParser(json).parse();
     }
 
     @Test
