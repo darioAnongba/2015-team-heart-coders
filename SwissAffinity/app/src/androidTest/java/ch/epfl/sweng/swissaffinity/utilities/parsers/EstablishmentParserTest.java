@@ -25,7 +25,7 @@ public class EstablishmentParserTest{
     public void setUp() throws MalformedURLException, ParserException, JSONException {
         json = (new DataForTesting()).createJSONEvent();
         estJson = json.getJSONObject("establishment");
-        est = (new EstablishmentParser()).parseFromJSON(json);
+        est = (new EstablishmentParser(json)).parse();
     }
 
     @Test

@@ -9,19 +9,23 @@ import ch.epfl.sweng.swissaffinity.utilities.Address;
  */
 
 
-public class AddressParser {
+public class AddressParser extends Parser<Address> {
 
-    public static Address parseFromJSON(JSONObject jsonObject) throws ParserException {
+    public AddressParser(JSONObject jsonObject) {
+        super(jsonObject);
+    }
+
+    @Override
+    public Address parse() throws ParserException {
         try {
-            String street = jsonObject.getString("street");
-            int streetNum = jsonObject.getInt("street_number");
-            int zipCode = jsonObject.getInt("zip_code");
-            String city = jsonObject.getString("city");
-            String province = jsonObject.getString("province");
-            String country = jsonObject.getString("country");
+            String street = mJsonObject.getString("street");
+            int streetNum = mJsonObject.getInt("street_number");
+            int zipCode = mJsonObject.getInt("zip_code");
+            String city = mJsonObject.getString("city");
+            String province = mJsonObject.getString("province");
+            String country = mJsonObject.getString("country");
             return new Address(country, zipCode, city, province, streetNum, street);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             new ParserException();
         }
         return null;

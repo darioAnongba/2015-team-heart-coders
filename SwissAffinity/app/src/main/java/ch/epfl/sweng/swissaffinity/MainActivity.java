@@ -29,11 +29,11 @@ import ch.epfl.sweng.swissaffinity.utilities.network.events.NetworkEventClient;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.*;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String EXTRA_EVENT = "ch.epfl.sweng.swissaffinity.event";
-    public static final String EXTRA_USER = "ch.epfl.sweng.swissaffinity.user";
-    public static final String SHARED_PREF = "ch.epfl.sweng.swissaffinity.shared_pref";
 
     public static final String SERVER_URL = "http://www.beecreative.ch";
+    public static final String SHARED_PREF = "ch.epfl.sweng.swissaffinity.shared_pref";
+    public static final String EXTRA_EVENT = "ch.epfl.sweng.swissaffinity.event";
+    public static final String EXTRA_USER = "ch.epfl.sweng.swissaffinity.user";
 
     private static EventClient EVENT_CLIENT;
 

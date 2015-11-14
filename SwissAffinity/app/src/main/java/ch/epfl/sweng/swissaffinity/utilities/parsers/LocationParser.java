@@ -7,16 +7,20 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
 /**
  * Created by sahinfurkan on 13/11/15.
  */
-public class LocationParser implements Parsable<Location> {
+public class LocationParser extends Parser<Location> {
+
+    public LocationParser(JSONObject jsonObject) {
+        super(jsonObject);
+    }
+
     @Override
-    public Location parseFromJSON(JSONObject jsonObject) throws ParserException {
-        try{
-            int id = jsonObject.getInt("id");           // TODO id is not used in Location class! Do we really need it?
-            String name = jsonObject.getString("name");
+    public Location parse() throws ParserException {
+        try {
+            int id = mJsonObject.getInt("id");           // TODO id is not used in Location class! Do we really need it?
+            String name = mJsonObject.getString("name");
             return new Location(name);
-        }catch (Exception e){
-            new ParserException();
+        } catch (Exception e) {
+            throw new ParserException(e);
         }
-        return null;
     }
 }

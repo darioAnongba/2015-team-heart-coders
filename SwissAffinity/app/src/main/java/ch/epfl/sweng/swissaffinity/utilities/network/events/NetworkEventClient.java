@@ -15,7 +15,7 @@ import java.util.List;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
-import ch.epfl.sweng.swissaffinity.utilities.parsers.Parsable;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.Parser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserFactory;
 
 public class NetworkEventClient implements EventClient {
@@ -38,8 +38,8 @@ public class NetworkEventClient implements EventClient {
             JSONArray jsonEvents = new JSONArray(content);
             for (int i = 0; i < jsonEvents.length(); ++i) {
                 JSONObject jsonObject = jsonEvents.getJSONObject(i);
-                Parsable<Event> parsable = (Parsable<Event>) ParserFactory.parserFor(jsonObject);
-                Event event = parsable.parseFromJSON(jsonObject);
+                Parser<Event> parsable = (Parser<Event>) ParserFactory.parserFor(jsonObject);
+                Event event = parsable.parse();
                 events.add(event);
             }
         } catch (Exception e) {
