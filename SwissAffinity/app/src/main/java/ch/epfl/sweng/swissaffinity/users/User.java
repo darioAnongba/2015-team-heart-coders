@@ -1,5 +1,6 @@
 package ch.epfl.sweng.swissaffinity.users;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,7 +17,7 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
  * <p/>
  * Created by dario on 17.10.2015.
  */
-public final class User {
+public final class User implements Serializable {
     public enum Gender {MALE, FEMALE}
 
     private int mId;
@@ -68,8 +69,7 @@ public final class User {
             String profession,
             URL profilePicture,
             Collection<Location> areasOfInterest,
-            List<Event> eventsAttended)
-    {
+            List<Event> eventsAttended) {
 
         mId = id;
         mfacebookId = facebookId;

@@ -21,24 +21,25 @@ import java.util.List;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
+import ch.epfl.sweng.swissaffinity.utilities.network.ServerTags;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClientException;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.NetworkEventClient;
 
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.*;
+
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_EVENT = "ch.epfl.sweng.swissaffinity.event";
-    public static final String SAVED_DATA = "ch.epfl.sweng.swissaffinity.saved_data";
+    public static final String EXTRA_USER = "ch.epfl.sweng.swissaffinity.user";
     public static final String SHARED_PREF = "ch.epfl.sweng.swissaffinity.shared_pref";
-    public static final String USERNAME = "user_name";
-    public static final String USERID = "user_id";
 
-    public static boolean REGISTERED = false;
     public static final String SERVER_URL = "http://www.beecreative.ch";
 
     private static EventClient EVENT_CLIENT;
 
     private EventExpandableListAdapter mListAdapter;
     private SharedPreferences sharedPreferences;
+    private String userName;
 
     public static EventClient getEventClient() {
         if (EVENT_CLIENT == null) {
@@ -68,12 +69,9 @@ public class MainActivity extends AppCompatActivity {
         createData();
 
         String welcomeText = getString(R.string.welcome_not_registered_text);
-        String firstName = sharedPreferences.getString(USERNAME, null);
-        if (firstName == null) {
-            REGISTERED = false;
-        } else {
-            REGISTERED = true;
-            welcomeText = String.format(getString(R.string.welcome_registered_text), firstName);
+        userName = sharedPreferences.getString(USERNAME.get(), null);
+        if (userName != null) {
+            welcomeText = String.format(getString(R.string.welcome_registered_text), userName);
         }
         ((TextView) findViewById(R.id.mainWelcomeText)).setText(welcomeText);
 
@@ -130,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
     private void fillEvents(List<Event> result) {
         String myEvents = getResources().getString(R.string.my_events);
         String upcomingEvents = getResources().getString(R.string.upcoming_events);
-        if (REGISTERED) {
+        if (userName != null) {
             mListAdapter.addGroup(myEvents);
             // TODO : add the events the user is registered to.
         }

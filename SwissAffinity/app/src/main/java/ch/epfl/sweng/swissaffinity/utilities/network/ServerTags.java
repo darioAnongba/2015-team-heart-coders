@@ -18,6 +18,7 @@ public enum ServerTags {
     ENABLED("enabled"),
     GENDER("gender"),
     BIRTH_DATE("birth_date"),
+    BIRTHDAY("birthday"),
     PROFESSION("profession"),
     PROFILE_PICTURE("profile_picture"),
     LOCATIONS_INTEREST("areas_of_interest"),
