@@ -50,7 +50,7 @@ public class UserParser extends Parser<User> {
     public User parse() throws ParserException {
         User user;
         try {
-            if (!(mJsonObject.get("name") instanceof String)) {
+            if (!(mJsonObject.getString("username") instanceof String)) {
                 throw new JSONException("Invalid question structure");
             }
         } catch (JSONException e) {
