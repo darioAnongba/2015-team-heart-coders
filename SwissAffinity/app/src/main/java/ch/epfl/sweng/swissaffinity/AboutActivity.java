@@ -3,6 +3,7 @@ package ch.epfl.sweng.swissaffinity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -23,8 +24,12 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
+import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
+import static ch.epfl.sweng.swissaffinity.MainActivity.SERVER_URL;
 import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREF;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
@@ -41,6 +46,7 @@ import static com.facebook.GraphRequest.newMeRequest;
 public class AboutActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private CallbackManager callbackManager;
+    private DefaultNetworkProvider networkProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +56,7 @@ public class AboutActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_about);
         sharedPreferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+        networkProvider = new DefaultNetworkProvider();
         setLogedText();
         LoginButton loginBtn = (LoginButton) findViewById(R.id.login_button);
         loginBtn.setReadPermissions("public_profile", "email", "user_birthday");
@@ -71,9 +78,8 @@ public class AboutActivity extends AppCompatActivity {
                                         }
                                         if (json != null) {
                                             fillUserData(json);
+                                            new DownloadUserTask().execute();
                                             Log.v("LoginActivity", response.toString());
-                                            Intent registerIntent = new Intent(AboutActivity.this,RegisterActivity.class);
-                                            startActivity(registerIntent);
                                             finish();
                                         } else {
                                             //TODO: if no data...
@@ -161,4 +167,35 @@ public class AboutActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
+
+
+    private class DownloadUserTask extends AsyncTask<String, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            boolean code = false;
+            String facebookId = sharedPreferences.getString(FACEBOOKID.get(), "");
+            try {
+                code = networkProvider.checkCode(SERVER_URL + "/api/users/" + facebookId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return code;
+        }
+
+
+        @Override
+        protected void onPostExecute(Boolean code) {
+            if (code) {
+                Intent registerIntent = new Intent(AboutActivity.this, MainActivity.class);
+                startActivity(registerIntent);
+            } else {
+                Intent registerIntent = new Intent(AboutActivity.this, RegisterActivity.class);
+                startActivity(registerIntent);
+            }
+        }
+    }
 }
+
+
+
