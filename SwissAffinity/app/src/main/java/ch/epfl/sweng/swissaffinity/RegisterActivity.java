@@ -9,9 +9,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import ch.epfl.sweng.swissaffinity.users.User;
-import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 
-import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREF;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOKID;
@@ -36,7 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        sharedPreferences = getApplicationContext().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+        sharedPreferences = MainActivity.SHARED_PREFS;
 
         final RadioGroup.OnCheckedChangeListener radioChecker = new RadioGroup.OnCheckedChangeListener() {
 
@@ -85,7 +83,4 @@ public class RegisterActivity extends AppCompatActivity {
             male.setChecked(true);
         }
     }
-
-
-
 }

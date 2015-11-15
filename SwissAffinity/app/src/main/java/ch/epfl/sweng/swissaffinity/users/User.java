@@ -38,7 +38,7 @@ public final class User implements Serializable {
     }
 
     private int mId;
-    private int mfacebookId;
+    private long mFacebookId;
 
     private String mUsername;
     private String mEmail;
@@ -71,7 +71,7 @@ public final class User implements Serializable {
      */
     public User(
             int id,
-            int facebookId,
+            long facebookId,
             String username,
             String email,
             String lastName,
@@ -89,7 +89,7 @@ public final class User implements Serializable {
             List<Event> eventsAttended) {
 
         mId = id;
-        mfacebookId = facebookId;
+        mFacebookId = facebookId;
         mUsername = username;
         mEmail = email;
         mLastName = lastName;
@@ -122,8 +122,8 @@ public final class User implements Serializable {
      *
      * @return id
      */
-    public int getFacebookId() {
-        return mfacebookId;
+    public long getFacebookId() {
+        return mFacebookId;
     }
 
     /**

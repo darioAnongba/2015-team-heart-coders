@@ -30,6 +30,10 @@ public class SafeJSONObject extends JSONObject {
         return get(name, defaultValue);
     }
 
+    public long getLong(String name, long defaultValue) {
+        return get(name, defaultValue);
+    }
+
     public String getString(String name, String defaultValue) {
         return get(name, defaultValue);
     }
