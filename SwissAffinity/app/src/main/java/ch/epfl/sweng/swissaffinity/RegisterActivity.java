@@ -12,7 +12,11 @@ import android.widget.RadioGroup;
 import java.sql.SQLException;
 
 import ch.epfl.sweng.swissaffinity.users.User;
+import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
+import ch.epfl.sweng.swissaffinity.utilities.network.users.NetworkUserClient;
+import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 
+import static ch.epfl.sweng.swissaffinity.MainActivity.SERVER_URL;
 import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREF;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
@@ -75,22 +79,32 @@ public class RegisterActivity extends AppCompatActivity {
         birthday = sharedPreferences.getString(BIRTHDAY.get(), "");
         gender = sharedPreferences.getString(GENDER.get(), "");
 
-        EditText userName = (EditText) findViewById(R.id.registerUserName);
-        userName.setText(name);
-        EditText firstNameText = (EditText) findViewById(R.id.registerFirstName);
-        firstNameText.setText(firstName);
-        EditText lastNameText = (EditText) findViewById(R.id.registerLastName);
-        lastNameText.setText(lastName);
-        EditText emailText = (EditText) findViewById(R.id.registerEmail);
-        emailText.setText(email);
-        EditText birthdayText = (EditText) findViewById(R.id.registerBirthDay);
-        birthdayText.setText(birthday);
-        if (gender == "female") {
-            RadioButton female = (RadioButton) findViewById(R.id.registerFemale);
-            female.setChecked(true);
-        } else if (gender == "male") {
-            RadioButton male = (RadioButton) findViewById(R.id.registerMale);
-            male.setChecked(true);
+        NetworkUserClient client = new NetworkUserClient(SERVER_URL,new DefaultNetworkProvider());
+        try {
+            mUser = client.fetchByIDOrFacebookId(facebookId);
+        } catch (UserClientException e) {
+            e.printStackTrace();
+        }
+        if(mUser==null) {
+            EditText userName = (EditText) findViewById(R.id.registerUserName);
+            userName.setText(name);
+            EditText firstNameText = (EditText) findViewById(R.id.registerFirstName);
+            firstNameText.setText(firstName);
+            EditText lastNameText = (EditText) findViewById(R.id.registerLastName);
+            lastNameText.setText(lastName);
+            EditText emailText = (EditText) findViewById(R.id.registerEmail);
+            emailText.setText(email);
+            EditText birthdayText = (EditText) findViewById(R.id.registerBirthDay);
+            birthdayText.setText(birthday);
+            if (gender == "female") {
+                RadioButton female = (RadioButton) findViewById(R.id.registerFemale);
+                female.setChecked(true);
+            } else if (gender == "male") {
+                RadioButton male = (RadioButton) findViewById(R.id.registerMale);
+                male.setChecked(true);
+            }
+        }else {
+
         }
     }
 }
