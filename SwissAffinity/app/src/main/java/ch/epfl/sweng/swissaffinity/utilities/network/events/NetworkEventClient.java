@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -13,10 +14,13 @@ import java.util.Collection;
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
+import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.Parser;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserFactory;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
 public class NetworkEventClient implements EventClient {
     private static final String SERVER_API_EVENTS = "/api/events";
@@ -37,12 +41,12 @@ public class NetworkEventClient implements EventClient {
             String content = mNetworkProvider.getContent(mServerUrl + SERVER_API_EVENTS);
             JSONArray jsonEvents = new JSONArray(content);
             for (int i = 0; i < jsonEvents.length(); ++i) {
-                JSONObject jsonObject = jsonEvents.getJSONObject(i);
-                Parser<Event> parsable = (Parser<Event>) ParserFactory.parserFor(jsonObject);
-                Event event = parsable.parse();
+                SafeJSONObject jsonObject = new SafeJSONObject(jsonEvents.getJSONObject(i));
+                Parser<? extends Event> parser = ParserFactory.parserFor(jsonObject);
+                Event event = parser.parse();
                 events.add(event);
             }
-        } catch (Exception e) {
+        } catch (ParserException | JSONException | IOException e) {
             throw new EventClientException(e);
         }
         return events;
@@ -73,7 +77,7 @@ public class NetworkEventClient implements EventClient {
             URL url = new URL(imagePath);
             image = BitmapFactory.decodeStream(
                     mNetworkProvider.getConnection(url)
-                            .getInputStream());
+                                    .getInputStream());
         } catch (IOException e) {
             throw new EventClientException(e);
         }

@@ -13,6 +13,10 @@ public class SafeJSONObject extends JSONObject {
         super(jsonString);
     }
 
+    public SafeJSONObject(JSONObject jsonObject) throws JSONException {
+        super(jsonObject.toString());
+    }
+
     private <A> A get(String name, A defaultValue) {
         A value = defaultValue;
         try {

@@ -18,6 +18,7 @@ import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.Parser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserFactory;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
 import static ch.epfl.sweng.swissaffinity.users.User.Gender;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ADDRESS;
@@ -91,16 +92,16 @@ public class UserParser extends Parser<User> {
         List<Event> eventsAttended = new ArrayList<>();
         for (int i = 0; i < events.length(); i++) {
             try {
-                JSONObject jsonEvent = events.getJSONObject(i);
-                Parser<Event> parsable = (Parser<Event>) ParserFactory.parserFor(jsonEvent);
-                Event event = parsable.parse();
+                SafeJSONObject jsonEvent = new SafeJSONObject(events.getJSONObject(i));
+                Parser<? extends Event> parser = ParserFactory.parserFor(jsonEvent);
+                Event event = parser.parse();
                 eventsAttended.add(event);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
         }
-        user = new User(
+        return new User(
                 id,
                 facebookId,
                 username,
@@ -118,7 +119,5 @@ public class UserParser extends Parser<User> {
                 profilePictureURL,
                 areasOfInterest,
                 eventsAttended);
-
-        return user;
     }
 }
