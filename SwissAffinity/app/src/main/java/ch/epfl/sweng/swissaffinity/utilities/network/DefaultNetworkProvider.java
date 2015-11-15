@@ -55,6 +55,19 @@ public class DefaultNetworkProvider implements NetworkProvider {
         throw new IOException("Not yet implemented");
     }
 
+    public Boolean checkCode(String serverURL) throws IOException{
+        URL url = new URL(serverURL);
+
+        HttpURLConnection conn = getConnection(url);
+        conn.setReadTimeout(10000 /* milliseconds */);
+        conn.setConnectTimeout(15000 /* milliseconds */);
+        conn.setRequestMethod("GET");
+        conn.setDoInput(true);
+        conn.connect();
+        int response = conn.getResponseCode();
+        return (response==200);
+    }
+
     /**
      * make a String out of the GET request to the server
      */
