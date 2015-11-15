@@ -37,7 +37,7 @@ public class Establishment implements Serializable {
         /**
          * Getter for the type of an establishment.
          *
-         * @param type the type in string format.
+         * @param type the server API type.
          *
          * @return
          */
