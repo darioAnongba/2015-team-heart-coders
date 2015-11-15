@@ -21,7 +21,7 @@ public enum ServerTags {
     BIRTHDAY("birthday"),
     PROFESSION("profession"),
     PROFILE_PICTURE("profile_picture"),
-    LOCATIONS_INTEREST("areas_of_interest"),
+    LOCATIONS_INTEREST("locations_of_interest"),
     EVENTS_ATTENDED("events_attended"),
     LOCATION("location"),
     MAX_PEOPLE("max_people"),

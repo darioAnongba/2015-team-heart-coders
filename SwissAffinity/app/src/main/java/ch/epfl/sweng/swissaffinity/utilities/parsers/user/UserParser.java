@@ -49,15 +49,9 @@ public class UserParser extends Parser<User> {
 
     public User parse() throws ParserException {
         User user;
-        try {
-            if (!(mJsonObject.get("userName") instanceof String)) {
-                throw new JSONException("Invalid question structure");
-            }
-        } catch (JSONException e) {
-            throw new ParserException(e);
-        }
+
         int id = mJsonObject.getInt(ID.get(), -1);
-        int facebookId = mJsonObject.getInt(FACEBOOKID.get(), -1);
+        long facebookId = mJsonObject.getLong(FACEBOOKID.get(), -1);
         String username = mJsonObject.getString(USERNAME.get(), "");
         String email = mJsonObject.getString(EMAIL.get(), "");
         String firstName = mJsonObject.getString(FIRST_NAME.get(), "");
@@ -71,15 +65,18 @@ public class UserParser extends Parser<User> {
         Gender gender = Gender.getGender(mJsonObject.getString(GENDER.get(), null));
         String birthDate = mJsonObject.getString(BIRTH_DATE.get(), "");
         String profession = mJsonObject.getString(PROFESSION.get(), "");
+        String profilePicture = mJsonObject.getString(PROFILE_PICTURE.get(), null);
 
-        URL profilePicture;
-        try {
-            profilePicture = new URL(mJsonObject.getString(PROFILE_PICTURE.get(), ""));
-        } catch (MalformedURLException e) {
-            throw new ParserException(e);
+        URL profilePictureURL = null;
+        if (profilePicture != null) {
+            try {
+                profilePictureURL = new URL(profilePicture);
+            } catch (MalformedURLException e) {
+                throw new ParserException(e);
+            }
         }
 
-        JSONArray areas = mJsonObject.getJSONArray(LOCATIONS_INTEREST.get(), null);
+        JSONArray areas = mJsonObject.getJSONArray(LOCATIONS_INTEREST.get(), new JSONArray());
         List<Location> areasOfInterest = new ArrayList<>();
         for (int i = 0; i < areas.length(); i++) {
             try {
@@ -90,8 +87,8 @@ public class UserParser extends Parser<User> {
                 throw new ParserException(e);
             }
         }
-        JSONArray events = mJsonObject.getJSONArray(EVENTS_ATTENDED.get(), null);
-        List<Event> eventsAttended = null;
+        JSONArray events = mJsonObject.getJSONArray(EVENTS_ATTENDED.get(), new JSONArray());
+        List<Event> eventsAttended = new ArrayList<>();
         for (int i = 0; i < events.length(); i++) {
             try {
                 JSONObject jsonEvent = events.getJSONObject(i);
@@ -103,7 +100,8 @@ public class UserParser extends Parser<User> {
             }
 
         }
-        user = new User(id,
+        user = new User(
+                id,
                 facebookId,
                 username,
                 email,
@@ -117,7 +115,7 @@ public class UserParser extends Parser<User> {
                 gender,
                 DateParser.parseFromString(birthDate),
                 profession,
-                profilePicture,
+                profilePictureURL,
                 areasOfInterest,
                 eventsAttended);
 

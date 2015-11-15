@@ -45,20 +45,15 @@ public class NetworkUserClient implements UserClient {
     }
 
     @Override
-    public User fetchByIDOrFacebookId(String id) throws UserClientException {
-        User user = null;
+    public User fetchByFacebookID(String id) throws UserClientException {
+        User user;
         try {
-
             String content = mNetworkProvider.getContent(mServerUrl + SERVER_API_USERS + id);
             JSONObject jsonObject = new JSONObject(content);
             user = new UserParser(jsonObject).parse();
-
         } catch (JSONException | ParserException | IOException e) {
             throw new UserClientException(e);
         }
-
         return user;
     }
-
-
 }
