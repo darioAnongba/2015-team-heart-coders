@@ -33,6 +33,22 @@ public class Establishment implements Serializable {
         public String get() {
             return mType;
         }
+
+        /**
+         * Getter for the type of an establishment.
+         *
+         * @param type the type in string format.
+         *
+         * @return
+         */
+        public Type getType(String type) {
+            for (Type t : Type.values()) {
+                if (t.mType.equalsIgnoreCase(type)) {
+                    return t;
+                }
+            }
+            return null;
+        }
     }
 
     private final int mId;
@@ -72,6 +88,12 @@ public class Establishment implements Serializable {
             String logoPath,
             Location location)
     {
+        if (id < 0 || name == null || type == null || address == null || phoneNumber == null ||
+            description == null || url == null || maxSeats < 0 || logoPath == null ||
+            location == null)
+        {
+            throw new IllegalArgumentException();
+        }
         mId = id;
         mName = name;
         mType = type;
@@ -85,17 +107,18 @@ public class Establishment implements Serializable {
     }
 
     /**
-     * Getter for the name.
+     * Getter for the id.
      *
-     * @return its name
+     * @return
      */
     public int getId() {
         return mId;
     }
+
     /**
      * Getter for the name.
      *
-     * @return its name
+     * @return
      */
     public String getName() {
         return mName;
@@ -104,7 +127,7 @@ public class Establishment implements Serializable {
     /**
      * Getter for the logo path.
      *
-     * @return the relative path
+     * @return
      */
     public String getLogoPath() {
         return mLogoPath;
@@ -113,7 +136,7 @@ public class Establishment implements Serializable {
     /**
      * Getter for the URL.
      *
-     * @return the URL
+     * @return
      */
     public URL getUrl() {
         return mUrl;
@@ -122,16 +145,16 @@ public class Establishment implements Serializable {
     /**
      * Getter for the description.
      *
-     * @return the description
+     * @return
      */
     public String getDescription() {
         return mDescription;
     }
 
     /**
-     * Getter for its address.
+     * Getter for the address.
      *
-     * @return the address
+     * @return
      */
     public Address getAddress() {
         return mAddress;
@@ -140,7 +163,7 @@ public class Establishment implements Serializable {
     /**
      * Getter for the type {@link Type}
      *
-     * @return the type
+     * @return
      */
     public Type getType() {
         return mType;
