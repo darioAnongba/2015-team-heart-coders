@@ -120,7 +120,7 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     private void fillUserData(SafeJSONObject jsonObject) {
-        String userId = jsonObject.getString(ID.get(), "");
+        String userId = "0000000000001";
         String name = jsonObject.getString(NAME.get(), "");
         String lastName = jsonObject.getString(LAST_NAME.get(), "");
         String firstName = jsonObject.getString(FIRST_NAME.get(), "");
