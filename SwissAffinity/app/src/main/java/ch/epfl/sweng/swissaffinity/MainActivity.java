@@ -85,11 +85,6 @@ public class MainActivity extends AppCompatActivity {
         USER_CLIENT = getUserClient();
         SHARED_PREFS = getApplicationContext().getSharedPreferences(SHARED_PREFS_ID, MODE_PRIVATE);
         mListAdapter = new EventExpandableListAdapter(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
         if (isNetworkConnected(this)) {
             try {
