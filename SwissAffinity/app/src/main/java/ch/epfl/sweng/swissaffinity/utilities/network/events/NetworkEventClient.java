@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,7 +13,6 @@ import java.util.Collection;
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
-import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.Parser;
@@ -22,9 +20,15 @@ import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserFactory;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
+/**
+ * Representation of an event client with network.
+ */
 public class NetworkEventClient implements EventClient {
-    private static final String SERVER_API_EVENTS = "/api/events";
-    private static final String SERVER_API_IMAGES = "/images/events/";
+
+    private static final String API = "/api";
+    private static final String EVENTS = "/events";
+    private static final String LOCATIONS = "/locations/";
+    private static final String IMAGES = "/images/events/";
 
     private final String mServerUrl;
     private final NetworkProvider mNetworkProvider;
@@ -37,8 +41,56 @@ public class NetworkEventClient implements EventClient {
     @Override
     public List<Event> fetchAll() throws EventClientException {
         List<Event> events = new ArrayList<>();
+        fetchEvents(events, API + EVENTS);
+        return events;
+    }
+
+    @Override
+    public List<Event> fetchAllFor(Collection<Location> locations) throws EventClientException {
+        if (locations == null) {
+            throw new IllegalArgumentException();
+        }
+        List<Event> events = new ArrayList<>();
+        for (Location location : locations) {
+            int id = location.getId();
+            fetchEvents(events, API + LOCATIONS + id + EVENTS);
+        }
+        return events;
+    }
+
+    @Override
+    public Event fetchBy(int id) throws EventClientException {
+        if (id < 0) {
+            throw new IllegalArgumentException();
+        }
         try {
-            String content = mNetworkProvider.getContent(mServerUrl + SERVER_API_EVENTS);
+            String content = mNetworkProvider.getContent(mServerUrl + API + EVENTS + "/" + id);
+            SafeJSONObject jsonObject = new SafeJSONObject(content);
+            Parser<? extends Event> parser = ParserFactory.parserFor(jsonObject);
+            return parser.parse();
+        } catch (IOException | ParserException | JSONException e) {
+            throw new EventClientException(e);
+        }
+    }
+
+    @Override
+    public Bitmap imageFor(Event event) throws EventClientException {
+        Bitmap image;
+        try {
+            String imagePath = mServerUrl + IMAGES + event.getImagePath();
+            URL url = new URL(imagePath);
+            image = BitmapFactory.decodeStream(
+                    mNetworkProvider.getConnection(url)
+                                    .getInputStream());
+        } catch (IOException e) {
+            throw new EventClientException(e);
+        }
+        return image;
+    }
+
+    private void fetchEvents(List<Event> events, String apiUrl) throws EventClientException {
+        try {
+            String content = mNetworkProvider.getContent(mServerUrl + apiUrl);
             JSONArray jsonEvents = new JSONArray(content);
             for (int i = 0; i < jsonEvents.length(); ++i) {
                 SafeJSONObject jsonObject = new SafeJSONObject(jsonEvents.getJSONObject(i));
@@ -49,38 +101,5 @@ public class NetworkEventClient implements EventClient {
         } catch (ParserException | JSONException | IOException e) {
             throw new EventClientException(e);
         }
-        return events;
-    }
-
-    @Override
-    public List<Event> fetchAllFor(Collection<Location> locations) throws EventClientException {
-        if (locations == null) {
-            throw new NullPointerException();
-        }
-        if (locations.isEmpty()) {
-            return fetchAll();
-        }
-        //TODO: implement
-        return null;
-    }
-
-    @Override
-    public Event fetchBy(int id) throws EventClientException {
-        return null;
-    }
-
-    @Override
-    public Bitmap imageFor(Event event) throws EventClientException {
-        String imagePath = mServerUrl + SERVER_API_IMAGES + event.getImagePath();
-        Bitmap image;
-        try {
-            URL url = new URL(imagePath);
-            image = BitmapFactory.decodeStream(
-                    mNetworkProvider.getConnection(url)
-                                    .getInputStream());
-        } catch (IOException e) {
-            throw new EventClientException(e);
-        }
-        return image;
     }
 }

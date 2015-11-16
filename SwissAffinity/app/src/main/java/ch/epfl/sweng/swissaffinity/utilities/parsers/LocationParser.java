@@ -18,7 +18,7 @@ public class LocationParser extends Parser<Location> {
         try {
             int id = mJsonObject.getInt("id");           // TODO id is not used in Location class! Do we really need it?
             String name = mJsonObject.getString("name");
-            return new Location(name);
+            return new Location(id, name);
         } catch (Exception e) {
             throw new ParserException(e);
         }

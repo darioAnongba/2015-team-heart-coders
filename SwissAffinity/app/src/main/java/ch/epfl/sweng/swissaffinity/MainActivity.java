@@ -20,7 +20,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
@@ -126,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchUser() throws ExecutionException, InterruptedException {
         String welcomeText = getString(R.string.welcome_not_registered_text);
-        String facebookID = SHARED_PREFS.getString(FACEBOOKID.get(), null);
+        String facebookID = SHARED_PREFS.getString(FACEBOOK_ID.get(), null);
         if (facebookID != null) {
             mUser = new DownloadUserTask().execute(facebookID).get();
             if (mUser != null) {

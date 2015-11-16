@@ -15,6 +15,7 @@ import ch.epfl.sweng.swissaffinity.utilities.Address;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.AddressParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.LocationParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.Parser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserFactory;
@@ -26,7 +27,7 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTH_DAT
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ENABLED;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EVENTS_ATTENDED;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOKID;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.GENDER;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.HOME_PHONE;
@@ -52,7 +53,7 @@ public class UserParser extends Parser<User> {
         User user;
 
         int id = mJsonObject.getInt(ID.get(), -1);
-        long facebookId = mJsonObject.getLong(FACEBOOKID.get(), -1);
+        long facebookId = mJsonObject.getLong(FACEBOOK_ID.get(), -1);
         String username = mJsonObject.getString(USERNAME.get(), "");
         String email = mJsonObject.getString(EMAIL.get(), "");
         String firstName = mJsonObject.getString(FIRST_NAME.get(), "");
@@ -82,7 +83,7 @@ public class UserParser extends Parser<User> {
         for (int i = 0; i < areas.length(); i++) {
             try {
                 JSONObject jsonArea = areas.getJSONObject(i);
-                Location location = new Location(jsonArea.toString());
+                Location location = new LocationParser(jsonArea).parse();
                 areasOfInterest.add(location);
             } catch (JSONException e) {
                 throw new ParserException(e);

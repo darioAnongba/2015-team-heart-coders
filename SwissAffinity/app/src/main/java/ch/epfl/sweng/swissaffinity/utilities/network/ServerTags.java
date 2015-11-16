@@ -6,7 +6,7 @@ package ch.epfl.sweng.swissaffinity.utilities.network;
 public enum ServerTags {
     ID("id"),
     NAME("name"),
-    FACEBOOKID("facebook_id"),
+    FACEBOOK_ID("facebook_id"),
     USERNAME("username"),
     EMAIL("email"),
     LAST_NAME("last_name"),
@@ -39,6 +39,12 @@ public enum ServerTags {
     MIN_AGE("min_age"),
     MAX_AGE("max_age"),
     ESTABLISHMENT("establishment"),
+    ZIP_CODE("zip_code"),
+    TYPE("type"),
+    PHONE_NUMBER("phone_number"),
+    URL("url"),
+    MAX_SEATS("max_seats"),
+    LOGO_PATH("logo_path"),
     EVENT_TYPE("discr"),
     SPEED_DATING_TYPE("speed_dating");
 
