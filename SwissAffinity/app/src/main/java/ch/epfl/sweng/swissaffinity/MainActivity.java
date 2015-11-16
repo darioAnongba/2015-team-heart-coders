@@ -38,6 +38,8 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_
  */
 public class MainActivity extends AppCompatActivity {
 
+    public static final String SERVER_URL = "http://www.beecreative.ch";
+
     public static final String EXTRA_EVENT = "ch.epfl.sweng.swissaffinity.event";
     public static final String EXTRA_USER = "ch.epfl.sweng.swissaffinity.user";
 
@@ -45,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
     public static EventClient EVENT_CLIENT;
     public static UserClient USER_CLIENT;
 
-    private static final String SERVER_URL = "http://www.beecreative.ch";
-    private static final String SHARED_PREFS_ID = "ch.epfl.sweng.swissaffinity.shared_pref";
+    private static final String SHARED_PREFS_ID = "ch.epfl.sweng.swissaffinity.shared_prefs";
 
     private EventExpandableListAdapter mListAdapter;
     private User mUser;
