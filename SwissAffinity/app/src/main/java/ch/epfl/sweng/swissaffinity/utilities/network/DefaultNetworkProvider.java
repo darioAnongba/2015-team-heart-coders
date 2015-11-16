@@ -38,8 +38,20 @@ public class DefaultNetworkProvider implements NetworkProvider {
         return fetchContent(connection);
     }
 
+    public Boolean checkCode(String serverURL) throws IOException{
+        URL url = new URL(serverURL);
+
+        HttpURLConnection conn = getConnection(url);
+        conn.setReadTimeout(10000 /* milliseconds */);
+        conn.setConnectTimeout(15000 /* milliseconds */);
+        conn.setRequestMethod("GET");
+        conn.setDoInput(true);
+        conn.connect();
+        int response = conn.getResponseCode();
+        return (response==200);
+    }
+
     public void yieldPUTContent(String serverURL) throws IOException {
-        //TODO: implement this part
         throw new IOException("Not yet implemented");
     }
 
