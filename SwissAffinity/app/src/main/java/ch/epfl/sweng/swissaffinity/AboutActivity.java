@@ -36,7 +36,6 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOKID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.GENDER;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;

@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import ch.epfl.sweng.swissaffinity.users.User;
@@ -52,9 +54,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         };
 
-
-
-
         RadioGroup gender = (RadioGroup) this.findViewById(R.id.registerGender);
         gender.setOnCheckedChangeListener(radioChecker);
         fillData();
@@ -64,7 +63,9 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 JSONObject json = createJson();
-                Log.v("Json", json.toString());
+                if (json != null) {
+                    Log.v("Json", json.toString());
+                }
             }
         });
 
@@ -78,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
         email = sharedPreferences.getString(EMAIL.get(), "");
         birthday = sharedPreferences.getString(BIRTHDAY.get(), "");
         gender = sharedPreferences.getString(GENDER.get(), "");
-        facebookId = sharedPreferences.getString(FACEBOOKID.get(),"");
+        facebookId = sharedPreferences.getString(FACEBOOKID.get(),null);
 
         EditText userName = (EditText) findViewById(R.id.registerUserName);
         userName.setText(name);
@@ -107,25 +108,61 @@ public class RegisterActivity extends AppCompatActivity {
         EditText firstNameText = (EditText) findViewById(R.id.registerFirstName);
         EditText lastNameText = (EditText) findViewById(R.id.registerLastName);
         EditText birthdayText = (EditText) findViewById(R.id.registerBirthDay);
+        EditText passwordText = (EditText) findViewById(R.id.registerPassword);
+        EditText passwordConfirmation = (EditText) findViewById(R.id.registerPasswordConfirmation);
 
         JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject();
-            jsonObject.put("email", emailText.getText().toString());
-            jsonObject.put("username",userNameText.getText().toString());
-            jsonObject.put("firstName",firstNameText.getText().toString());
-            jsonObject.put("lastName",lastNameText.getText().toString());
-            jsonObject.put("gender",gender);
-            jsonObject.put("birthDate",birthdayText.getText().toString());
-            jsonObject.put("facebookId",facebookId);
-            jsonObject.put("plainPassword","123Test");
-        } catch (JSONException e) {
+        if(emailText.getText().toString().length()==0 || emailText.getText().toString().length()>100 || !isValidEmail(emailText.getText().toString())) {
+            Toast.makeText(RegisterActivity.this,"Mail is not in a valid format , empty or over 100 characters",
+                    Toast.LENGTH_SHORT).show();
+        } else if ((userNameText.getText().toString().length()==0 || userNameText.getText().toString().length() >50)) {
+            Toast.makeText(RegisterActivity.this, "Username is empty , or over 50 characters",
+                    Toast.LENGTH_SHORT).show();
+        }else if((firstNameText.getText().toString().length()==0 || firstNameText.getText().toString().length() >50)) {
+            Toast.makeText(RegisterActivity.this, "First Name is empty , or over 50 characters",
+                    Toast.LENGTH_SHORT).show();
+        }else if((lastNameText.getText().toString().length()==0 || lastNameText.getText().toString().length() >50)) {
+            Toast.makeText(RegisterActivity.this, "Last Name is empty , or over 50 characters",
+                    Toast.LENGTH_SHORT).show();
+        }else if(passwordText.getText().toString().length()==0) {
+            Toast.makeText(RegisterActivity.this, "Password is empty ",
+                    Toast.LENGTH_SHORT).show();
+        }else if (!passwordText.getText().toString().equals(passwordConfirmation.getText().toString())) {
+            Toast.makeText(RegisterActivity.this, "Password do not match ",
+                    Toast.LENGTH_SHORT).show();
+        }else if(gender==null) {
+            Toast.makeText(RegisterActivity.this, "No value found for Gender ",
+                    Toast.LENGTH_SHORT).show();
+        }else if(birthdayText.getText().toString().length()==0 ||birthdayText.getText().toString().length()>20 ) {
+            Toast.makeText(RegisterActivity.this, "Birth Date is empty or too long ",
+                    Toast.LENGTH_SHORT).show();
+        }else {
+            try {
+                jsonObject = new JSONObject();
+                jsonObject.put("email", emailText.getText().toString());
+                jsonObject.put("username", userNameText.getText().toString());
+                jsonObject.put("firstName", firstNameText.getText().toString());
+                jsonObject.put("lastName", lastNameText.getText().toString());
+                jsonObject.put("gender", gender);
+                jsonObject.put("birthDate", birthdayText.getText().toString());
+                jsonObject.put("facebookId", facebookId);
+                jsonObject.put("plainPassword", passwordText.getText().toString());
+            } catch (JSONException e) {
+            }
         }
         return jsonObject;
     }
 
     public void post() {
-        
+
+    }
+
+    public final static boolean isValidEmail(CharSequence target) {
+        if (target == null) {
+            return false;
+        } else {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+        }
     }
 
 
