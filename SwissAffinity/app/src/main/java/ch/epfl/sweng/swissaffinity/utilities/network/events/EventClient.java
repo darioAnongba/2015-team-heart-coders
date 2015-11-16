@@ -14,7 +14,7 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
 public interface EventClient {
 
     /**
-     * Fetch
+     * Fetch all the events
      *
      * @return the list of all the events
      *
@@ -23,11 +23,11 @@ public interface EventClient {
     List<Event> fetchAll() throws EventClientException;
 
     /**
-     * Fetch
+     * Fetch the events for a given collection of locations
      *
-     * @param locations the locations desired
+     * @param locations a collection of locations
      *
-     * @return all the events according the locations
+     * @return all the events according the given locations
      *
      * @throws EventClientException
      */
