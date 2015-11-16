@@ -1,5 +1,7 @@
 package ch.epfl.sweng.swissaffinity.utilities.parsers;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,11 +19,12 @@ public class SafeJSONObject extends JSONObject {
         super(jsonObject.toString());
     }
 
-    private <A> A get(String name, A defaultValue) {
+    public <A> A get(String name, A defaultValue) {
         A value = defaultValue;
         try {
             value = (A) super.get(name);
         } catch (JSONException e) {
+            Log.e("SafeJSONObject", e.getMessage());
         }
         return value;
     }

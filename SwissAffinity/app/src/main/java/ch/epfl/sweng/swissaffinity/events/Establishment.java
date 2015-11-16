@@ -41,7 +41,7 @@ public class Establishment implements Serializable {
          *
          * @return
          */
-        public Type getType(String type) {
+        public static Type getType(String type) {
             for (Type t : Type.values()) {
                 if (t.mType.equalsIgnoreCase(type)) {
                     return t;
@@ -57,7 +57,7 @@ public class Establishment implements Serializable {
     private final Address mAddress;
     private final String mPhoneNumber;
     private final String mDescription; // nullable
-    private final URL mUrl; // nullable
+    private final String mUrl; // nullable
     private final int mMaxSeats; // nullable
     private final String mLogoPath; // nullable
     private final Location mLocation;
@@ -83,14 +83,13 @@ public class Establishment implements Serializable {
             Address address,
             String phoneNumber,
             String description,
-            URL url,
+            String url,
             int maxSeats,
             String logoPath,
             Location location)
     {
         if (id < 0 || name == null || type == null || address == null || phoneNumber == null ||
-            description == null || url == null || maxSeats < 0 || logoPath == null ||
-            location == null)
+            description == null || url == null || logoPath == null || location == null)
         {
             throw new IllegalArgumentException();
         }
@@ -138,7 +137,7 @@ public class Establishment implements Serializable {
      *
      * @return
      */
-    public URL getUrl() {
+    public String getUrl() {
         return mUrl;
     }
 

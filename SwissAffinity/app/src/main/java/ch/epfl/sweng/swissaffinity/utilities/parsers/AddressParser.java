@@ -29,7 +29,7 @@ public class AddressParser extends Parser<Address> {
         String city = mJsonObject.getString(CITY.get(), "");
         String province = mJsonObject.getString(PROVINCE.get(), "");
         String country = mJsonObject.getString(COUNTRY.get(), "");
-        
+
         return new Address(country, zipCode, city, province, streetNum, street);
     }
 }
