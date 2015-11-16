@@ -33,10 +33,10 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
-        new DownloadImageTask().execute();
         Intent intent = getIntent();
         mEvent = (Event) intent.getSerializableExtra(EXTRA_EVENT);
         mUser = (User) intent.getSerializableExtra(EXTRA_USER);
+        new DownloadImageTask().execute();
         fillEventData();
     }
 

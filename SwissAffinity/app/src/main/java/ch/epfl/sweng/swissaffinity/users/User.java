@@ -1,7 +1,6 @@
 package ch.epfl.sweng.swissaffinity.users;
 
 import java.io.Serializable;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -69,7 +68,7 @@ public final class User implements Serializable {
     private boolean mEnabled;
     private Gender mGender;
     private Date mBirthDate;
-    private URL mProfilePicture;
+    private String mProfilePicture;
     private Collection<Location> mAreasOfInterest;
     private List<Event> mEventsAttended;
 
@@ -109,7 +108,7 @@ public final class User implements Serializable {
             Gender gender,
             Date birthDate,
             String profession,
-            URL profilePicture,
+            String profilePicture,
             Collection<Location> areasOfInterest,
             List<Event> eventsAttended)
     {
@@ -352,7 +351,7 @@ public final class User implements Serializable {
      *
      * @return the profile picture url
      */
-    public URL getProfilePicture() {
+    public String getProfilePicture() {
         return mProfilePicture;
     }
 
@@ -361,7 +360,7 @@ public final class User implements Serializable {
      *
      * @param profilePicture the profile picture url
      */
-    public void setProfilePicture(URL profilePicture) {
+    public void setProfilePicture(String profilePicture) {
         mProfilePicture = profilePicture;
     }
 

@@ -75,6 +75,9 @@ public class NetworkEventClient implements EventClient {
 
     @Override
     public Bitmap imageFor(Event event) throws EventClientException {
+        if (event == null) {
+            throw new IllegalArgumentException();
+        }
         Bitmap image;
         try {
             String imagePath = mServerUrl + IMAGES + event.getImagePath();

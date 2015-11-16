@@ -192,6 +192,7 @@ public class AboutActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean code) {
             if (code) {
+                //FIXME: I don't think you want to start main again !!!
                 Intent registerIntent = new Intent(AboutActivity.this, MainActivity.class);
                 startActivity(registerIntent);
             } else {

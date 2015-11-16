@@ -67,16 +67,7 @@ public class UserParser extends Parser<User> {
         Gender gender = Gender.getGender(mJsonObject.get(GENDER.get(), "male"));
         String birthDate = mJsonObject.get(BIRTH_DATE.get(), "");
         String profession = mJsonObject.get(PROFESSION.get(), "");
-        String profilePicture = mJsonObject.get(PROFILE_PICTURE.get(), null);
-
-        URL profilePictureURL = null;
-        if (profilePicture != null) {
-            try {
-                profilePictureURL = new URL(profilePicture);
-            } catch (MalformedURLException e) {
-                throw new ParserException(e);
-            }
-        }
+        String profilePicture = mJsonObject.get(PROFILE_PICTURE.get(), "");
 
         JSONArray areas = mJsonObject.get(LOCATIONS_INTEREST.get(), new JSONArray());
         List<Location> areasOfInterest = new ArrayList<>();
@@ -119,7 +110,7 @@ public class UserParser extends Parser<User> {
                 gender,
                 DateParser.parseFromString(birthDate),
                 profession,
-                profilePictureURL,
+                profilePicture,
                 areasOfInterest,
                 eventsAttended);
     }
