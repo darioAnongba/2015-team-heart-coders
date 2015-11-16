@@ -10,7 +10,6 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
  * Representation of a basic event.
  */
 public abstract class Event implements Serializable {
-
     /**
      * The possible states of an event.
      */
@@ -26,20 +25,20 @@ public abstract class Event implements Serializable {
         }
 
         /**
-         * Getter for the state of the event.
+         * Getter for the state of the event
          *
-         * @return the server API state.
+         * @return the server API state
          */
         public String get() {
             return mState;
         }
 
         /**
-         * Getter for the state of an event.
+         * Getter for the state of an event
          *
-         * @param state the server API state.
+         * @param state the server API state
          *
-         * @return the state.
+         * @return the corresponding state
          */
         public static State getState(String state) {
             for (State s : State.values()) {
@@ -80,7 +79,7 @@ public abstract class Event implements Serializable {
     /**
      * Getter for the name
      *
-     * @return the name of the event
+     * @return the name
      */
     public String getName() {
         return mName;
@@ -89,16 +88,16 @@ public abstract class Event implements Serializable {
     /**
      * Getter for the description
      *
-     * @return the description of the event
+     * @return the description
      */
     public String getDescription() {
         return mDescription;
     }
 
     /**
-     * Getter for the beginning date.
+     * Getter for the beginning date
      *
-     * @return the beginning date and time.
+     * @return the beginning date and time {@link Date}
      */
     public Date getDateBegin() {
         return mDateBegin;
@@ -116,7 +115,7 @@ public abstract class Event implements Serializable {
     /**
      * Getter for the location
      *
-     * @return the location of the event {@link Location}
+     * @return the location {@link Location}
      */
     public Location getLocation() {
         return mLocation;
@@ -125,7 +124,7 @@ public abstract class Event implements Serializable {
     /**
      * Getter for the image path
      *
-     * @return the relative path for the image
+     * @return the relative path of the image
      */
     public String getImagePath() {
         return mImagePath;
@@ -134,7 +133,7 @@ public abstract class Event implements Serializable {
     /**
      * Getter for the price
      *
-     * @return the price of the event
+     * @return the price
      */
     public double getBasePrice() {
         return mBasePrice;
@@ -143,7 +142,7 @@ public abstract class Event implements Serializable {
     /**
      * Getter for the maximum people
      *
-     * @return the maximum number of people for the event
+     * @return the maximum number of people
      */
     public int getMaxPeople() {
         return mMaxPeople;
@@ -167,9 +166,9 @@ public abstract class Event implements Serializable {
         private Date mLastUpdate;
 
         /**
-         * Setter for ID.
+         * Setter for ID
          *
-         * @param id
+         * @param id the ID
          *
          * @return this
          */
@@ -179,9 +178,9 @@ public abstract class Event implements Serializable {
         }
 
         /**
-         * Setter for name.
+         * Setter for name
          *
-         * @param name
+         * @param name the name
          *
          * @return this
          */
@@ -191,9 +190,9 @@ public abstract class Event implements Serializable {
         }
 
         /**
-         * Setter for location.
+         * Setter for location
          *
-         * @param location
+         * @param location the location {@link Location}
          *
          * @return this
          */
@@ -203,9 +202,9 @@ public abstract class Event implements Serializable {
         }
 
         /**
-         * Setter for maximum number of people.
+         * Setter for maximum number of people
          *
-         * @param maxPeople
+         * @param maxPeople the maximum number of people
          *
          * @return this
          */
@@ -215,9 +214,9 @@ public abstract class Event implements Serializable {
         }
 
         /**
-         * Setter for starting date and time.
+         * Setter for the beginning date
          *
-         * @param dateBegin
+         * @param dateBegin the beginning date and time {@link Date}
          *
          * @return this
          */
@@ -227,9 +226,9 @@ public abstract class Event implements Serializable {
         }
 
         /**
-         * Setter for ending date and time
+         * Setter for the ending date
          *
-         * @param dateEnd
+         * @param dateEnd the ending date and time {@link Date}
          *
          * @return this
          */
@@ -239,9 +238,9 @@ public abstract class Event implements Serializable {
         }
 
         /**
-         * Setter for price.
+         * Setter for price
          *
-         * @param basePrice
+         * @param basePrice the price
          *
          * @return this
          */
@@ -251,9 +250,9 @@ public abstract class Event implements Serializable {
         }
 
         /**
-         * Setter for event state.
+         * Setter for event state
          *
-         * @param state
+         * @param state the state {@link State}
          *
          * @return this
          */
@@ -265,7 +264,7 @@ public abstract class Event implements Serializable {
         /**
          * Setter for the description
          *
-         * @param descrition
+         * @param descrition the description
          *
          * @return this
          */
@@ -275,9 +274,9 @@ public abstract class Event implements Serializable {
         }
 
         /**
-         * Setter for the image path.
+         * Setter for the image path
          *
-         * @param imagePath
+         * @param imagePath the image relative path
          *
          * @return this
          */
@@ -287,9 +286,9 @@ public abstract class Event implements Serializable {
         }
 
         /**
-         * Setter for the last update date and time.
+         * Setter for the last updated date
          *
-         * @param lastUpdate
+         * @param lastUpdate the last updated date and time {@link Date}
          *
          * @return this
          */
