@@ -7,7 +7,6 @@ import ch.epfl.sweng.swissaffinity.events.Establishment;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
-import ch.epfl.sweng.swissaffinity.utilities.parsers.EstablishmentParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.LocationParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.Parser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
@@ -47,9 +46,9 @@ public class SpeedDatingEventParser extends Parser<SpeedDatingEvent> {
         try {
             int id = mJsonObject.getInt(ID.get());
             String name = mJsonObject.getString(NAME.get());
-            Location location =
-                    new LocationParser(new SafeJSONObject(mJsonObject.getJSONObject(LOCATION.get())))
-                            .parse();
+            SafeJSONObject jsonLocation =
+                    new SafeJSONObject(mJsonObject.getJSONObject(LOCATION.get()));
+            Location location = new LocationParser(jsonLocation).parse();
             int maxPeople = mJsonObject.getInt(MAX_PEOPLE.get());
             String dateBegin = mJsonObject.getString(DATE_BEGIN.get());
             String dateEnd = mJsonObject.getString(DATE_END.get());

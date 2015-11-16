@@ -13,6 +13,7 @@ import java.net.URL;
  * The class that get the HTTP connection from the server URL.
  */
 public class DefaultNetworkProvider implements NetworkProvider {
+
     public final static int HTTP_SUCCESS_START = 200;
     public final static int HTTP_SUCCESS_END = 299;
 

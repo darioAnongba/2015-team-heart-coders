@@ -8,7 +8,7 @@ import ch.epfl.sweng.swissaffinity.users.User;
 public interface UserClient {
 
     /**
-     * Fetch
+     * Fetch a user regarding his user name
      *
      * @param userName the user name
      *
@@ -19,7 +19,7 @@ public interface UserClient {
     User fetchByUsername(String userName) throws UserClientException;
 
     /**
-     * Fetch
+     * Fetch a user reagrding his ID or Facebook ID
      *
      * @param id the user facebook ID
      *

@@ -12,7 +12,7 @@ import ch.epfl.sweng.swissaffinity.utilities.parsers.user.UserParser;
 
 
 /**
- * User Client parser Created by Max on 06/11/2015.
+ * Representation of a user client.
  */
 public class NetworkUserClient implements UserClient {
 

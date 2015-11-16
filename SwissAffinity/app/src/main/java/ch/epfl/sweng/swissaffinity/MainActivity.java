@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
@@ -32,9 +31,13 @@ import ch.epfl.sweng.swissaffinity.utilities.network.users.NetworkUserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.*;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
 
+/**
+ * The main activity of the application.
+ */
 public class MainActivity extends AppCompatActivity {
+
     public static final String EXTRA_EVENT = "ch.epfl.sweng.swissaffinity.event";
     public static final String EXTRA_USER = "ch.epfl.sweng.swissaffinity.user";
 
@@ -81,21 +84,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         EVENT_CLIENT = getEventClient();
         USER_CLIENT = getUserClient();
-        SHARED_PREFS = getApplicationContext().getSharedPreferences(SHARED_PREFS_ID, MODE_PRIVATE);
+        SHARED_PREFS = getSharedPreferences(SHARED_PREFS_ID, MODE_PRIVATE);
         mListAdapter = new EventExpandableListAdapter(this);
 
         if (isNetworkConnected(this)) {
-            try {
-                fetchUser();
-                fetchEvents();
-            } catch (InterruptedException | ExecutionException e) {
-                Log.e("Fetch tasks", e.getMessage());
-            }
-
+            fetchUser();
+            fetchEvents();
+        } else if (savedInstanceState != null) {
+            Toast.makeText(this, "We get saved state!", Toast.LENGTH_LONG).show();
+            //TODO: get saved state of the app... (and save it also!)
         } else {
-            Toast.makeText(MainActivity.this, "No Network", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "No Network", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -118,27 +120,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void fetchUser() throws ExecutionException, InterruptedException {
-        String welcomeText = getString(R.string.welcome_not_registered_text);
-        String facebookID = SHARED_PREFS.getString(FACEBOOK_ID.get(), null);
-        if (facebookID != null) {
-            mUser = new DownloadUserTask().execute(facebookID).get();
-            if (mUser != null) {
-                welcomeText = String.format(
-                        getString(R.string.welcome_registered_text),
-                        mUser.getUsername());
-            }
-        }
-        ((TextView) findViewById(R.id.mainWelcomeText)).setText(welcomeText);
+    private void fetchUser() {
+        new DownloadUserTask().execute();
     }
 
-    private void fetchEvents() throws ExecutionException, InterruptedException {
-        String myEvents = getString(R.string.my_events);
+    private void fetchEvents() {
         new DownloadEventsTask().execute();
-        if (mUser != null) {
-            mListAdapter.addGroup(myEvents);
-            // TODO : add the events the user is registered to.
-        }
     }
 
     private class DownloadEventsTask extends AsyncTask<Void, Void, List<Event>> {
@@ -155,7 +142,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<Event> events) {
+            String myEvents = getString(R.string.my_events);
             String upcomingEvents = getString(R.string.upcoming_events);
+            if (mUser != null) {
+                mListAdapter.addGroup(myEvents);
+                // TODO : add the events the user is registered to.
+            }
             mListAdapter.addGroup(upcomingEvents);
             for (Event event : events) {
                 mListAdapter.addChild(upcomingEvents, event);
@@ -191,15 +183,31 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class DownloadUserTask extends AsyncTask<String, Void, User> {
+    private class DownloadUserTask extends AsyncTask<Void, Void, User> {
         @Override
-        protected User doInBackground(String... params) {
-            try {
-                return USER_CLIENT.fetchByFacebookID(params[0]);
-            } catch (UserClientException e) {
-                Log.e("FetchUser", e.getMessage());
+        protected User doInBackground(Void... params) {
+            String facebookID = SHARED_PREFS.getString(FACEBOOK_ID.get(), null);
+            if (facebookID != null) {
+                try {
+                    return USER_CLIENT.fetchByFacebookID(facebookID);
+                } catch (UserClientException e) {
+                    Log.e("FetchUser", e.getMessage());
+                }
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(User user) {
+            String welcomeText = getString(R.string.welcome_not_registered_text);
+            if (user != null) {
+                mUser = user;
+                welcomeText = String.format(
+                        getString(R.string.welcome_registered_text),
+                        mUser.getUsername());
+            }
+            ((TextView) findViewById(R.id.mainWelcomeText)).setText(welcomeText);
+            super.onPostExecute(user);
         }
     }
 }

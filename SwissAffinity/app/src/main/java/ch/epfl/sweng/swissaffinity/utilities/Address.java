@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Representation of a postal address.
  */
 public class Address implements Serializable {
+
     private final String mStreet;
     private final int mStreetNumber;
     private final int mZipCode;

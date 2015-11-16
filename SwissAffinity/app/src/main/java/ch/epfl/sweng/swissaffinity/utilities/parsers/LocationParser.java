@@ -1,5 +1,6 @@
 package ch.epfl.sweng.swissaffinity.utilities.parsers;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import ch.epfl.sweng.swissaffinity.utilities.Location;
@@ -22,7 +23,7 @@ public class LocationParser extends Parser<Location> {
             int id = mJsonObject.getInt(ID.get());
             String name = mJsonObject.getString(NAME.get());
             return new Location(id, name);
-        } catch (Exception e) {
+        } catch (JSONException e) {
             throw new ParserException(e);
         }
     }

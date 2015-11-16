@@ -20,6 +20,7 @@ import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClientException;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.NetworkEventClient;
 
+import static ch.epfl.sweng.swissaffinity.MainActivity.*;
 import static ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser.dateToString;
 
 public class EventActivity extends AppCompatActivity {
@@ -32,10 +33,10 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
-        Intent intent = getIntent();
-        mEvent = (Event) intent.getSerializableExtra(MainActivity.EXTRA_EVENT);
-        mUser = (User) intent.getSerializableExtra(MainActivity.EXTRA_USER);
         new DownloadImageTask().execute();
+        Intent intent = getIntent();
+        mEvent = (Event) intent.getSerializableExtra(EXTRA_EVENT);
+        mUser = (User) intent.getSerializableExtra(EXTRA_USER);
         fillEventData();
     }
 
@@ -77,7 +78,7 @@ public class EventActivity extends AppCompatActivity {
         protected Bitmap doInBackground(Void... params) {
             Bitmap image = null;
             try {
-                image = MainActivity.EVENT_CLIENT.imageFor(mEvent);
+                image = EVENT_CLIENT.imageFor(mEvent);
             } catch (EventClientException e) {
                 // no image.
             }
