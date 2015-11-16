@@ -26,7 +26,6 @@ public class EventActivity extends AppCompatActivity {
 
     private Event mEvent;
     private User mUser;
-    private Bitmap mImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +35,7 @@ public class EventActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mEvent = (Event) intent.getSerializableExtra(MainActivity.EXTRA_EVENT);
         mUser = (User) intent.getSerializableExtra(MainActivity.EXTRA_USER);
-        try {
-            mImage = new DownloadImageTask().execute().get();
-        } catch (InterruptedException | ExecutionException e) {
-            // no image.
-        }
+        new DownloadImageTask().execute();
         fillEventData();
     }
 
@@ -55,9 +50,6 @@ public class EventActivity extends AppCompatActivity {
         String maxPeople =
                 String.format(getString(R.string.event_max_people), mEvent.getMaxPeople());
         ((TextView) findViewById(R.id.eventMaxPeople)).setText(maxPeople);
-        if (mImage != null) {
-            ((ImageView) findViewById(R.id.eventPicture)).setImageBitmap(mImage);
-        }
         if (mEvent instanceof SpeedDatingEvent) {
             SpeedDatingEvent event = (SpeedDatingEvent) mEvent;
             int men = event.getMenRegistered();
@@ -72,7 +64,7 @@ public class EventActivity extends AppCompatActivity {
     }
 
     public void register(View view) {
-        if (mUser != null) {
+        if (mUser == null) {
             startActivity(new Intent(EventActivity.this, AboutActivity.class));
         } else {
             Toast.makeText(EventActivity.this, "Not implemented yet :(", Toast.LENGTH_SHORT).show();
@@ -81,18 +73,23 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private class DownloadImageTask extends AsyncTask<Void, Void, Bitmap> {
-        EventClient eventClient = new NetworkEventClient(
-                MainActivity.SERVER_URL, new DefaultNetworkProvider());
-
         @Override
         protected Bitmap doInBackground(Void... params) {
             Bitmap image = null;
             try {
-                image = eventClient.imageFor(mEvent);
+                image = MainActivity.EVENT_CLIENT.imageFor(mEvent);
             } catch (EventClientException e) {
                 // no image.
             }
             return image;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap != null) {
+                ((ImageView) findViewById(R.id.eventPicture)).setImageBitmap(bitmap);
+            }
+            super.onPostExecute(bitmap);
         }
     }
 }

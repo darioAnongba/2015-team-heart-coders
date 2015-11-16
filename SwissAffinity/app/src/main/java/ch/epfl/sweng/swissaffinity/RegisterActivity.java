@@ -1,4 +1,5 @@
 package ch.epfl.sweng.swissaffinity;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,10 +15,10 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ch.epfl.sweng.swissaffinity.users.User;
-import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREF;
+
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOKID;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.GENDER;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_NAME;
@@ -39,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        sharedPreferences = getApplicationContext().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+        sharedPreferences = MainActivity.SHARED_PREFS;
 
         final RadioGroup.OnCheckedChangeListener radioChecker = new RadioGroup.OnCheckedChangeListener() {
 
@@ -79,7 +80,8 @@ public class RegisterActivity extends AppCompatActivity {
         email = sharedPreferences.getString(EMAIL.get(), "");
         birthday = sharedPreferences.getString(BIRTHDAY.get(), "");
         gender = sharedPreferences.getString(GENDER.get(), "");
-        facebookId = sharedPreferences.getString(FACEBOOKID.get(),null);
+
+        facebookId = sharedPreferences.getString(FACEBOOK_ID.get(),"");
 
         EditText userName = (EditText) findViewById(R.id.registerUserName);
         userName.setText(name);
@@ -164,9 +166,6 @@ public class RegisterActivity extends AppCompatActivity {
             return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
         }
     }
-
-
-
 
 
 }

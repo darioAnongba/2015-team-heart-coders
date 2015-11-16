@@ -26,9 +26,19 @@ public abstract class Event implements Serializable {
         }
 
         /**
+         * Getter for the state of the event.
+         *
+         * @return the server API state.
+         */
+        public String get() {
+            return mState;
+        }
+
+        /**
          * Getter for the state of an event.
          *
          * @param state the server API state.
+         *
          * @return the state.
          */
         public static State getState(String state) {
@@ -41,17 +51,17 @@ public abstract class Event implements Serializable {
         }
     }
 
-    protected final int mId;
-    protected final String mName;
-    protected final Location mLocation;
-    protected final int mMaxPeople;
-    protected final Date mDateBegin;
-    protected final Date mDateEnd;
-    protected final double mBasePrice;
-    protected final State mState;
-    protected final String mDescription;
-    protected final String mImagePath;
-    protected final Date mLastUpdate;
+    private final int mId;
+    private final String mName;
+    private final Location mLocation;
+    private final int mMaxPeople;
+    private final Date mDateBegin;
+    private final Date mDateEnd;
+    private final double mBasePrice;
+    private final State mState;
+    private final String mDescription;
+    private final String mImagePath;
+    private final Date mLastUpdate;
 
     protected Event(Builder builder) {
         mId = builder.mId;
@@ -85,14 +95,19 @@ public abstract class Event implements Serializable {
         return mDescription;
     }
 
+    /**
+     * Getter for the beginning date.
+     *
+     * @return the beginning date and time.
+     */
     public Date getDateBegin() {
         return mDateBegin;
     }
 
     /**
-     * Getter for the beginning date
+     * Getter for the ending date
      *
-     * @return the starting date and time {@link Date}
+     * @return the ending date and time {@link Date}
      */
     public Date getDateEnd() {
         return mDateEnd;
@@ -135,7 +150,7 @@ public abstract class Event implements Serializable {
     }
 
     /**
-     * Builder for the abstract event class.
+     * Builder for the event class.
      */
     public static class Builder {
 
@@ -155,6 +170,7 @@ public abstract class Event implements Serializable {
          * Setter for ID.
          *
          * @param id
+         *
          * @return this
          */
         public Builder setId(int id) {
@@ -166,6 +182,7 @@ public abstract class Event implements Serializable {
          * Setter for name.
          *
          * @param name
+         *
          * @return this
          */
         public Builder setName(String name) {
@@ -177,6 +194,7 @@ public abstract class Event implements Serializable {
          * Setter for location.
          *
          * @param location
+         *
          * @return this
          */
         public Builder setLocation(Location location) {
@@ -188,6 +206,7 @@ public abstract class Event implements Serializable {
          * Setter for maximum number of people.
          *
          * @param maxPeople
+         *
          * @return this
          */
         public Builder setMaxPeople(int maxPeople) {
@@ -199,6 +218,7 @@ public abstract class Event implements Serializable {
          * Setter for starting date and time.
          *
          * @param dateBegin
+         *
          * @return this
          */
         public Builder setDateBegin(Date dateBegin) {
@@ -210,6 +230,7 @@ public abstract class Event implements Serializable {
          * Setter for ending date and time
          *
          * @param dateEnd
+         *
          * @return this
          */
         public Builder setDateEnd(Date dateEnd) {
@@ -221,6 +242,7 @@ public abstract class Event implements Serializable {
          * Setter for price.
          *
          * @param basePrice
+         *
          * @return this
          */
         public Builder setBasePrice(double basePrice) {
@@ -232,6 +254,7 @@ public abstract class Event implements Serializable {
          * Setter for event state.
          *
          * @param state
+         *
          * @return this
          */
         public Builder setState(String state) {
@@ -243,6 +266,7 @@ public abstract class Event implements Serializable {
          * Setter for the description
          *
          * @param descrition
+         *
          * @return this
          */
         public Builder setDescrition(String descrition) {
@@ -254,6 +278,7 @@ public abstract class Event implements Serializable {
          * Setter for the image path.
          *
          * @param imagePath
+         *
          * @return this
          */
         public Builder setImagePath(String imagePath) {
@@ -265,6 +290,7 @@ public abstract class Event implements Serializable {
          * Setter for the last update date and time.
          *
          * @param lastUpdate
+         *
          * @return this
          */
         public Builder setLastUpdate(Date lastUpdate) {
