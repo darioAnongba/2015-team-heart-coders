@@ -3,11 +3,19 @@ package ch.epfl.sweng.swissaffinity.utilities.network;
 
 import android.util.Log;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.ConnectException;
+import java.net.HttpRetryException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 
 /**
  * The class that get the HTTP connection from the server URL.
@@ -47,11 +55,32 @@ public class DefaultNetworkProvider implements NetworkProvider {
         conn.setDoInput(true);
         conn.connect();
         int response = conn.getResponseCode();
-        return (response==200);
+        return (response==HttpURLConnection.HTTP_OK);
     }
 
-    public void yieldPUTContent(String serverURL) throws IOException {
-        throw new IOException("Not yet implemented");
+    public  String postContent(String serverURL, JSONObject json) throws IOException {
+        URL url = new URL(serverURL);
+        String response = null;
+        HttpURLConnection conn = getConnection(url);
+        conn.setDoInput(true);
+        conn.setDoOutput(true);
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.connect();
+        OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
+        out.write(json.toString());
+        out.flush();
+        out.close();
+        int responseCode = conn.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+           response =fetchContent(conn);
+        } else if(responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR){
+            throw new ConnectException();
+        } else if(responseCode == HttpURLConnection.HTTP_BAD_REQUEST) {
+            response =fetchErrorContent(conn);
+        } else {
+            throw new ConnectException();
+        }
+        return response;
     }
 
     /**
@@ -66,7 +95,6 @@ public class DefaultNetworkProvider implements NetworkProvider {
             while ((line = reader.readLine()) != null) {
                 stringBuilder.append(line).append("\n");
             }
-            Log.d("HTTPFetchContent", "Fetched string of length " + stringBuilder.length());
             return stringBuilder.toString();
         } finally {
             if (reader != null) {
@@ -74,4 +102,22 @@ public class DefaultNetworkProvider implements NetworkProvider {
             }
         }
     }
+
+    private String fetchErrorContent(HttpURLConnection connection) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append("\n");
+            }
+            return stringBuilder.toString();
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+    }
+
 }

@@ -1,5 +1,7 @@
 package ch.epfl.sweng.swissaffinity.utilities.network.users;
 
+import org.json.JSONObject;
+
 import ch.epfl.sweng.swissaffinity.users.User;
 
 /**
@@ -28,4 +30,6 @@ public interface UserClient {
      * @throws UserClientException if a problem occurs
      */
     User fetchByFacebookID(String id) throws UserClientException;
+
+    JSONObject postUser(String url , JSONObject jsonObject) throws UserClientException;
 }

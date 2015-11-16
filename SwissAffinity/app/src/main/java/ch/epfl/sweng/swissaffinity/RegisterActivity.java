@@ -1,7 +1,7 @@
 package ch.epfl.sweng.swissaffinity;
 
-import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,11 +10,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+
 import ch.epfl.sweng.swissaffinity.users.User;
+import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
+import ch.epfl.sweng.swissaffinity.utilities.network.users.NetworkUserClient;
+import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
@@ -35,13 +42,15 @@ public class RegisterActivity extends AppCompatActivity {
     private String lastName;
     private String birthday;
     private SharedPreferences sharedPreferences;
+    private final String SERVER_URL = "http://beecreative.ch/api/users";
+    private DefaultNetworkProvider networkProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         sharedPreferences = MainActivity.SHARED_PREFS;
-
+        networkProvider = new DefaultNetworkProvider();
         final RadioGroup.OnCheckedChangeListener radioChecker = new RadioGroup.OnCheckedChangeListener() {
 
             @Override
@@ -63,10 +72,8 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton.setClickable(false);
         registerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                JSONObject json = createJson();
-                if (json != null) {
-                    Log.v("Json", json.toString());
-                }
+                new UploadUserTask().execute();
+
             }
         });
 
@@ -151,13 +158,13 @@ public class RegisterActivity extends AppCompatActivity {
                 jsonObject.put("plainPassword", passwordText.getText().toString());
             } catch (JSONException e) {
             }
+            TextView editText =(TextView) findViewById(R.id.registerInstruction);
+            editText.setText(jsonObject.toString());
         }
         return jsonObject;
     }
 
-    public void post() {
 
-    }
 
     public final static boolean isValidEmail(CharSequence target) {
         if (target == null) {
@@ -166,6 +173,24 @@ public class RegisterActivity extends AppCompatActivity {
             return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
         }
     }
+
+    private class UploadUserTask extends AsyncTask<String, Void, Void>{
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            NetworkUserClient networkUserClient = new NetworkUserClient(SERVER_URL, new DefaultNetworkProvider());
+            try {
+                JSONObject jsonObject = createJson();
+                networkUserClient.postUser(SERVER_URL, jsonObject);
+            } catch (UserClientException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        };
 
 
 }

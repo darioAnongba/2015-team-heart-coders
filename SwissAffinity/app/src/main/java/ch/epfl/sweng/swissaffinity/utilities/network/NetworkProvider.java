@@ -1,5 +1,7 @@
 package ch.epfl.sweng.swissaffinity.utilities.network;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -28,4 +30,7 @@ public interface NetworkProvider {
      * @throws IOException if no success with the request.
      */
     String getContent(String serverURL) throws IOException;
+
+
+    String postContent(String serverURL, JSONObject json) throws IOException;
 }
