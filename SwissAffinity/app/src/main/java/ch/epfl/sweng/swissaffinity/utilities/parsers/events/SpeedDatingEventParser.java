@@ -32,7 +32,7 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.WOMEN_REG
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.WOMEN_SEATS;
 
 /**
- * Parser for getting a speed-dating event instance.
+ * Parser for the SpeedDatingEvent class.
  */
 public class SpeedDatingEventParser extends Parser<SpeedDatingEvent> {
 

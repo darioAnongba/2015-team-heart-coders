@@ -41,7 +41,7 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.PROFILE_P
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
 /**
- * Created by Max on 13/11/2015.
+ * A parser for the User class.
  */
 public class UserParser extends Parser<User> {
 
@@ -49,8 +49,8 @@ public class UserParser extends Parser<User> {
         super(jsonObject);
     }
 
+    @Override
     public User parse() throws ParserException {
-        User user;
 
         int id = mJsonObject.getInt(ID.get(), -1);
         long facebookId = mJsonObject.getLong(FACEBOOK_ID.get(), -1);
@@ -98,7 +98,7 @@ public class UserParser extends Parser<User> {
                 Event event = parser.parse();
                 eventsAttended.add(event);
             } catch (JSONException e) {
-                e.printStackTrace();
+                throw new ParserException(e);
             }
 
         }
