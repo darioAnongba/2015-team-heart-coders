@@ -7,18 +7,37 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by Lionel on 13/11/15.
+ * Representation of a safe JSONObject class.
  */
 public class SafeJSONObject extends JSONObject {
 
+    /**
+     * Constructor of the class
+     *
+     * @param jsonString a string JSONObject
+     *
+     * @throws JSONException if something goes wrong
+     */
     public SafeJSONObject(String jsonString) throws JSONException {
         super(jsonString);
     }
 
+    /**
+     * Constructor of the class
+     *
+     * @param jsonObject a JSONObject instance
+     *
+     * @throws JSONException if something goes wrong
+     */
     public SafeJSONObject(JSONObject jsonObject) throws JSONException {
         super(jsonObject.toString());
     }
 
+
+    /**
+     * Getter to generically have a default fallback value.
+     */
+    @SuppressWarnings("unchecked")
     public <A> A get(String name, A defaultValue) {
         A value = defaultValue;
         try {
@@ -27,29 +46,5 @@ public class SafeJSONObject extends JSONObject {
             Log.e("SafeJSONObject", e.getMessage());
         }
         return value;
-    }
-
-    public boolean getBoolean(String name, boolean defaultValue) {
-        return get(name, defaultValue);
-    }
-
-    public int getInt(String name, int defaultValue) {
-        return get(name, defaultValue);
-    }
-
-    public long getLong(String name, long defaultValue) {
-        return get(name, defaultValue);
-    }
-
-    public String getString(String name, String defaultValue) {
-        return get(name, defaultValue);
-    }
-
-    public JSONArray getJSONArray(String name, JSONArray defaultValue) {
-        return get(name, defaultValue);
-    }
-
-    public JSONObject getJSONObject(String name, JSONObject defaultValue) {
-        return get(name, defaultValue);
     }
 }
