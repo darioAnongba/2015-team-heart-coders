@@ -52,22 +52,22 @@ public class UserParser extends Parser<User> {
     @Override
     public User parse() throws ParserException {
 
-        int id = mJsonObject.getInt(ID.get(), -1);
-        long facebookId = mJsonObject.getLong(FACEBOOK_ID.get(), -1);
-        String username = mJsonObject.getString(USERNAME.get(), "");
-        String email = mJsonObject.getString(EMAIL.get(), "");
-        String firstName = mJsonObject.getString(FIRST_NAME.get(), "");
-        String lastName = mJsonObject.getString(LAST_NAME.get(), "");
-        String mobilePhone = mJsonObject.getString(MOBILE_PHONE.get(), "");
-        String homePhone = mJsonObject.getString(HOME_PHONE.get(), "");
-        JSONObject preAddress = mJsonObject.getJSONObject(ADDRESS.get(), null);
+        int id = mJsonObject.get(ID.get(), -1);
+        long facebookId = mJsonObject.get(FACEBOOK_ID.get(), -1L);
+        String username = mJsonObject.get(USERNAME.get(), "");
+        String email = mJsonObject.get(EMAIL.get(), "");
+        String firstName = mJsonObject.get(FIRST_NAME.get(), "");
+        String lastName = mJsonObject.get(LAST_NAME.get(), "");
+        String mobilePhone = mJsonObject.get(MOBILE_PHONE.get(), "");
+        String homePhone = mJsonObject.get(HOME_PHONE.get(), "");
+        JSONObject preAddress = mJsonObject.get(ADDRESS.get(), new JSONObject());
         Address address = new AddressParser(preAddress).parse();
-        boolean locked = mJsonObject.getBoolean(LOCKED.get(), true);
-        boolean enabled = mJsonObject.getBoolean(ENABLED.get(), true);
-        Gender gender = Gender.getGender(mJsonObject.getString(GENDER.get(), null));
-        String birthDate = mJsonObject.getString(BIRTH_DATE.get(), "");
-        String profession = mJsonObject.getString(PROFESSION.get(), "");
-        String profilePicture = mJsonObject.getString(PROFILE_PICTURE.get(), null);
+        boolean locked = mJsonObject.get(LOCKED.get(), true);
+        boolean enabled = mJsonObject.get(ENABLED.get(), true);
+        Gender gender = Gender.getGender(mJsonObject.get(GENDER.get(), "male"));
+        String birthDate = mJsonObject.get(BIRTH_DATE.get(), "");
+        String profession = mJsonObject.get(PROFESSION.get(), "");
+        String profilePicture = mJsonObject.get(PROFILE_PICTURE.get(), "");
 
         URL profilePictureURL = null;
         if (profilePicture != null) {
@@ -78,7 +78,7 @@ public class UserParser extends Parser<User> {
             }
         }
 
-        JSONArray areas = mJsonObject.getJSONArray(LOCATIONS_INTEREST.get(), new JSONArray());
+        JSONArray areas = mJsonObject.get(LOCATIONS_INTEREST.get(), new JSONArray());
         List<Location> areasOfInterest = new ArrayList<>();
         for (int i = 0; i < areas.length(); i++) {
             try {
@@ -89,7 +89,8 @@ public class UserParser extends Parser<User> {
                 throw new ParserException(e);
             }
         }
-        JSONArray events = mJsonObject.getJSONArray(EVENTS_ATTENDED.get(), new JSONArray());
+
+        JSONArray events = mJsonObject.get(EVENTS_ATTENDED.get(), new JSONArray());
         List<Event> eventsAttended = new ArrayList<>();
         for (int i = 0; i < events.length(); i++) {
             try {
@@ -102,6 +103,7 @@ public class UserParser extends Parser<User> {
             }
 
         }
+
         return new User(
                 id,
                 facebookId,

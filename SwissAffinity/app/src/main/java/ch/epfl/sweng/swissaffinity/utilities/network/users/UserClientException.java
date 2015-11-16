@@ -1,11 +1,9 @@
 package ch.epfl.sweng.swissaffinity.utilities.network.users;
 
 /**
- * Created by Joel on 10/26/2015.
+ * An exception class extension for UserClient
  */
-public class UserClientException extends Exception{
-
-    private static final long serialVersionUID = 1L;
+public class UserClientException extends Exception {
 
     public UserClientException() {
         super();

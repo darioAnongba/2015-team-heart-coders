@@ -23,12 +23,12 @@ public class AddressParser extends Parser<Address> {
     @Override
     public Address parse() throws ParserException {
 
-        String street = mJsonObject.getString(STREET.get(), "");
-        int streetNum = mJsonObject.getInt(STREET_NUMBER.get(), -1);
-        int zipCode = mJsonObject.getInt(ZIP_CODE.get(), -1);
-        String city = mJsonObject.getString(CITY.get(), "");
-        String province = mJsonObject.getString(PROVINCE.get(), "");
-        String country = mJsonObject.getString(COUNTRY.get(), "");
+        String street = mJsonObject.get(STREET.get(), "");
+        int streetNum = mJsonObject.get(STREET_NUMBER.get(), -1);
+        int zipCode = mJsonObject.get(ZIP_CODE.get(), -1);
+        String city = mJsonObject.get(CITY.get(), "");
+        String province = mJsonObject.get(PROVINCE.get(), "");
+        String country = mJsonObject.get(COUNTRY.get(), "");
 
         return new Address(country, zipCode, city, province, streetNum, street);
     }

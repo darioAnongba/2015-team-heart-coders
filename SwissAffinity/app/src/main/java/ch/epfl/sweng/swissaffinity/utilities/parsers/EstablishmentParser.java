@@ -32,15 +32,15 @@ public class EstablishmentParser extends Parser<Establishment> {
         try {
             int id = mJsonObject.getInt(ID.get());
             String name = mJsonObject.getString(NAME.get());
-            Type type = Type.getType(mJsonObject.getString(TYPE.get(), "bar"));
+            Type type = Type.getType(mJsonObject.get(TYPE.get(), "bar"));
             Address address = new AddressParser(mJsonObject.get(
                     ADDRESS.get(),
                     new JSONObject())).parse();
-            String phoneNum = mJsonObject.getString(PHONE_NUMBER.get(), "");
-            String description = mJsonObject.getString(DESCRIPTION.get(), "");
-            String url = mJsonObject.getString(URL.get(), "");
-            int maxSeats = mJsonObject.getInt(MAX_SEATS.get(), -1);
-            String logoPath = mJsonObject.getString(LOGO_PATH.get(), "");
+            String phoneNum = mJsonObject.get(PHONE_NUMBER.get(), "");
+            String description = mJsonObject.get(DESCRIPTION.get(), "");
+            String url = mJsonObject.get(URL.get(), "");
+            int maxSeats = mJsonObject.get(MAX_SEATS.get(), -1);
+            String logoPath = mJsonObject.get(LOGO_PATH.get(), "");
             Location location =
                     new LocationParser(mJsonObject.getJSONObject(LOCATION.get())).parse();
 

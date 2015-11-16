@@ -12,7 +12,7 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.SPEED_DAT
 public class ParserFactory {
 
     public static Parser<? extends Event> parserFor(SafeJSONObject jsonObject) throws ParserException {
-        String eventType = jsonObject.getString(EVENT_TYPE.get(), "");
+        String eventType = jsonObject.get(EVENT_TYPE.get(), "");
         if (eventType != null && eventType.equals(SPEED_DATING_TYPE.get())) {
             return new SpeedDatingEventParser(jsonObject);
         }
