@@ -24,13 +24,12 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ch.epfl.sweng.swissaffinity.utilities.network.ServerTags;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
 import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREFS;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOKID;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.GENDER;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ID;
@@ -134,15 +133,15 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     private void fillUserData(SafeJSONObject jsonObject) {
-        String facebookID = jsonObject.getString(ID.get(), "");
-        String userName = jsonObject.getString(NAME.get(), "");
-        String lastName = jsonObject.getString(LAST_NAME.get(), "");
-        String firstName = jsonObject.getString(FIRST_NAME.get(), "");
-        String gender = jsonObject.getString(GENDER.get(), "");
-        String birthday = jsonObject.getString(BIRTHDAY.get(), "");
-        String email = jsonObject.getString(EMAIL.get(), "");
+        String facebookID = jsonObject.get(ID.get(), "");
+        String userName = jsonObject.get(NAME.get(), "");
+        String lastName = jsonObject.get(LAST_NAME.get(), "");
+        String firstName = jsonObject.get(FIRST_NAME.get(), "");
+        String gender = jsonObject.get(GENDER.get(), "");
+        String birthday = jsonObject.get(BIRTHDAY.get(), "");
+        String email = jsonObject.get(EMAIL.get(), "");
         SHARED_PREFS.edit()
-                    .putString(FACEBOOKID.get(), facebookID)
+                    .putString(FACEBOOK_ID.get(), facebookID)
                     .putString(USERNAME.get(), userName)
                     .putString(LAST_NAME.get(), lastName)
                     .putString(FIRST_NAME.get(), firstName)
@@ -154,7 +153,7 @@ public class AboutActivity extends AppCompatActivity {
 
     private void deleteUserData() {
         SHARED_PREFS.edit()
-                    .putString(FACEBOOKID.get(), null)
+                    .putString(FACEBOOK_ID.get(), null)
                     .putString(USERNAME.get(), null)
                     .putString(LAST_NAME.get(), null)
                     .putString(FIRST_NAME.get(), null)

@@ -15,7 +15,8 @@ import ch.epfl.sweng.swissaffinity.utilities.parsers.user.UserParser;
  * User Client parser Created by Max on 06/11/2015.
  */
 public class NetworkUserClient implements UserClient {
-    private static final String SERVER_API_USERS = "/api/users/";
+
+    private static final String USERS = "/api/users/";
 
     private final String mServerUrl;
     private final NetworkProvider mNetworkProvider;
@@ -25,35 +26,24 @@ public class NetworkUserClient implements UserClient {
         mNetworkProvider = networkProvider;
     }
 
-
     @Override
     public User fetchByUsername(String userName) throws UserClientException {
-        User user = null;
-        try {
-            String content =
-                    mNetworkProvider.getContent(mServerUrl + SERVER_API_USERS + userName);
-
-
-            JSONObject jsonObject = new JSONObject(content);
-            user = new UserParser(jsonObject).parse();
-
-        } catch (JSONException | ParserException | IOException e) {
-            throw new UserClientException(e);
-        }
-
-        return user;
+        return fetch(userName);
     }
 
     @Override
     public User fetchByFacebookID(String id) throws UserClientException {
-        User user;
+        return fetch(id);
+    }
+
+    private User fetch(String nameOrId) throws UserClientException {
         try {
-            String content = mNetworkProvider.getContent(mServerUrl + SERVER_API_USERS + id);
+            String content =
+                    mNetworkProvider.getContent(mServerUrl + USERS + nameOrId);
             JSONObject jsonObject = new JSONObject(content);
-            user = new UserParser(jsonObject).parse();
-        } catch (JSONException | ParserException | IOException e) {
+            return new UserParser(jsonObject).parse();
+        } catch (ParserException | JSONException | IOException e) {
             throw new UserClientException(e);
         }
-        return user;
     }
 }

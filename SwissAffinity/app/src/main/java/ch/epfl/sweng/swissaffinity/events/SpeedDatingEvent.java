@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 
 /**
- * Representation of a speed-dating event.
+ * Representation of a speed dating event.
  */
 public class SpeedDatingEvent extends Event implements Serializable {
 
@@ -80,6 +80,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
          * Setter for men seats
          *
          * @param menSeats
+         *
          * @return this
          */
         public Builder setMenSeats(int menSeats) {
@@ -91,6 +92,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
          * Setter for women seats
          *
          * @param womenSeats
+         *
          * @return this
          */
         public Builder setWomenSeats(int womenSeats) {
@@ -102,6 +104,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
          * Setter for registered men
          *
          * @param menRegistered
+         *
          * @return this
          */
         public Builder setMenRegistered(int menRegistered) {
@@ -113,6 +116,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
          * Setter for registered women
          *
          * @param womenRegistered
+         *
          * @return this
          */
         public Builder setWomenRegistered(int womenRegistered) {
@@ -125,6 +129,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
          * Setter for minimum age
          *
          * @param minAge
+         *
          * @return this
          */
         public Builder setMinAge(int minAge) {
@@ -136,6 +141,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
          * Setter for maximum age
          *
          * @param maxAge
+         *
          * @return this
          */
         public Builder setMaxAge(int maxAge) {
@@ -147,6 +153,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
          * Setter for establishment
          *
          * @param establishment
+         *
          * @return this
          */
         public Builder setEstablishment(Establishment establishment) {

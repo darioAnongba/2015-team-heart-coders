@@ -1,9 +1,10 @@
 package ch.epfl.sweng.swissaffinity.utilities.network.events;
 
 /**
- * Created by Lionel on 05/11/15.
+ * An exception class extension for EventClient.
  */
 public class EventClientException extends Exception {
+
     public EventClientException() {
         super();
     }

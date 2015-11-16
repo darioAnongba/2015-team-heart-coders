@@ -31,7 +31,7 @@ public class DefaultNetworkProvider implements NetworkProvider {
         connection.setDoInput(true);
         connection.connect();
         int responseCode = connection.getResponseCode();
-        if (responseCode != HTTP_SUCCESS_START) {
+        if (responseCode < HTTP_SUCCESS_START || responseCode > HTTP_SUCCESS_END) {
             throw new IOException("Connection bad response code: " + responseCode);
         }
         return fetchContent(connection);

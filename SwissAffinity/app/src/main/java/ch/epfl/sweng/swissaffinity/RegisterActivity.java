@@ -1,6 +1,5 @@
 package ch.epfl.sweng.swissaffinity;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +11,7 @@ import ch.epfl.sweng.swissaffinity.users.User;
 
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOKID;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.GENDER;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_NAME;
@@ -63,7 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
         email = sharedPreferences.getString(EMAIL.get(), "");
         birthday = sharedPreferences.getString(BIRTHDAY.get(), "");
         gender = sharedPreferences.getString(GENDER.get(), "");
-        facebookId = sharedPreferences.getString(FACEBOOKID.get(),"");
+        facebookId = sharedPreferences.getString(FACEBOOK_ID.get(),"");
 
         EditText userName = (EditText) findViewById(R.id.registerUserName);
         userName.setText(name);
