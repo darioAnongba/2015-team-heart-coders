@@ -67,7 +67,7 @@ public class UserParser extends Parser<User> {
         Gender gender = Gender.getGender(mJsonObject.get(GENDER.get(), "male"));
         String birthDate = mJsonObject.get(BIRTH_DATE.get(), "");
         String profession = mJsonObject.get(PROFESSION.get(), "");
-        String profilePicture = mJsonObject.get(PROFILE_PICTURE.get(), "");
+        String profilePicture = mJsonObject.get(PROFILE_PICTURE.get(), null);
 
         URL profilePictureURL = null;
         if (profilePicture != null) {

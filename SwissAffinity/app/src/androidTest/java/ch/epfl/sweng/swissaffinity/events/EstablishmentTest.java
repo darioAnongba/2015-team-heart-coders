@@ -46,7 +46,7 @@ public class EstablishmentTest {
 
     @Test
     public void testGetUrl() {
-        assertEquals("http://urlTest.com", establishment.getUrl().toString());
+        assertEquals("", establishment.getUrl());
     }
 
 }

@@ -60,7 +60,6 @@ public class Establishment implements Serializable {
     private final String mUrl; // nullable
     private final int mMaxSeats; // nullable
     private final String mLogoPath; // nullable
-    private final Location mLocation;
 
     /**
      * Constructor for an establishment.
@@ -74,7 +73,6 @@ public class Establishment implements Serializable {
      * @param url         the URL of the website
      * @param maxSeats    maximum number of seats
      * @param logoPath    the relative path to the logo
-     * @param location    its location {@link Location}
      */
     public Establishment(
             int id,
@@ -85,11 +83,10 @@ public class Establishment implements Serializable {
             String description,
             String url,
             int maxSeats,
-            String logoPath,
-            Location location)
+            String logoPath)
     {
         if (id < 0 || name == null || type == null || address == null || phoneNumber == null ||
-            description == null || url == null || logoPath == null || location == null)
+            description == null || url == null || logoPath == null)
         {
             throw new IllegalArgumentException();
         }
@@ -102,7 +99,6 @@ public class Establishment implements Serializable {
         mUrl = url;
         mMaxSeats = maxSeats;
         mLogoPath = logoPath;
-        mLocation = location;
     }
 
     /**

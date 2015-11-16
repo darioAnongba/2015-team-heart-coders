@@ -41,8 +41,6 @@ public class EstablishmentParser extends Parser<Establishment> {
             String url = mJsonObject.get(URL.get(), "");
             int maxSeats = mJsonObject.get(MAX_SEATS.get(), -1);
             String logoPath = mJsonObject.get(LOGO_PATH.get(), "");
-            Location location =
-                    new LocationParser(mJsonObject.getJSONObject(LOCATION.get())).parse();
 
             return new Establishment(
                     id,
@@ -53,8 +51,7 @@ public class EstablishmentParser extends Parser<Establishment> {
                     description,
                     url,
                     maxSeats,
-                    logoPath,
-                    location);
+                    logoPath);
         } catch (Exception e) {
             throw new ParserException(e);
         }

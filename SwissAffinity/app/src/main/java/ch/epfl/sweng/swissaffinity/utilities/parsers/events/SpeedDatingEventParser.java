@@ -17,6 +17,7 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BASE_PRIC
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.DATE_BEGIN;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.DATE_END;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.DESCRIPTION;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ESTABLISHMENT;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.IMAGE_PATH;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_UPDATE;
@@ -64,7 +65,8 @@ public class SpeedDatingEventParser extends Parser<SpeedDatingEvent> {
             int minAge = mJsonObject.getInt(MIN_AGE.get());
             int maxAge = mJsonObject.getInt(MAX_AGE.get());
 
-            Establishment establishment = new EstablishmentParser(mJsonObject).parse();
+            Establishment establishment =
+                    new EstablishmentParser(mJsonObject.getJSONObject(ESTABLISHMENT.get())).parse();
 
             builder.setId(id)
                    .setName(name)
