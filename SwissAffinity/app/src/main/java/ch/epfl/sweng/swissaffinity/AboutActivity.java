@@ -2,7 +2,7 @@ package ch.epfl.sweng.swissaffinity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -16,6 +16,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
+import com.facebook.GraphRequest.GraphJSONObjectCallback;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -23,15 +24,20 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREF;
-import static ch.epfl.sweng.swissaffinity.MainActivity.USERID;
-import static ch.epfl.sweng.swissaffinity.MainActivity.USERNAME;
-import static com.facebook.AccessToken.getCurrentAccessToken;
-import static com.facebook.GraphRequest.newMeRequest;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
+
+import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREFS;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.GENDER;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ID;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_NAME;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.NAME;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
 public class AboutActivity extends AppCompatActivity {
-    private SharedPreferences sharedPreferences;
-    private LoginButton loginBtn;
     private CallbackManager callbackManager;
 
     @Override
@@ -41,46 +47,51 @@ public class AboutActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(context);
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_about);
-        sharedPreferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
-        setLogedText();
-        loginBtn = (LoginButton) findViewById(R.id.login_button);
+        setLoggedText();
+        LoginButton loginBtn = (LoginButton) findViewById(R.id.login_button);
         loginBtn.setReadPermissions("public_profile", "email", "user_birthday");
         loginBtn.registerCallback(
                 callbackManager, new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        GraphRequest request = newMeRequest(
-                                getCurrentAccessToken(),
-                                new GraphRequest.GraphJSONObjectCallback() {
+                        GraphRequest request = GraphRequest.newMeRequest(
+                                AccessToken.getCurrentAccessToken(),
+                                new GraphJSONObjectCallback() {
                                     @Override
-                                    public void onCompleted(
-                                            JSONObject object, GraphResponse response)
-                                    {
-                                        JSONObject json = response.getJSONObject();
-                                        if (json != null) {
-                                            try {
-                                                String userId = json.getString("id");
-                                                String name = json.getString("name");
-                                                String lastName = json.getString("last_name");
-                                                String firstName = json.getString("first_name");
-                                                String gender = json.getString("gender");
-                                                String birthday = json.getString("birthday");
-                                                String email = json.getString("email");
-                                                sharedPreferences.edit()
-                                                                 .putString(USERNAME, firstName)
-                                                                 .putString(USERID, userId)
-                                                                 .apply();
-                                                Log.v("LoginActivity", response.toString());
-                                                finish();
-                                            } catch (JSONException e) {
-                                                Log.e("AboutActivity", e.getMessage());
-                                            }
+                                    public void onCompleted(JSONObject json, GraphResponse rep) {
+                                        SafeJSONObject jsonObject = null;
+                                        try {
+                                            jsonObject = new SafeJSONObject(rep.getRawResponse());
+                                        } catch (JSONException e) {
+                                            Log.e("AboutActivity", e.toString());
+                                        }
+                                        Log.v("AboutActivity", rep.toString());
+                                        if (jsonObject != null) {
+                                            fillUserData(jsonObject);
+                                            finish();
+                                        } else {
+                                            //TODO: no data...
+                                            onError(null);
                                         }
                                     }
                                 });
                         Bundle parameters = new Bundle();
-                        parameters.putString(
-                                "fields", "id,name,first_name,last_name,email,gender,birthday");
+                        String fields = new StringBuilder()
+                                .append(ID.get())
+                                .append(",")
+                                .append(NAME.get())
+                                .append(",")
+                                .append(FIRST_NAME.get())
+                                .append(",")
+                                .append(LAST_NAME.get())
+                                .append(",")
+                                .append(EMAIL.get())
+                                .append(",")
+                                .append(GENDER.get())
+                                .append(",")
+                                .append(BIRTHDAY.get())
+                                .toString();
+                        parameters.putString("fields", fields);
                         request.setParameters(parameters);
                         request.executeAsync();
                     }
@@ -96,7 +107,9 @@ public class AboutActivity extends AppCompatActivity {
                     @Override
                     public void onError(FacebookException e) {
                         Toast.makeText(
-                                AboutActivity.this, "Login attempt failed", Toast.LENGTH_SHORT)
+                                AboutActivity.this,
+                                "Login attempt failed",
+                                Toast.LENGTH_SHORT)
                              .show();
                     }
                 });
@@ -106,26 +119,11 @@ public class AboutActivity extends AppCompatActivity {
                     AccessToken oldAccessToken, AccessToken currentAccessToken)
             {
                 if (currentAccessToken == null) {
-                    sharedPreferences.edit()
-                                     .putString(USERNAME, null)
-                                     .putString(USERID, null)
-                                     .apply();
-                    setLogedText();
+                    deleteUserData();
+                    setLoggedText();
                 }
             }
         };
-    }
-
-    private void setLogedText() {
-        final TextView logged = ((TextView) findViewById(R.id.aboutLogedText));
-        String userName = sharedPreferences.getString(MainActivity.USERNAME, null);
-        if (userName == null) {
-            logged.setText("To start, you have to login:");
-            logged.setTextSize(20);
-        } else {
-            String loggedText = getString(R.string.about_logged);
-            logged.setText(String.format(loggedText, userName));
-        }
     }
 
     @Override
@@ -133,4 +131,60 @@ public class AboutActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
+
+    private void fillUserData(SafeJSONObject jsonObject) {
+        String facebookID = jsonObject.get(ID.get(), "");
+        String userName = jsonObject.get(NAME.get(), "");
+        String lastName = jsonObject.get(LAST_NAME.get(), "");
+        String firstName = jsonObject.get(FIRST_NAME.get(), "");
+        String gender = jsonObject.get(GENDER.get(), "");
+        String birthday = jsonObject.get(BIRTHDAY.get(), "");
+        String email = jsonObject.get(EMAIL.get(), "");
+        SHARED_PREFS.edit()
+                    .putString(FACEBOOK_ID.get(), facebookID)
+                    .putString(USERNAME.get(), userName)
+                    .putString(LAST_NAME.get(), lastName)
+                    .putString(FIRST_NAME.get(), firstName)
+                    .putString(GENDER.get(), gender)
+                    .putString(BIRTHDAY.get(), birthday)
+                    .putString(EMAIL.get(), email)
+                    .apply();
+    }
+
+    private void deleteUserData() {
+        SHARED_PREFS.edit()
+                    .putString(FACEBOOK_ID.get(), null)
+                    .putString(USERNAME.get(), null)
+                    .putString(LAST_NAME.get(), null)
+                    .putString(FIRST_NAME.get(), null)
+                    .putString(GENDER.get(), null)
+                    .putString(BIRTHDAY.get(), null)
+                    .putString(EMAIL.get(), null)
+                    .apply();
+    }
+
+    private void setLoggedText() {
+        TextView logged = ((TextView) findViewById(R.id.aboutLogedText));
+        String userName = SHARED_PREFS.getString(USERNAME.get(), null);
+        if (userName == null) {
+            logged.setText("To start, you have to login:");
+            logged.setTextSize(20);
+            logged.setTextColor(Color.RED);
+        } else {
+            String loggedText = getString(R.string.about_logged);
+            logged.setText(String.format(loggedText, userName));
+        }
+    }
+
+//        @Override
+//        protected void onPostExecute(Boolean code) {
+//            if (code) {
+//                Intent registerIntent = new Intent(AboutActivity.this, MainActivity.class);
+//                startActivity(registerIntent);
+//            } else {
+//                Intent registerIntent = new Intent(AboutActivity.this, RegisterActivity.class);
+//                startActivity(registerIntent);
+//            }
+//        }
+//    }
 }

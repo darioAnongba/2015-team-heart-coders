@@ -11,21 +11,23 @@ import java.net.URL;
 
 import ch.epfl.sweng.swissaffinity.DataForTesting;
 import ch.epfl.sweng.swissaffinity.events.Establishment;
+import ch.epfl.sweng.swissaffinity.utilities.network.ServerTags;
 
 import static org.junit.Assert.assertEquals;
 
 /**
  * Created by sahinfurkan on 13/11/15.
  */
-public class EstablishmentParserTest{
+public class EstablishmentParserTest {
     JSONObject json;
     JSONObject estJson;
     Establishment est;
+
     @Before
-    public void setUp() throws MalformedURLException, ParserException, JSONException {
-        json = (new DataForTesting()).createJSONEvent();
-        estJson = json.getJSONObject("establishment");
-        est = (new EstablishmentParser()).parseFromJSON(json);
+    public void setUp() throws Exception {
+        json = DataForTesting.createJSONEvent();
+        estJson = json.getJSONObject(ServerTags.ESTABLISHMENT.get());
+        est = new EstablishmentParser(estJson).parse();
     }
 
     @Test
@@ -44,8 +46,8 @@ public class EstablishmentParserTest{
     }
 
     @Test
-    public void urlTest() throws JSONException, MalformedURLException {
-        assertEquals(new URL(estJson.getString("url")), est.getUrl());
+    public void urlTest() throws JSONException {
+        assertEquals(estJson.getString("url"), est.getUrl());
     }
 
     @Test

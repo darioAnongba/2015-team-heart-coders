@@ -3,10 +3,11 @@ package ch.epfl.sweng.swissaffinity.utilities;
 import java.io.Serializable;
 
 /**
- * Representation of the location of an event.
+ * Representation of a location.
  */
 public class Location implements Serializable {
 
+    private final int mId;
     private final String mName;
 
     /**
@@ -14,15 +15,27 @@ public class Location implements Serializable {
      *
      * @param name the name of the location.
      */
-    public Location(String name) {
-        if (name == null) {
+    public Location(int id, String name) {
+        if (id < 0 || name == null) {
             throw new NullPointerException();
         }
+        mId = id;
         mName = name;
     }
 
     /**
-     * @return the location name.
+     * Getter for the ID
+     *
+     * @return
+     */
+    public int getId() {
+        return mId;
+    }
+
+    /**
+     * Getter for the name
+     *
+     * @return
      */
     public String getName() {
         return mName;

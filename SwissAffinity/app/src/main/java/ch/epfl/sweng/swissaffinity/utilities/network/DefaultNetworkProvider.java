@@ -5,7 +5,6 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -22,32 +21,20 @@ public class DefaultNetworkProvider implements NetworkProvider {
         return (HttpURLConnection) url.openConnection();
     }
 
-    /**
-     * Get the content of a HTTP GET request to the provided server URL.
-     *
-     * @param serverURL the server address
-     *
-     * @return the content of the request
-     *
-     * @throws IOException if no success with the request.
-     */
     @Override
     public String getContent(String serverURL) throws IOException {
-
         URL url = new URL(serverURL);
-
-        HttpURLConnection conn = getConnection(url);
-        conn.setReadTimeout(10000 /* milliseconds */);
-        conn.setConnectTimeout(15000 /* milliseconds */);
-        conn.setRequestMethod("GET");
-        conn.setDoInput(true);
-        conn.connect();
-        int response = conn.getResponseCode();
-        if (response < HTTP_SUCCESS_START || response > HTTP_SUCCESS_END) {
-            throw new IOException("Invalid HTTP response code");
+        HttpURLConnection connection = getConnection(url);
+        connection.setReadTimeout(10000 /* milliseconds */);
+        connection.setConnectTimeout(15000 /* milliseconds */);
+        connection.setRequestMethod("GET");
+        connection.setDoInput(true);
+        connection.connect();
+        int responseCode = connection.getResponseCode();
+        if (responseCode < HTTP_SUCCESS_START || responseCode > HTTP_SUCCESS_END) {
+            throw new IOException("Connection bad response code: " + responseCode);
         }
-
-        return fetchContent(conn);
+        return fetchContent(connection);
     }
 
     public void yieldPUTContent(String serverURL) throws IOException {
@@ -58,22 +45,17 @@ public class DefaultNetworkProvider implements NetworkProvider {
     /**
      * make a String out of the GET request to the server
      */
-    private String fetchContent(HttpURLConnection conn) throws IOException {
-
+    private String fetchContent(HttpURLConnection connection) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader reader = null;
-
         try {
-            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 stringBuilder.append(line).append("\n");
             }
-
             Log.d("HTTPFetchContent", "Fetched string of length " + stringBuilder.length());
-
             return stringBuilder.toString();
-
         } finally {
             if (reader != null) {
                 reader.close();

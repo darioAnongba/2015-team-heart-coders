@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import ch.epfl.sweng.swissaffinity.DataForTesting;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
+import ch.epfl.sweng.swissaffinity.utilities.network.ServerTags;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,12 +21,12 @@ public class LocationParserTest {
 
     @Before
     public void setUp() throws ParserException, JSONException {
-        json = (new DataForTesting()).createJSONEvent().getJSONObject("location");
-        location = new LocationParser().parseFromJSON(json);
+        json = DataForTesting.createJSONEvent().getJSONObject(ServerTags.LOCATION.get());
+        location = new LocationParser(json).parse();
     }
 
     @Test
     public void nameTest() throws JSONException {
-        assertEquals(location.getName(), json.getString("name"));
+        assertEquals(location.getName(), json.getString(ServerTags.NAME.get()));
     }
 }

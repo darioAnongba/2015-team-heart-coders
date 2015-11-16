@@ -4,19 +4,26 @@ import org.json.JSONObject;
 
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ID;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.NAME;
+
 /**
- * Created by sahinfurkan on 13/11/15.
+ * Parser for the Location class.
  */
-public class LocationParser implements Parsable<Location> {
+public class LocationParser extends Parser<Location> {
+
+    public LocationParser(JSONObject jsonObject) {
+        super(jsonObject);
+    }
+
     @Override
-    public Location parseFromJSON(JSONObject jsonObject) throws ParserException {
-        try{
-            int id = jsonObject.getInt("id");           // TODO id is not used in Location class! Do we really need it?
-            String name = jsonObject.getString("name");
-            return new Location(name);
-        }catch (Exception e){
-            new ParserException();
+    public Location parse() throws ParserException {
+        try {
+            int id = mJsonObject.getInt(ID.get());
+            String name = mJsonObject.getString(NAME.get());
+            return new Location(id, name);
+        } catch (Exception e) {
+            throw new ParserException(e);
         }
-        return null;
     }
 }

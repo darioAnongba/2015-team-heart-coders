@@ -4,26 +4,32 @@ import org.json.JSONObject;
 
 import ch.epfl.sweng.swissaffinity.utilities.Address;
 
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.CITY;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.COUNTRY;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.PROVINCE;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.STREET;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.STREET_NUMBER;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ZIP_CODE;
+
 /**
- * Created by sahinfurkan on 13/11/15.
+ * Parser for the Address class.
  */
+public class AddressParser extends Parser<Address> {
 
+    public AddressParser(JSONObject jsonObject) {
+        super(jsonObject);
+    }
 
-public class AddressParser implements Parsable<Address> {
     @Override
-    public Address parseFromJSON(JSONObject jsonObject) throws ParserException {
-        try {
-            String street = jsonObject.getString("street");
-            int streetNum = jsonObject.getInt("street_number");
-            int zipCode = jsonObject.getInt("zip_code");
-            String city = jsonObject.getString("city");
-            String province = jsonObject.getString("province");
-            String country = jsonObject.getString("country");
-            return new Address(country, zipCode, city, province, streetNum, street);
-        }
-        catch (Exception e) {
-            new ParserException();
-        }
-        return null;
+    public Address parse() throws ParserException {
+
+        String street = mJsonObject.get(STREET.get(), "");
+        int streetNum = mJsonObject.get(STREET_NUMBER.get(), -1);
+        int zipCode = mJsonObject.get(ZIP_CODE.get(), -1);
+        String city = mJsonObject.get(CITY.get(), "");
+        String province = mJsonObject.get(PROVINCE.get(), "");
+        String country = mJsonObject.get(COUNTRY.get(), "");
+
+        return new Address(country, zipCode, city, province, streetNum, street);
     }
 }
