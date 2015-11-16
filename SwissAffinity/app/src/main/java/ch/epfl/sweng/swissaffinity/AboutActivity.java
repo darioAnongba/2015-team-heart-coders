@@ -141,8 +141,7 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     private void fillUserData(SafeJSONObject jsonObject) {
-
-        String facebookID = "0000000000001";
+        String facebookID = jsonObject.get(ID.get(), "");
         String userName = jsonObject.get(NAME.get(), "");
         String lastName = jsonObject.get(LAST_NAME.get(), "");
         String firstName = jsonObject.get(FIRST_NAME.get(), "");
