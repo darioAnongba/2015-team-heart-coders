@@ -16,7 +16,6 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
  * Representation of a user.
  */
 public final class User implements Serializable {
-
     /**
      * Gender of the user.
      */
@@ -44,7 +43,7 @@ public final class User implements Serializable {
          *
          * @param gender the server API gender
          *
-         * @return
+         * @return the gender
          */
         public static Gender getGender(String gender) {
             for (Gender g : Gender.values()) {
@@ -114,6 +113,13 @@ public final class User implements Serializable {
             Collection<Location> areasOfInterest,
             List<Event> eventsAttended)
     {
+        if (id < 0 || facebookId < 0 || username == null || email == null || lastName == null ||
+            firstName == null || mobilePhone == null || homePhone == null || address == null ||
+            gender == null || birthDate == null || profession == null || profilePicture == null ||
+            areasOfInterest == null || eventsAttended == null)
+        {
+            throw new IllegalArgumentException();
+        }
         mId = id;
         mFacebookId = facebookId;
         mUsername = username;
