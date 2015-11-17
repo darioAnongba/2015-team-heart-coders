@@ -30,7 +30,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
     /**
      * Getter for men seats
      *
-     * @return the number of men seats for the event
+     * @return the number of men seats
      */
     public int getMenSeats() {
         return mMenSeats;
@@ -39,7 +39,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
     /**
      * Getter for women seats
      *
-     * @return the number of women seats for the event
+     * @return the number of women seats
      */
     public int getWomenSeats() {
         return mWomenSeats;
@@ -48,7 +48,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
     /**
      * Getter for the regidtered men
      *
-     * @return the number of registered men to the event
+     * @return the number of registered men
      */
     public int getMenRegistered() {
         return mMenRegistered;
@@ -57,7 +57,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
     /**
      * Getter for the registered women
      *
-     * @return the number of registered women to the event
+     * @return the number of registered women
      */
     public int getWomenRegistered() {
         return mWomenRegistered;
@@ -79,7 +79,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
         /**
          * Setter for men seats
          *
-         * @param menSeats
+         * @param menSeats the number of men seats
          *
          * @return this
          */
@@ -91,7 +91,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
         /**
          * Setter for women seats
          *
-         * @param womenSeats
+         * @param womenSeats the number of women seats
          *
          * @return this
          */
@@ -103,7 +103,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
         /**
          * Setter for registered men
          *
-         * @param menRegistered
+         * @param menRegistered the number of registered men
          *
          * @return this
          */
@@ -115,7 +115,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
         /**
          * Setter for registered women
          *
-         * @param womenRegistered
+         * @param womenRegistered the number of registered women
          *
          * @return this
          */
@@ -128,7 +128,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
         /**
          * Setter for minimum age
          *
-         * @param minAge
+         * @param minAge the minimum age
          *
          * @return this
          */
@@ -140,7 +140,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
         /**
          * Setter for maximum age
          *
-         * @param maxAge
+         * @param maxAge the maximum age
          *
          * @return this
          */
@@ -152,7 +152,7 @@ public class SpeedDatingEvent extends Event implements Serializable {
         /**
          * Setter for establishment
          *
-         * @param establishment
+         * @param establishment the establishment {@link Establishment}
          *
          * @return this
          */
@@ -162,9 +162,9 @@ public class SpeedDatingEvent extends Event implements Serializable {
         }
 
         /**
-         * Getter for the speed dating event.
+         * Build the speed dating event
          *
-         * @return the build speed dating event
+         * @return the speed dating event {@link SpeedDatingEvent}
          */
         public SpeedDatingEvent build() {
             return new SpeedDatingEvent(this);

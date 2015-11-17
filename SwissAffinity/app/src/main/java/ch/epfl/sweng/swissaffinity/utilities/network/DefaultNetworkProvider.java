@@ -21,6 +21,7 @@ import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
  * The class that get the HTTP connection from the server URL.
  */
 public class DefaultNetworkProvider implements NetworkProvider {
+
     public final static int HTTP_SUCCESS_START = 200;
     public final static int HTTP_SUCCESS_END = 299;
 
@@ -32,30 +33,27 @@ public class DefaultNetworkProvider implements NetworkProvider {
     @Override
     public String getContent(String serverURL) throws IOException {
         URL url = new URL(serverURL);
-        HttpURLConnection connection = getConnection(url);
-        connection.setReadTimeout(10000 /* milliseconds */);
-        connection.setConnectTimeout(15000 /* milliseconds */);
-        connection.setRequestMethod("GET");
-        connection.setDoInput(true);
-        connection.connect();
-        int responseCode = connection.getResponseCode();
-        if (responseCode < HTTP_SUCCESS_START || responseCode > HTTP_SUCCESS_END) {
-            throw new IOException("Connection bad response code: " + responseCode);
+        HttpURLConnection conn = getConnection(url);
+        if (!isConnectionSuccess(conn)) {
+            throw new IOException("Connection bad response code: " + conn.getResponseCode());
         }
-        return fetchContent(connection);
+        return fetchContent(conn);
     }
 
-    public Boolean checkCode(String serverURL) throws IOException{
-        URL url = new URL(serverURL);
-
-        HttpURLConnection conn = getConnection(url);
+    public static boolean isConnectionSuccess(HttpURLConnection conn) throws IOException {
         conn.setReadTimeout(10000 /* milliseconds */);
         conn.setConnectTimeout(15000 /* milliseconds */);
         conn.setRequestMethod("GET");
         conn.setDoInput(true);
         conn.connect();
         int response = conn.getResponseCode();
-        return (response==HttpURLConnection.HTTP_OK);
+        return response == HTTP_SUCCESS_START;
+    }
+
+    public static Boolean checkConnection(String serverURL) throws IOException {
+        URL url = new URL(serverURL);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        return isConnectionSuccess(conn);
     }
 
     public  String postContent(String serverURL, JSONObject json) throws IOException {

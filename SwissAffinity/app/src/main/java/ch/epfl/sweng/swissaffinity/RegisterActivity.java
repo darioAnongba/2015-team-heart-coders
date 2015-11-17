@@ -1,6 +1,5 @@
 package ch.epfl.sweng.swissaffinity;
 
-import android.accounts.NetworkErrorException;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,17 +12,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-
-import ch.epfl.sweng.swissaffinity.users.User;
+import ch.epfl.sweng.swissaffinity.users.User.Gender;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.NetworkUserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 
+import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREFS;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
@@ -34,10 +30,11 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private User mUser = null;
-    private String name;
-    private String email;
-    private String firstName;
+    private EditText emailText;
+    private EditText userNameText;
+    private EditText firstNameText;
+    private EditText lastNameText;
+    private EditText birthdayText;
     private String facebookId;
     private String gender = null;
     private String lastName;
@@ -45,11 +42,14 @@ public class RegisterActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private final String SERVER_URL = "http://beecreative.ch/api/users";
     private DefaultNetworkProvider networkProvider;
+    private EditText passwordText;
+    private EditText passwordConfirmation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
         sharedPreferences = MainActivity.SHARED_PREFS;
         networkProvider = new DefaultNetworkProvider();
         final RadioGroup.OnCheckedChangeListener radioChecker = new RadioGroup.OnCheckedChangeListener() {
@@ -65,8 +65,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         };
 
-        RadioGroup gender = (RadioGroup) this.findViewById(R.id.registerGender);
-        gender.setOnCheckedChangeListener(radioChecker);
         fillData();
 
         Button registerButton = (Button) findViewById(R.id.userRegistration);
@@ -79,76 +77,104 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+        registerButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        JSONObject json = createJson();
+                        if (json != null) {
+                            Log.v("UserJson", json.toString());
+                        }
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "Not implemented yet ;)",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
-    public void fillData(){
+    public void fillData() {
 
-        name = sharedPreferences.getString(USERNAME.get(), "");
-        firstName = sharedPreferences.getString(FIRST_NAME.get(), "");
-        lastName = sharedPreferences.getString(LAST_NAME.get(), "");
-        email = sharedPreferences.getString(EMAIL.get(), "");
-        birthday = sharedPreferences.getString(BIRTHDAY.get(), "");
-        gender = sharedPreferences.getString(GENDER.get(), "");
+        String userName = SHARED_PREFS.getString(USERNAME.get(), "");
+        String firstName = SHARED_PREFS.getString(FIRST_NAME.get(), "");
+        String lastName = SHARED_PREFS.getString(LAST_NAME.get(), "");
+        String email = SHARED_PREFS.getString(EMAIL.get(), "");
+        String birthday = SHARED_PREFS.getString(BIRTHDAY.get(), "");
+        gender = SHARED_PREFS.getString(GENDER.get(), "");
+        facebookId = SHARED_PREFS.getString(FACEBOOK_ID.get(), "");
 
-        facebookId = sharedPreferences.getString(FACEBOOK_ID.get(),"");
-
-        EditText userName = (EditText) findViewById(R.id.registerUserName);
-        userName.setText(name);
-        EditText firstNameText = (EditText) findViewById(R.id.registerFirstName);
+        userNameText = (EditText) findViewById(R.id.registerUserName);
+        userNameText.setText(userName);
+        firstNameText = (EditText) findViewById(R.id.registerFirstName);
         firstNameText.setText(firstName);
-        EditText lastNameText = (EditText) findViewById(R.id.registerLastName);
+        lastNameText = (EditText) findViewById(R.id.registerLastName);
         lastNameText.setText(lastName);
-        EditText emailText = (EditText) findViewById(R.id.registerEmail);
+        emailText = (EditText) findViewById(R.id.registerEmail);
         emailText.setText(email);
-        EditText birthdayText = (EditText) findViewById(R.id.registerBirthDay);
+        birthdayText = (EditText) findViewById(R.id.registerBirthDay);
         birthdayText.setText(birthday);
-        if (gender == "female") {
-            RadioButton female = (RadioButton) findViewById(R.id.registerFemale);
-            female.setChecked(true);
-        } else if (gender == "male") {
-            RadioButton male = (RadioButton) findViewById(R.id.registerMale);
-            male.setChecked(true);
+        if (gender.equalsIgnoreCase(Gender.FEMALE.get())) {
+            ((RadioButton) findViewById(R.id.registerFemale)).setChecked(true);
+        } else if (gender.equalsIgnoreCase(Gender.MALE.get())) {
+            ((RadioButton) findViewById(R.id.registerMale)).setChecked(true);
         }
-
+        passwordText = (EditText) findViewById(R.id.registerPassword);
+        passwordConfirmation = (EditText) findViewById(R.id.registerPasswordConfirmation);
     }
-
 
     private JSONObject createJson() {
-        EditText emailText = (EditText) findViewById(R.id.registerEmail);
-        EditText userNameText = (EditText) findViewById(R.id.registerUserName);
-        EditText firstNameText = (EditText) findViewById(R.id.registerFirstName);
-        EditText lastNameText = (EditText) findViewById(R.id.registerLastName);
-        EditText birthdayText = (EditText) findViewById(R.id.registerBirthDay);
-        EditText passwordText = (EditText) findViewById(R.id.registerPassword);
-        EditText passwordConfirmation = (EditText) findViewById(R.id.registerPasswordConfirmation);
-
         JSONObject jsonObject = null;
         JSONObject jsonRequest = null;
-        if(emailText.getText().toString().length()==0 || emailText.getText().toString().length()>100 || !isValidEmail(emailText.getText().toString())) {
-            Toast.makeText(RegisterActivity.this,"Mail is not in a valid format , empty or over 100 characters",
+
+
+        if (emailText.getText().toString().isEmpty() ||
+            emailText.getText().toString().length() > 100 ||
+            !isValidEmail(emailText.getText().toString()))
+        {
+            Toast.makeText(
+                    RegisterActivity.this,
+                    "Mail is not in a valid format , empty or over 100 characters",
                     Toast.LENGTH_SHORT).show();
-        } else if ((userNameText.getText().toString().length()==0 || userNameText.getText().toString().length() >50)) {
-            Toast.makeText(RegisterActivity.this, "Username is empty , or over 50 characters",
+        } else if ((userNameText.getText().toString().isEmpty() ||
+                    userNameText.getText().toString().length() > 50))
+        {
+            Toast.makeText(
+                    RegisterActivity.this, "Username is empty , or over 50 characters",
                     Toast.LENGTH_SHORT).show();
-        }else if((firstNameText.getText().toString().length()==0 || firstNameText.getText().toString().length() >50)) {
-            Toast.makeText(RegisterActivity.this, "First Name is empty , or over 50 characters",
+        } else if ((firstNameText.getText().toString().isEmpty() ||
+                    firstNameText.getText().toString().length() > 50))
+        {
+            Toast.makeText(
+                    RegisterActivity.this, "First Name is empty , or over 50 characters",
                     Toast.LENGTH_SHORT).show();
-        }else if((lastNameText.getText().toString().length()==0 || lastNameText.getText().toString().length() >50)) {
-            Toast.makeText(RegisterActivity.this, "Last Name is empty , or over 50 characters",
+        } else if ((lastNameText.getText().toString().isEmpty() ||
+                    lastNameText.getText().toString().length() > 50))
+        {
+            Toast.makeText(
+                    RegisterActivity.this, "Last Name is empty , or over 50 characters",
                     Toast.LENGTH_SHORT).show();
-        }else if(passwordText.getText().toString().length()==0) {
-            Toast.makeText(RegisterActivity.this, "Password is empty ",
+        } else if (passwordText.getText().toString().isEmpty()) {
+            Toast.makeText(
+                    RegisterActivity.this, "Password is empty ",
                     Toast.LENGTH_SHORT).show();
-        }else if (!passwordText.getText().toString().equals(passwordConfirmation.getText().toString())) {
-            Toast.makeText(RegisterActivity.this, "Password do not match ",
+        } else if (!passwordText.getText().toString().equals(
+                passwordConfirmation.getText()
+                                    .toString()))
+        {
+            Toast.makeText(
+                    RegisterActivity.this, "Password do not match ",
                     Toast.LENGTH_SHORT).show();
-        }else if(gender==null) {
-            Toast.makeText(RegisterActivity.this, "No value found for Gender ",
+        } else if (gender == null) {
+            Toast.makeText(
+                    RegisterActivity.this, "No value found for Gender ",
                     Toast.LENGTH_SHORT).show();
-        }else if(birthdayText.getText().toString().length()==0 ||birthdayText.getText().toString().length()>20 ) {
-            Toast.makeText(RegisterActivity.this, "Birth Date is empty or too long ",
+        } else if (birthdayText.getText().toString().length() == 0 ||
+                   birthdayText.getText().toString().length() > 20)
+        {
+            Toast.makeText(
+                    RegisterActivity.this, "Birth Date is empty or too long ",
                     Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             try {
                 jsonObject = new JSONObject();
                 jsonRequest = new JSONObject();
@@ -170,13 +196,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
-    public final static boolean isValidEmail(CharSequence target) {
-        if (target == null) {
-            return false;
-        } else {
-            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
-        }
+
+    public static boolean isValidEmail(CharSequence target) {
+        return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
+
 
     private class UploadUserTask extends AsyncTask<String, Void, Void> {
 
@@ -194,6 +218,5 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
     };
-
 
 }

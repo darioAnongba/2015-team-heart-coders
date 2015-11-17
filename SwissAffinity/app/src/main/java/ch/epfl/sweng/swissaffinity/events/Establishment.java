@@ -1,16 +1,13 @@
 package ch.epfl.sweng.swissaffinity.events;
 
 import java.io.Serializable;
-import java.net.URL;
 
 import ch.epfl.sweng.swissaffinity.utilities.Address;
-import ch.epfl.sweng.swissaffinity.utilities.Location;
 
 /**
  * Representation of an establishment for an event to take place in.
  */
 public class Establishment implements Serializable {
-
     /**
      * Type of establishment.
      */
@@ -26,20 +23,20 @@ public class Establishment implements Serializable {
         }
 
         /**
-         * Getter for the string representation of the type.
+         * Getter for the server API representation of a type
          *
-         * @return its type
+         * @return its server API type representation
          */
         public String get() {
             return mType;
         }
 
         /**
-         * Getter for the type of an establishment.
+         * Getter for the type of an establishment
          *
-         * @param type the server API type.
+         * @param type the server API type
          *
-         * @return
+         * @return the corresponding type
          */
         public static Type getType(String type) {
             for (Type t : Type.values()) {
@@ -102,54 +99,54 @@ public class Establishment implements Serializable {
     }
 
     /**
-     * Getter for the id.
+     * Getter for the ID
      *
-     * @return
+     * @return the ID
      */
     public int getId() {
         return mId;
     }
 
     /**
-     * Getter for the name.
+     * Getter for the name
      *
-     * @return
+     * @return the name
      */
     public String getName() {
         return mName;
     }
 
     /**
-     * Getter for the logo path.
+     * Getter for the logo path
      *
-     * @return
+     * @return the logo path
      */
     public String getLogoPath() {
         return mLogoPath;
     }
 
     /**
-     * Getter for the URL.
+     * Getter for the URL
      *
-     * @return
+     * @return the url
      */
     public String getUrl() {
         return mUrl;
     }
 
     /**
-     * Getter for the description.
+     * Getter for the description
      *
-     * @return
+     * @return the description
      */
     public String getDescription() {
         return mDescription;
     }
 
     /**
-     * Getter for the address.
+     * Getter for the address
      *
-     * @return
+     * @return the address
      */
     public Address getAddress() {
         return mAddress;
@@ -158,7 +155,7 @@ public class Establishment implements Serializable {
     /**
      * Getter for the type {@link Type}
      *
-     * @return
+     * @return the type
      */
     public Type getType() {
         return mType;
