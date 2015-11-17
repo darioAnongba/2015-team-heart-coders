@@ -64,8 +64,8 @@ public class DefaultNetworkProvider implements NetworkProvider {
 
     /**
      *The method to write a user into the server and get his response
-     * @param serverURL The server where you're posting the new User
-     * @param json The json of the User
+     * @param serverURL The server where you're posting the json
+     * @param json The json of that you want to send to the servers
      * @return The server response (error or the good content of a json that is written in the database
      * @throws IOException if one constructor is not valid ( OutputStreamWritter);
      */
