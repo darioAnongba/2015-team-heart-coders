@@ -1,5 +1,6 @@
 package ch.epfl.sweng.swissaffinity;
 
+import android.accounts.NetworkErrorException;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -72,11 +73,12 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton.setClickable(false);
         registerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                new UploadUserTask().execute();
-
+               JSONObject json =createJson();
+                if (json!=null) {
+                    new UploadUserTask().execute(json.toString());
+                }
             }
         });
-
     }
 
     public void fillData(){
@@ -121,6 +123,7 @@ public class RegisterActivity extends AppCompatActivity {
         EditText passwordConfirmation = (EditText) findViewById(R.id.registerPasswordConfirmation);
 
         JSONObject jsonObject = null;
+        JSONObject jsonRequest = null;
         if(emailText.getText().toString().length()==0 || emailText.getText().toString().length()>100 || !isValidEmail(emailText.getText().toString())) {
             Toast.makeText(RegisterActivity.this,"Mail is not in a valid format , empty or over 100 characters",
                     Toast.LENGTH_SHORT).show();
@@ -148,6 +151,7 @@ public class RegisterActivity extends AppCompatActivity {
         }else {
             try {
                 jsonObject = new JSONObject();
+                jsonRequest = new JSONObject();
                 jsonObject.put("email", emailText.getText().toString());
                 jsonObject.put("username", userNameText.getText().toString());
                 jsonObject.put("firstName", firstNameText.getText().toString());
@@ -156,14 +160,14 @@ public class RegisterActivity extends AppCompatActivity {
                 jsonObject.put("birthDate", birthdayText.getText().toString());
                 jsonObject.put("facebookId", facebookId);
                 jsonObject.put("plainPassword", passwordText.getText().toString());
+                jsonRequest.put("rest_user_registration",jsonObject);
             } catch (JSONException e) {
             }
             TextView editText =(TextView) findViewById(R.id.registerInstruction);
             editText.setText(jsonObject.toString());
         }
-        return jsonObject;
+        return jsonRequest;
     }
-
 
 
     public final static boolean isValidEmail(CharSequence target) {
@@ -174,23 +178,22 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private class UploadUserTask extends AsyncTask<String, Void, Void>{
+    private class UploadUserTask extends AsyncTask<String, Void, Void> {
 
         @Override
         protected Void doInBackground(String... params) {
 
             NetworkUserClient networkUserClient = new NetworkUserClient(SERVER_URL, new DefaultNetworkProvider());
             try {
-                JSONObject jsonObject = createJson();
+                JSONObject jsonObject = new JSONObject(params[0]);
                 networkUserClient.postUser(SERVER_URL, jsonObject);
-            } catch (UserClientException e) {
-                e.printStackTrace();
+            } catch (UserClientException | JSONException e) {
+
             }
             return null;
         }
 
-
-        };
+    };
 
 
 }
