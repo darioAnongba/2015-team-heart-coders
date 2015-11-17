@@ -22,7 +22,7 @@ public class LocationParserTest {
     @Before
     public void setUp() throws ParserException, JSONException {
         json = DataForTesting.createJSONEvent().getJSONObject(ServerTags.LOCATION.get());
-        location = new LocationParser(json).parse();
+        location = new LocationParser().parse(new SafeJSONObject(json));
     }
 
     @Test

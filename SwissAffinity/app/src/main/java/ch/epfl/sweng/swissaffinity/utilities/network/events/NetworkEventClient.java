@@ -67,7 +67,7 @@ public class NetworkEventClient implements EventClient {
             String content = mNetworkProvider.getContent(mServerUrl + API + EVENTS + "/" + id);
             SafeJSONObject jsonObject = new SafeJSONObject(content);
             Parser<? extends Event> parser = ParserFactory.parserFor(jsonObject);
-            return parser.parse();
+            return parser.parse(jsonObject);
         } catch (IOException | ParserException | JSONException e) {
             throw new EventClientException(e);
         }
@@ -98,7 +98,7 @@ public class NetworkEventClient implements EventClient {
             for (int i = 0; i < jsonEvents.length(); ++i) {
                 SafeJSONObject jsonObject = new SafeJSONObject(jsonEvents.getJSONObject(i));
                 Parser<? extends Event> parser = ParserFactory.parserFor(jsonObject);
-                Event event = parser.parse();
+                Event event = parser.parse(jsonObject);
                 events.add(event);
             }
         } catch (ParserException | JSONException | IOException e) {

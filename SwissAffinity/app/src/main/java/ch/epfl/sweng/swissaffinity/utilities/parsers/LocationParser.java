@@ -13,15 +13,11 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.NAME;
  */
 public class LocationParser extends Parser<Location> {
 
-    public LocationParser(JSONObject jsonObject) {
-        super(jsonObject);
-    }
-
     @Override
-    public Location parse() throws ParserException {
+    public Location parse(SafeJSONObject jsonObject) throws ParserException {
         try {
-            int id = mJsonObject.getInt(ID.get());
-            String name = mJsonObject.getString(NAME.get());
+            int id = jsonObject.getInt(ID.get());
+            String name = jsonObject.getString(NAME.get());
             return new Location(id, name);
         } catch (JSONException e) {
             throw new ParserException(e);

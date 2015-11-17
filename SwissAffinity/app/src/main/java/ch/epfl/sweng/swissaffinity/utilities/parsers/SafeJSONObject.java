@@ -34,6 +34,13 @@ public class SafeJSONObject extends JSONObject {
     }
 
     /**
+     * Default constructor
+     */
+    public SafeJSONObject() {
+        super();
+    }
+
+    /**
      * Getter to generically have a default fallback value.
      */
     @SuppressWarnings("unchecked")

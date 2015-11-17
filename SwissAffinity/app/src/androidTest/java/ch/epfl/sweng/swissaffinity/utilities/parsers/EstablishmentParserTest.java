@@ -25,7 +25,7 @@ public class EstablishmentParserTest {
     public void setUp() throws Exception {
         json = DataForTesting.createJSONEvent();
         estJson = json.getJSONObject(ServerTags.ESTABLISHMENT.get());
-        est = new EstablishmentParser(estJson).parse();
+        est = new EstablishmentParser().parse(new SafeJSONObject(estJson));
     }
 
     @Test

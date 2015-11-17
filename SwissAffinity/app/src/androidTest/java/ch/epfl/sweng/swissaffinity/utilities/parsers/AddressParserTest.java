@@ -19,8 +19,8 @@ public class AddressParserTest {
     JSONObject json;
     @Before
     public void setUp() throws JSONException, ParserException {
-        json = (new DataForTesting()).createJSONEvent().getJSONObject("establishment").getJSONObject("address");
-        address = (new AddressParser(json)).parse();
+        json = DataForTesting.createJSONEvent().getJSONObject("establishment").getJSONObject("address");
+        address = new AddressParser().parse(new SafeJSONObject(json));
     }
 
     @Test

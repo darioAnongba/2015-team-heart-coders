@@ -45,49 +45,50 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
  */
 public class UserParser extends Parser<User> {
 
-    public UserParser(JSONObject jsonObject) {
-        super(jsonObject);
-    }
-
     @Override
-    public User parse() throws ParserException {
+    public User parse(SafeJSONObject jsonObject) throws ParserException {
 
-        int id = mJsonObject.get(ID.get(), -1);
-        long facebookId = mJsonObject.get(FACEBOOK_ID.get(), -1L);
-        String username = mJsonObject.get(USERNAME.get(), "");
-        String email = mJsonObject.get(EMAIL.get(), "");
-        String firstName = mJsonObject.get(FIRST_NAME.get(), "");
-        String lastName = mJsonObject.get(LAST_NAME.get(), "");
-        String mobilePhone = mJsonObject.get(MOBILE_PHONE.get(), "");
-        String homePhone = mJsonObject.get(HOME_PHONE.get(), "");
-        JSONObject preAddress = mJsonObject.get(ADDRESS.get(), new JSONObject());
-        Address address = new AddressParser(preAddress).parse();
-        boolean locked = mJsonObject.get(LOCKED.get(), true);
-        boolean enabled = mJsonObject.get(ENABLED.get(), true);
-        Gender gender = Gender.getGender(mJsonObject.get(GENDER.get(), "male"));
-        String birthDate = mJsonObject.get(BIRTH_DATE.get(), "");
-        String profession = mJsonObject.get(PROFESSION.get(), "");
-        String profilePicture = mJsonObject.get(PROFILE_PICTURE.get(), "");
+        int id = jsonObject.get(ID.get(), -1);
+        long facebookId = jsonObject.get(FACEBOOK_ID.get(), -1L);
+        String username = jsonObject.get(USERNAME.get(), "");
+        String email = jsonObject.get(EMAIL.get(), "");
+        String firstName = jsonObject.get(FIRST_NAME.get(), "");
+        String lastName = jsonObject.get(LAST_NAME.get(), "");
+        String mobilePhone = jsonObject.get(MOBILE_PHONE.get(), "");
+        String homePhone = jsonObject.get(HOME_PHONE.get(), "");
+        SafeJSONObject jsonAddress;
+        try {
+            jsonAddress = new SafeJSONObject(jsonObject.getJSONObject(ADDRESS.get()));
+        } catch (JSONException e) {
+            throw new ParserException(e);
+        }
+        Address address = new AddressParser().parse(jsonAddress);
+        boolean locked = jsonObject.get(LOCKED.get(), true);
+        boolean enabled = jsonObject.get(ENABLED.get(), true);
+        Gender gender = Gender.getGender(jsonObject.get(GENDER.get(), "male"));
+        String birthDate = jsonObject.get(BIRTH_DATE.get(), "");
+        String profession = jsonObject.get(PROFESSION.get(), "");
+        String profilePicture = jsonObject.get(PROFILE_PICTURE.get(), "");
 
-        JSONArray areas = mJsonObject.get(LOCATIONS_INTEREST.get(), new JSONArray());
+        JSONArray areas = jsonObject.get(LOCATIONS_INTEREST.get(), new JSONArray());
         List<Location> areasOfInterest = new ArrayList<>();
         for (int i = 0; i < areas.length(); i++) {
             try {
                 JSONObject jsonArea = areas.getJSONObject(i);
-                Location location = new LocationParser(jsonArea).parse();
+                Location location = new LocationParser().parse(new SafeJSONObject(jsonArea));
                 areasOfInterest.add(location);
             } catch (JSONException e) {
                 throw new ParserException(e);
             }
         }
 
-        JSONArray events = mJsonObject.get(EVENTS_ATTENDED.get(), new JSONArray());
+        JSONArray events = jsonObject.get(EVENTS_ATTENDED.get(), new JSONArray());
         List<Event> eventsAttended = new ArrayList<>();
         for (int i = 0; i < events.length(); i++) {
             try {
                 SafeJSONObject jsonEvent = new SafeJSONObject(events.getJSONObject(i));
                 Parser<? extends Event> parser = ParserFactory.parserFor(jsonEvent);
-                Event event = parser.parse();
+                Event event = parser.parse(jsonEvent);
                 eventsAttended.add(event);
             } catch (JSONException e) {
                 throw new ParserException(e);
