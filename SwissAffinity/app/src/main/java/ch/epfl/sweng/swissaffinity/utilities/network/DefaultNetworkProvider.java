@@ -63,11 +63,11 @@ public class DefaultNetworkProvider implements NetworkProvider {
     }
 
     /**
-     *
-     * @param serverURL
-     * @param json
-     * @return
-     * @throws IOException
+     *The method to write a user into the server and get his response
+     * @param serverURL The server where you're posting the new User
+     * @param json The json of the User
+     * @return The server response (error or the good content of a json that is written in the database
+     * @throws IOException if one constructor is not valid ( OutputStreamWritter);
      */
     public  String postContent(String serverURL, JSONObject json) throws IOException {
         URL url = new URL(serverURL);
