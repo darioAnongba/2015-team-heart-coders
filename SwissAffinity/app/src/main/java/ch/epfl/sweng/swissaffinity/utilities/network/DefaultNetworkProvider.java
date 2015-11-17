@@ -1,21 +1,15 @@
 package ch.epfl.sweng.swissaffinity.utilities.network;
 
 
-import android.util.Log;
-
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ConnectException;
-import java.net.HttpRetryException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 
 /**
  * The class that get the HTTP connection from the server URL.
@@ -40,6 +34,12 @@ public class DefaultNetworkProvider implements NetworkProvider {
         return fetchContent(conn);
     }
 
+    /**
+     *The method to check if the connection is successful
+     * @param conn the urlConnection
+     * @return true if the server return 200 as response code , false else
+     * @throws IOException
+     */
     public static boolean isConnectionSuccess(HttpURLConnection conn) throws IOException {
         conn.setReadTimeout(10000 /* milliseconds */);
         conn.setConnectTimeout(15000 /* milliseconds */);
@@ -50,12 +50,25 @@ public class DefaultNetworkProvider implements NetworkProvider {
         return response == HTTP_SUCCESS_START;
     }
 
+    /**
+     * Checkthe connection using the IsConnectionSuccess
+     * @param serverURL the server Url
+     * @return The boolean to see if you get http response code == 200
+     * @throws IOException
+     */
     public static Boolean checkConnection(String serverURL) throws IOException {
         URL url = new URL(serverURL);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         return isConnectionSuccess(conn);
     }
 
+    /**
+     *
+     * @param serverURL
+     * @param json
+     * @return
+     * @throws IOException
+     */
     public  String postContent(String serverURL, JSONObject json) throws IOException {
         URL url = new URL(serverURL);
         String response = null;
@@ -70,7 +83,7 @@ public class DefaultNetworkProvider implements NetworkProvider {
         out.close();
         int responseCode = conn.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
-           response =fetchContent(conn);
+            response =fetchContent(conn);
         } else if(responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR){
             throw new ConnectException();
         } else if(responseCode == HttpURLConnection.HTTP_BAD_REQUEST) {
@@ -101,6 +114,12 @@ public class DefaultNetworkProvider implements NetworkProvider {
         }
     }
 
+    /**
+     *
+     * @param connection the HttpUrlConnection from where you're reading the errorStream
+     * @return The errorStream that the server sent you
+     * @throws IOException If the connection.getErrorStream cannot be open
+     */
     private String fetchErrorContent(HttpURLConnection connection) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader reader = null;
