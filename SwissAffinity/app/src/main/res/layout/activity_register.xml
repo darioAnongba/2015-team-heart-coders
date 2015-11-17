@@ -1,0 +1,134 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp"
+                tools:context="ch.epfl.sweng.swissaffinity.EventActivity">
+
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/registerScrollView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="false" >
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Please fill these fields so you can register"
+                android:id="@+id/registerInstruction"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:hint="Name"
+                android:ems="10"
+                android:id="@+id/registerUserName"
+                android:layout_below="@+id/registerInstruction"
+                android:layout_alignStart="@+id/registerEmail"/>
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="First Name"
+                android:id="@+id/registerFirstName"
+                android:layout_alignTop="@+id/registerScrollView"
+                android:layout_alignParentStart="true" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/registerLastName"
+                android:hint="Last Name"
+                android:layout_below="@+id/registerFirstName"
+                android:layout_alignParentStart="true" />
+
+            <EditText
+                android:layout_width="391dp"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="Email"
+                android:ems="10"
+                android:id="@+id/registerEmail"
+                android:layout_below="@+id/registerUserName"
+                android:layout_centerHorizontal="true"/>
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:hint="Password"
+                android:id="@+id/registerPassword"
+                android:layout_below="@+id/registerEmail"
+                android:layout_centerHorizontal="true" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:hint="Password Confirmation"
+                android:id="@+id/registerPasswordConfirmation"
+                android:layout_below="@+id/registerPhoneNumber"
+                android:layout_alignStart="@+id/registerPhoneNumber"/>
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:ems="10"
+                android:hint="Date of Birth"
+                android:id="@+id/registerBirthDay"
+                android:layout_below="@+id/registerAddress"
+                android:layout_centerHorizontal="true"/>
+
+            <RadioGroup
+                android:id="@+id/registerGender"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/registerBirthDay"
+                android:layout_toStartOf="@+id/eventRegistration"
+                android:layout_below="@+id/registerBirthDay"
+                android:layout_alignEnd="@+id/registerBirthDay">
+
+                <RadioButton
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Female"
+                    android:id="@+id/registerFemale"
+                    android:checked="false" />
+
+                <RadioButton
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Male"
+                    android:id="@+id/registerMale"
+                    android:checked="false" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/userRegistration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:layout_alignBottom="@+id/registerScrollView"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>

@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
+import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClientException;
@@ -24,7 +25,7 @@ import static ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser.dateToStr
 public class EventActivity extends AppCompatActivity {
 
     private Event mEvent;
-    private Bitmap mImage;
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,28 +34,22 @@ public class EventActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mEvent = (Event) intent.getSerializableExtra(MainActivity.EXTRA_EVENT);
-        try {
-            mImage = new DownloadImageTask().execute().get();
-        } catch (InterruptedException | ExecutionException e) {
-            // no image.
-        }
+        mUser = (User) intent.getSerializableExtra(MainActivity.EXTRA_USER);
+        new DownloadImageTask().execute();
         fillEventData();
     }
 
     private void fillEventData() {
-        ((TextView) findViewById(R.id.eventNameTextView)).setText(mEvent.getName());
+        ((TextView) findViewById(R.id.eventName)).setText(mEvent.getName());
         ((TextView) findViewById(R.id.eventDateBegin)).setText(dateToString(mEvent.getDateBegin()));
         ((TextView) findViewById(R.id.eventDateEnd)).setText(dateToString(mEvent.getDateEnd()));
         ((TextView) findViewById(R.id.eventLocation)).setText(mEvent.getLocation().getName());
-        ((TextView) findViewById(R.id.eventDescription)).setText(mEvent.getDesription());
+        ((TextView) findViewById(R.id.eventDescription)).setText(mEvent.getDescription());
         String price = String.format(getString(R.string.event_price), mEvent.getBasePrice());
         ((TextView) findViewById(R.id.eventPrice)).setText(price);
         String maxPeople =
                 String.format(getString(R.string.event_max_people), mEvent.getMaxPeople());
         ((TextView) findViewById(R.id.eventMaxPeople)).setText(maxPeople);
-        if (mImage != null) {
-            ((ImageView) findViewById(R.id.eventPicture)).setImageBitmap(mImage);
-        }
         if (mEvent instanceof SpeedDatingEvent) {
             SpeedDatingEvent event = (SpeedDatingEvent) mEvent;
             int men = event.getMenRegistered();
@@ -69,7 +64,7 @@ public class EventActivity extends AppCompatActivity {
     }
 
     public void register(View view) {
-        if (!MainActivity.REGISTERED) {
+        if (mUser == null) {
             startActivity(new Intent(EventActivity.this, AboutActivity.class));
         } else {
             Toast.makeText(EventActivity.this, "Not implemented yet :(", Toast.LENGTH_SHORT).show();
@@ -78,18 +73,23 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private class DownloadImageTask extends AsyncTask<Void, Void, Bitmap> {
-        EventClient eventClient = new NetworkEventClient(
-                MainActivity.SERVER_URL, new DefaultNetworkProvider());
-
         @Override
         protected Bitmap doInBackground(Void... params) {
             Bitmap image = null;
             try {
-                image = eventClient.imageFor(mEvent);
+                image = MainActivity.EVENT_CLIENT.imageFor(mEvent);
             } catch (EventClientException e) {
                 // no image.
             }
             return image;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap != null) {
+                ((ImageView) findViewById(R.id.eventPicture)).setImageBitmap(bitmap);
+            }
+            super.onPostExecute(bitmap);
         }
     }
 }

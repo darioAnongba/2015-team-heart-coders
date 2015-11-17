@@ -1,15 +1,12 @@
 package ch.epfl.sweng.swissaffinity.events;
 
 import java.io.Serializable;
-import java.util.Date;
-
-import ch.epfl.sweng.swissaffinity.utilities.Location;
 
 
 /**
- * Representation of a speed-dating event.
+ * Representation of a speed dating event.
  */
-public class SpeedDatingEvent extends AbstractEvent implements Event, Serializable {
+public class SpeedDatingEvent extends Event implements Serializable {
 
     private final int mMenSeats;
     private final int mWomenSeats;
@@ -30,66 +27,46 @@ public class SpeedDatingEvent extends AbstractEvent implements Event, Serializab
         this.mEstablishment = builder.mEstablishment;
     }
 
-    @Override
-    public String getName() {
-        return mName;
-    }
-
-    @Override
-    public String getDesription() {
-        return mDescription;
-    }
-
-    @Override
-    public Date getDateBegin() {
-        return mDateBegin;
-    }
-
-    @Override
-    public Date getDateEnd() {
-        return mDateEnd;
-    }
-
-    @Override
-    public Location getLocation() {
-        return mLocation;
-    }
-
-    @Override
-    public String getImagePath() {
-        return mImagePath;
-    }
-
-    @Override
-    public double getBasePrice() {
-        return mBasePrice;
-    }
-
-    @Override
-    public int getMaxPeople() {
-        return mMaxPeople;
-    }
-
+    /**
+     * Getter for men seats
+     *
+     * @return the number of men seats for the event
+     */
     public int getMenSeats() {
         return mMenSeats;
     }
 
+    /**
+     * Getter for women seats
+     *
+     * @return the number of women seats for the event
+     */
     public int getWomenSeats() {
         return mWomenSeats;
     }
 
+    /**
+     * Getter for the regidtered men
+     *
+     * @return the number of registered men to the event
+     */
     public int getMenRegistered() {
         return mMenRegistered;
     }
 
+    /**
+     * Getter for the registered women
+     *
+     * @return the number of registered women to the event
+     */
     public int getWomenRegistered() {
         return mWomenRegistered;
     }
 
     /**
-     * Builder for the speed dating event class.
+     * Builder for a speed dating event.
      */
-    public static class Builder extends AbstractEvent.Builder {
+    public static class Builder extends Event.Builder {
 
         private int mMenSeats;
         private int mWomenSeats;
@@ -99,42 +76,96 @@ public class SpeedDatingEvent extends AbstractEvent implements Event, Serializab
         private int mMaxAge;
         private Establishment mEstablishment;
 
+        /**
+         * Setter for men seats
+         *
+         * @param menSeats
+         *
+         * @return this
+         */
         public Builder setMenSeats(int menSeats) {
             mMenSeats = menSeats;
             return this;
         }
 
+        /**
+         * Setter for women seats
+         *
+         * @param womenSeats
+         *
+         * @return this
+         */
         public Builder setWomenSeats(int womenSeats) {
             mWomenSeats = womenSeats;
             return this;
         }
 
+        /**
+         * Setter for registered men
+         *
+         * @param menRegistered
+         *
+         * @return this
+         */
         public Builder setMenRegistered(int menRegistered) {
             mMenRegistered = menRegistered;
             return this;
         }
 
+        /**
+         * Setter for registered women
+         *
+         * @param womenRegistered
+         *
+         * @return this
+         */
         public Builder setWomenRegistered(int womenRegistered) {
             mWomenRegistered = womenRegistered;
             return this;
 
         }
 
+        /**
+         * Setter for minimum age
+         *
+         * @param minAge
+         *
+         * @return this
+         */
         public Builder setMinAge(int minAge) {
             mMinAge = minAge;
             return this;
         }
 
+        /**
+         * Setter for maximum age
+         *
+         * @param maxAge
+         *
+         * @return this
+         */
         public Builder setMaxAge(int maxAge) {
             mMaxAge = maxAge;
             return this;
         }
 
+        /**
+         * Setter for establishment
+         *
+         * @param establishment
+         *
+         * @return this
+         */
         public Builder setEstablishment(Establishment establishment) {
             mEstablishment = establishment;
             return this;
         }
 
+        /**
+         * Getter for the speed dating event.
+         *
+         * @return the build speed dating event
+         */
         public SpeedDatingEvent build() {
             return new SpeedDatingEvent(this);
         }

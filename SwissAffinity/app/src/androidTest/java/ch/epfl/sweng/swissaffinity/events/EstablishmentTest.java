@@ -21,32 +21,32 @@ public class EstablishmentTest {
 
     @Test
     public void testGetName() {
-        assertEquals("Cafe Cuba", establishment.getmName());
+        assertEquals("Cafe Cuba", establishment.getName());
     }
 
     @Test
     public void testGetDescription() {
-        assertEquals("testDescription", establishment.getmDescription());
+        assertEquals("testDescription", establishment.getDescription());
     }
 
     @Test
     public void testGetLogoPath() {
-        assertEquals("logoTest", establishment.getmLogoPath());
+        assertEquals("logoTest", establishment.getLogoPath());
     }
 
     @Test
     public void testGetAddress() {
-        assertEquals(DataForTesting.ADRESSES.get(0), establishment.getmAddress());
+        assertEquals(DataForTesting.ADRESSES.get(0), establishment.getAddress());
     }
 
     @Test
     public void testGetType() {
-        assertEquals(Establishment.Type.BAR, establishment.getmType());
+        assertEquals(Establishment.Type.BAR, establishment.getType());
     }
 
     @Test
     public void testGetUrl() {
-        assertEquals("http://urlTest.com", establishment.getmUrl().toString());
+        assertEquals("", establishment.getUrl());
     }
 
 }
