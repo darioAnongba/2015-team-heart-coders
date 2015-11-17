@@ -92,6 +92,7 @@ public class DataForTesting {
                             "",
                             100,
                             "logoTest")
+
             ));
 
     public static List<GregorianCalendar> DATES = new ArrayList<>(
