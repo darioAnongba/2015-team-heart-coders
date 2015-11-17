@@ -2,7 +2,6 @@ package ch.epfl.sweng.swissaffinity.utilities.parsers;
 
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,14 +11,21 @@ import org.json.JSONObject;
 public class SafeJSONObject extends JSONObject {
 
     /**
+     * Default constructor
+     */
+    public SafeJSONObject() {
+        super();
+    }
+
+    /**
      * Constructor of the class
      *
-     * @param jsonString a string JSONObject
+     * @param json a string JSONObject
      *
      * @throws JSONException if something goes wrong
      */
-    public SafeJSONObject(String jsonString) throws JSONException {
-        super(jsonString);
+    public SafeJSONObject(String json) throws JSONException {
+        super(json);
     }
 
     /**
@@ -30,14 +36,7 @@ public class SafeJSONObject extends JSONObject {
      * @throws JSONException if something goes wrong
      */
     public SafeJSONObject(JSONObject jsonObject) throws JSONException {
-        super(jsonObject.toString());
-    }
-
-    /**
-     * Default constructor
-     */
-    public SafeJSONObject() {
-        super();
+        this(jsonObject.toString());
     }
 
     /**
@@ -47,9 +46,12 @@ public class SafeJSONObject extends JSONObject {
     public <A> A get(String name, A defaultValue) {
         A value = defaultValue;
         try {
-            value = (A) super.get(name);
+            Object o = super.get(name);
+            if (o.getClass().equals(defaultValue.getClass())) {
+                value = (A) o;
+            }
         } catch (JSONException e) {
-            Log.e("SafeJSONObject", e.getMessage());
+            Log.d("SafeJSONObject", e.getMessage());
         }
         return value;
     }
