@@ -22,31 +22,31 @@
         <activity
             android:name=".AboutActivity"
             android:label="@string/title_activity_about">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ch.epfl.sweng.swissaffinity.MainActivity" />
+            <!--<meta-data
+                android:name="android.support.PARENT"
+                android:value=".MainActivity" />-->
         </activity>
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_about">
-            <meta-data
+            <!--<meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ch.epfl.sweng.swissaffinity.AboutActivity" />
+                android:value="ch.epfl.sweng.swissaffinity.AboutActivity" />-->
         </activity>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".MainActivity">
-            <meta-data
+            <!--<meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ch.epfl.sweng.swissaffinity.MainActivity" />
+                android:value="ch.epfl.sweng.swissaffinity.MainActivity" />-->
         </activity>
         <activity
             android:name=".EventActivity"
             android:label="@string/title_activity_event">
-            <meta-data
+            <!--<meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ch.epfl.sweng.swissaffinity.MainActivity" />
+                android:value="ch.epfl.sweng.swissaffinity.MainActivity" />-->
         </activity>
 
         <meta-data
