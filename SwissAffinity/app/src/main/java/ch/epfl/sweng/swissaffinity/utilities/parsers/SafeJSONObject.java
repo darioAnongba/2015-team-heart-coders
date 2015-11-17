@@ -33,6 +33,12 @@ public class SafeJSONObject extends JSONObject {
         super(jsonObject.toString());
     }
 
+    /**
+     * Default constructor
+     */
+    public SafeJSONObject() {
+        super();
+    }
 
     /**
      * Getter to generically have a default fallback value.

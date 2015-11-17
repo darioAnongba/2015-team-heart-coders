@@ -1,7 +1,6 @@
 package ch.epfl.sweng.swissaffinity.users;
 
 import java.io.Serializable;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -16,7 +15,6 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
  * Representation of a user.
  */
 public final class User implements Serializable {
-
     /**
      * Gender of the user.
      */
@@ -44,7 +42,7 @@ public final class User implements Serializable {
          *
          * @param gender the server API gender
          *
-         * @return
+         * @return the gender
          */
         public static Gender getGender(String gender) {
             for (Gender g : Gender.values()) {
@@ -70,7 +68,7 @@ public final class User implements Serializable {
     private boolean mEnabled;
     private Gender mGender;
     private Date mBirthDate;
-    private URL mProfilePicture;
+    private String mProfilePicture;
     private Collection<Location> mAreasOfInterest;
     private List<Event> mEventsAttended;
 
@@ -110,10 +108,17 @@ public final class User implements Serializable {
             Gender gender,
             Date birthDate,
             String profession,
-            URL profilePicture,
+            String profilePicture,
             Collection<Location> areasOfInterest,
             List<Event> eventsAttended)
     {
+        if (id < 0 || facebookId < 0 || username == null || email == null || lastName == null ||
+            firstName == null || mobilePhone == null || homePhone == null || address == null ||
+            gender == null || birthDate == null || profession == null || profilePicture == null ||
+            areasOfInterest == null || eventsAttended == null)
+        {
+            throw new IllegalArgumentException();
+        }
         mId = id;
         mFacebookId = facebookId;
         mUsername = username;
@@ -136,7 +141,7 @@ public final class User implements Serializable {
     /**
      * Getter for the ID
      *
-     * @return
+     * @return the ID
      */
     public int getId() {
 
@@ -146,7 +151,7 @@ public final class User implements Serializable {
     /**
      * Getter for the Facebook ID
      *
-     * @return
+     * @return the Facebook ID
      */
     public long getFacebookId() {
         return mFacebookId;
@@ -155,7 +160,7 @@ public final class User implements Serializable {
     /**
      * Getter for the user name
      *
-     * @return
+     * @return the user name
      */
     public String getUsername() {
         return mUsername;
@@ -164,7 +169,7 @@ public final class User implements Serializable {
     /**
      * Getter for the email
      *
-     * @return
+     * @return the email
      */
     public String getEmail() {
         return mEmail;
@@ -173,7 +178,7 @@ public final class User implements Serializable {
     /**
      * Setter for the email
      *
-     * @param email The email
+     * @param email the email
      */
     public void setEmail(String email) {
         mEmail = email;
@@ -182,7 +187,7 @@ public final class User implements Serializable {
     /**
      * Getter for the last name
      *
-     * @return
+     * @return the last name
      */
     public String getLastName() {
         return mLastName;
@@ -191,7 +196,7 @@ public final class User implements Serializable {
     /**
      * Setter for the last name
      *
-     * @param lastName The last name
+     * @param lastName the last name
      */
     public void setLastName(String lastName) {
         mLastName = lastName;
@@ -200,7 +205,7 @@ public final class User implements Serializable {
     /**
      * Getter for the first name
      *
-     * @return
+     * @return the first name
      */
     public String getFirstName() {
         return mFirstName;
@@ -209,7 +214,7 @@ public final class User implements Serializable {
     /**
      * Setter for the first name
      *
-     * @param firstName The first name
+     * @param firstName the first name
      */
     public void setFirstName(String firstName) {
         mFirstName = firstName;
@@ -218,7 +223,7 @@ public final class User implements Serializable {
     /**
      * Getter for the mobile phone number
      *
-     * @return
+     * @return the mobile phone number
      */
     public String getMobilePhone() {
         return mMobilePhone;
@@ -227,7 +232,7 @@ public final class User implements Serializable {
     /**
      * Setter for the mobile phone number
      *
-     * @param mobilePhone The mobile phone
+     * @param mobilePhone the mobile phone
      */
     public void setMobilePhone(String mobilePhone) {
         mMobilePhone = mobilePhone;
@@ -236,7 +241,7 @@ public final class User implements Serializable {
     /**
      * Getter for the home phone number
      *
-     * @return
+     * @return the home phone number
      */
     public String getHomePhone() {
         return mHomePhone;
@@ -245,7 +250,7 @@ public final class User implements Serializable {
     /**
      * Setter for the home phone number
      *
-     * @param homePhone The home phone
+     * @param homePhone the home phone
      */
     public void setHomePhone(String homePhone) {
         mHomePhone = homePhone;
@@ -254,7 +259,7 @@ public final class User implements Serializable {
     /**
      * Getter for the address
      *
-     * @return
+     * @return the address
      */
     public Address getAddress() {
         return mAddress;
@@ -263,25 +268,25 @@ public final class User implements Serializable {
     /**
      * Setter for the address
      *
-     * @param address The address
+     * @param address the address
      */
     public void setAddress(Address address) {
         mAddress = address;
     }
 
     /**
-     * Getter for the locked
+     * Getter for the locked status
      *
-     * @return
+     * @return the locked status
      */
     public boolean getLocked() {
         return mLocked;
     }
 
     /**
-     * Getter for the enabled
+     * Getter for the enabled status
      *
-     * @return
+     * @return the enabled status
      */
     public boolean getEnabled() {
         return mEnabled;
@@ -290,7 +295,7 @@ public final class User implements Serializable {
     /**
      * Getter for the gender
      *
-     * @return
+     * @return the gender {@link Gender}
      */
     public Gender getGender() {
         return mGender;
@@ -308,7 +313,7 @@ public final class User implements Serializable {
     /**
      * Getter for the birth date
      *
-     * @return
+     * @return the birth date {@link Date}
      */
     public Date getBirthDate() {
         return mBirthDate;
@@ -317,7 +322,7 @@ public final class User implements Serializable {
     /**
      * Setter for the birth date
      *
-     * @param birthDate The birth date
+     * @param birthDate The birth date {@link Date}
      */
     public void setBirthDate(Date birthDate) {
         mBirthDate = birthDate;
@@ -326,7 +331,7 @@ public final class User implements Serializable {
     /**
      * Getter for the profession
      *
-     * @return
+     * @return the profession
      */
     public String getProfession() {
         return mProfession;
@@ -335,34 +340,34 @@ public final class User implements Serializable {
     /**
      * Setter for the profession
      *
-     * @param profession The profession
+     * @param profession the profession
      */
     public void setProfession(String profession) {
         mProfession = profession;
     }
 
     /**
-     * Getter for the  profile picture url
+     * Getter for the profile picture url
      *
-     * @return
+     * @return the profile picture url
      */
-    public URL getProfilePicture() {
+    public String getProfilePicture() {
         return mProfilePicture;
     }
 
     /**
      * Setter for the profile picture url
      *
-     * @param profilePicture The profile picture url
+     * @param profilePicture the profile picture url
      */
-    public void setProfilePicture(URL profilePicture) {
+    public void setProfilePicture(String profilePicture) {
         mProfilePicture = profilePicture;
     }
 
     /**
      * Getter for the areas of interest
      *
-     * @return
+     * @return a collecction of locations
      */
     public Collection<Location> getAreasOfInterest() {
         return new HashSet<>(mAreasOfInterest);
@@ -371,7 +376,7 @@ public final class User implements Serializable {
     /**
      * Setter for the areas of interest
      *
-     * @param areasOfInterest the areas of interest
+     * @param areasOfInterest a collection of locations
      */
     public void setAreasOfInterest(Collection<Location> areasOfInterest) {
         mAreasOfInterest = new HashSet<>(areasOfInterest);
@@ -380,7 +385,7 @@ public final class User implements Serializable {
     /**
      * Getter for the events attended
      *
-     * @return
+     * @return a list of events
      */
     public List<Event> getEventsAttended() {
         return new ArrayList<>(mEventsAttended);

@@ -11,13 +11,14 @@ public class Location implements Serializable {
     private final String mName;
 
     /**
-     * The constructor of a location.
+     * The constructor of a location
      *
-     * @param name the name of the location.
+     * @param id   the ID
+     * @param name the name
      */
     public Location(int id, String name) {
         if (id < 0 || name == null) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
         mId = id;
         mName = name;
@@ -26,7 +27,7 @@ public class Location implements Serializable {
     /**
      * Getter for the ID
      *
-     * @return
+     * @return the ID
      */
     public int getId() {
         return mId;
@@ -35,7 +36,7 @@ public class Location implements Serializable {
     /**
      * Getter for the name
      *
-     * @return
+     * @return the name
      */
     public String getName() {
         return mName;

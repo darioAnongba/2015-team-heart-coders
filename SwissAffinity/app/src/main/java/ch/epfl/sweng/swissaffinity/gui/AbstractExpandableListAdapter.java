@@ -104,6 +104,6 @@ public abstract class AbstractExpandableListAdapter<A, B> extends BaseExpandable
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 }

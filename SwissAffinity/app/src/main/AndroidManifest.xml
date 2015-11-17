@@ -11,6 +11,10 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light">
 
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -21,43 +25,25 @@
         </activity>
         <activity
             android:name=".AboutActivity"
-            android:label="@string/title_activity_about">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ch.epfl.sweng.swissaffinity.MainActivity" />
-        </activity>
+            android:label="@string/title_activity_about"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".RegisterActivity"
-            android:label="@string/title_activity_about">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ch.epfl.sweng.swissaffinity.AboutActivity" />
-        </activity>
+            android:label="@string/title_activity_about"
+            android:parentActivityName=".AboutActivity"/>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ch.epfl.sweng.swissaffinity.MainActivity" />
-        </activity>
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".EventActivity"
-            android:label="@string/title_activity_event">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ch.epfl.sweng.swissaffinity.MainActivity" />
-        </activity>
-
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
-
+            android:label="@string/title_activity_event"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-    </application>
 
+    </application>
 </manifest>
