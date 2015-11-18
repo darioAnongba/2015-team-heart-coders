@@ -3,6 +3,7 @@ package ch.epfl.sweng.swissaffinity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,21 +25,26 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
+import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
 import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREFS;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.GENDER;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
 public class AboutActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
+    private DefaultNetworkProvider networkProvider;
+    private final String SERVER_URL = "http://www.beecreative.ch";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,7 @@ public class AboutActivity extends AppCompatActivity {
         Context context = getApplicationContext();
         FacebookSdk.sdkInitialize(context);
         callbackManager = CallbackManager.Factory.create();
+        networkProvider = new DefaultNetworkProvider();
         setContentView(R.layout.activity_about);
         setLoggedText();
         LoginButton loginBtn = (LoginButton) findViewById(R.id.login_button);
@@ -68,6 +75,7 @@ public class AboutActivity extends AppCompatActivity {
                                         Log.v("AboutActivity", rep.toString());
                                         if (jsonObject != null) {
                                             fillUserData(jsonObject);
+                                            new DownloadUserTask().execute();
                                             finish();
                                         } else {
                                             //TODO: no data...
@@ -176,15 +184,30 @@ public class AboutActivity extends AppCompatActivity {
         }
     }
 
-//        @Override
-//        protected void onPostExecute(Boolean code) {
-//            if (code) {
-//                Intent registerIntent = new Intent(AboutActivity.this, MainActivity.class);
-//                startActivity(registerIntent);
-//            } else {
-//                Intent registerIntent = new Intent(AboutActivity.this, RegisterActivity.class);
-//                startActivity(registerIntent);
-//            }
-//        }
-//    }
+    private class DownloadUserTask extends AsyncTask<String, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            boolean code = false;
+            String facebookId = SHARED_PREFS.getString(FACEBOOK_ID.get(), "");
+            try {
+                code = networkProvider.checkCode(SERVER_URL + "/api/users/" + facebookId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return code;
+        }
+
+
+        @Override
+        protected void onPostExecute(Boolean code) {
+            if (code) {
+                Intent registerIntent = new Intent(AboutActivity.this, MainActivity.class);
+                startActivity(registerIntent);
+            } else {
+                Intent registerIntent = new Intent(AboutActivity.this, RegisterActivity.class);
+                startActivity(registerIntent);
+            }
+        }
+    }
 }
