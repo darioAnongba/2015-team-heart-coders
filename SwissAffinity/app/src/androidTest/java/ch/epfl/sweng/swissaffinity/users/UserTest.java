@@ -6,27 +6,28 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.utilities.Address;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 
 import static ch.epfl.sweng.swissaffinity.DataForTesting.*;
 
-
-/**
- * Created by yannick on 13.11.15.
- */
 public class UserTest extends TestCase {
 
     private User user;
     private Address address;
-    private Collection<Location> locations;
-    private Collection<Event> events;
+    private List<Location> locations;
+    private List<Event> events;
+    private Date birthday;
+    private URL url;
 
     @Before
     public void setUp() throws MalformedURLException, ParserException {
@@ -34,6 +35,8 @@ public class UserTest extends TestCase {
         address = new Address("Switzerland",1000,"Lausanne","Vaud",1,"Rue du Test");
         locations = new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1)));
         events = new ArrayList<Event>(Arrays.asList(speedDatingEventCreator()));
+        birthday = DateParser.parseFromString("1983-11-16T16:00:00+0100");
+        url = new URL("http://testUrl.com");
     }
 
     @Test
@@ -86,27 +89,29 @@ public class UserTest extends TestCase {
         assertEquals("testProfession", user.getProfession());
     }
 
-/*
-    @Test
+/*    @Test
     public void testGetAreaOfInterest() {
-        assertEquals(locations, user.getAreasOfInterest());
+        for (int i = 0; i < locations.size(); i++) {
+            assertEquals(locations.get(i), user.getAreasOfInterest().get(i));
+        }
     }
 
     @Test
-    public void testGetAddress() {
+         public void testGetAddress() {
         assertEquals(address, user.getAddress());
-    }
+    }*/
 
     @Test
     public void testGetBirthDate() {
-        assertEquals(new Date(), user.getBirthDate());
+        assertEquals(birthday, user.getBirthDate());
     }
 
     @Test
     public void testGetEventsAttended() {
-        assertEquals(events, user.getEventsAttended());
+        for (int i = 0; i < events.size(); i++) {
+            assertEquals(events.get(i), user.getEventsAttended().get(i));
+        }
     }
-*/
 
     @Test
     public void testGetLocked() {
@@ -117,6 +122,323 @@ public class UserTest extends TestCase {
     public void testGetEnabled() {
         assertEquals(true, user.getEnabled());
     }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testIDException() throws ParserException {
+        user = new User(-10,
+                2001,
+                "testUsername",
+                "testEmail",
+                "testLastName",
+                "testFirstName",
+                "testPhone",
+                "testHomePhone",
+                new Address("Switzerland", 1000, "Lausanne", "Vaud", 1, "Rue du Test"),
+                false,
+                true,
+                User.Gender.MALE,
+                birthday,
+                "testProfession",
+                url,
+                new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
+                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testFacebookIDException() throws ParserException {
+        user = new User(1,
+                -10,
+                "testUsername",
+                "testEmail",
+                "testLastName",
+                "testFirstName",
+                "testPhone",
+                "testHomePhone",
+                new Address("Switzerland", 1000, "Lausanne", "Vaud", 1, "Rue du Test"),
+                false,
+                true,
+                User.Gender.MALE,
+                birthday,
+                "testProfession",
+                url,
+                new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
+                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUsernameException() throws ParserException {
+        user = new User(1,
+                2001,
+                null,
+                "testEmail",
+                "testLastName",
+                "testFirstName",
+                "testPhone",
+                "testHomePhone",
+                new Address("Switzerland", 1000, "Lausanne", "Vaud", 1, "Rue du Test"),
+                false,
+                true,
+                User.Gender.MALE,
+                birthday,
+                "testProfession",
+                url,
+                new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
+                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testEmailException() throws ParserException {
+        user = new User(1,
+                2001,
+                "testUsername",
+                null,
+                "testLastName",
+                "testFirstName",
+                "testPhone",
+                "testHomePhone",
+                new Address("Switzerland", 1000, "Lausanne", "Vaud", 1, "Rue du Test"),
+                false,
+                true,
+                User.Gender.MALE,
+                birthday,
+                "testProfession",
+                url,
+                new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
+                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testLastNameException() throws ParserException {
+        user = new User(1,
+                2001,
+                "testUsername",
+                "testEmail",
+                null,
+                "testFirstName",
+                "testPhone",
+                "testHomePhone",
+                new Address("Switzerland", 1000, "Lausanne", "Vaud", 1, "Rue du Test"),
+                false,
+                true,
+                User.Gender.MALE,
+                birthday,
+                "testProfession",
+                url,
+                new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
+                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testFirstNameException() throws ParserException {
+        user = new User(1,
+                2001,
+                "testUsername",
+                "testEmail",
+                "testLastName",
+                null,
+                "testPhone",
+                "testHomePhone",
+                new Address("Switzerland", 1000, "Lausanne", "Vaud", 1, "Rue du Test"),
+                false,
+                true,
+                User.Gender.MALE,
+                birthday,
+                "testProfession",
+                url,
+                new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
+                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPhoneException() throws ParserException {
+        user = new User(1,
+                2001,
+                "testUsername",
+                "testEmail",
+                "testLastName",
+                "testFirstName",
+                null,
+                "testHomePhone",
+                new Address("Switzerland", 1000, "Lausanne", "Vaud", 1, "Rue du Test"),
+                false,
+                true,
+                User.Gender.MALE,
+                birthday,
+                "testProfession",
+                url,
+                new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
+                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testHomePhoneException() throws ParserException {
+        user = new User(1,
+                2001,
+                "testUsername",
+                "testEmail",
+                "testLastName",
+                "testFirstName",
+                "testPhone",
+                null,
+                new Address("Switzerland", 1000, "Lausanne", "Vaud", 1, "Rue du Test"),
+                false,
+                true,
+                User.Gender.MALE,
+                birthday,
+                "testProfession",
+                url,
+                new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
+                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddressException() throws ParserException {
+        user = new User(1,
+                2001,
+                "testUsername",
+                "testEmail",
+                "testLastName",
+                "testFirstName",
+                "testPhone",
+                "testHomePhone",
+                null,
+                false,
+                true,
+                User.Gender.MALE,
+                birthday,
+                "testProfession",
+                url,
+                new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
+                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGenderException() throws ParserException {
+        user = new User(1,
+                2001,
+                "testUsername",
+                "testEmail",
+                "testLastName",
+                "testFirstName",
+                "testPhone",
+                "testHomePhone",
+                new Address("Switzerland", 1000, "Lausanne", "Vaud", 1, "Rue du Test"),
+                false,
+                true,
+                null,
+                birthday,
+                "testProfession",
+                url,
+                new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
+                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testBirthdayException() throws ParserException {
+        user = new User(1,
+                2001,
+                "testUsername",
+                "testEmail",
+                "testLastName",
+                "testFirstName",
+                "testPhone",
+                "testHomePhone",
+                new Address("Switzerland", 1000, "Lausanne", "Vaud", 1, "Rue du Test"),
+                false,
+                true,
+                User.Gender.MALE,
+                null,
+                "testProfession",
+                url,
+                new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
+                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testProfessionException() throws ParserException {
+        user = new User(1,
+                2001,
+                "testUsername",
+                "testEmail",
+                "testLastName",
+                "testFirstName",
+                "testPhone",
+                "testHomePhone",
+                new Address("Switzerland", 1000, "Lausanne", "Vaud", 1, "Rue du Test"),
+                false,
+                true,
+                User.Gender.MALE,
+                birthday,
+                null,
+                url,
+                new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
+                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testURLException() throws ParserException {
+        user = new User(1,
+                2001,
+                "testUsername",
+                "testEmail",
+                "testLastName",
+                "testFirstName",
+                "testPhone",
+                "testHomePhone",
+                new Address("Switzerland", 1000, "Lausanne", "Vaud", 1, "Rue du Test"),
+                false,
+                true,
+                User.Gender.MALE,
+                birthday,
+                "testProfession",
+                null,
+                new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
+                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testAreasOfInterestException() throws ParserException {
+        user = new User(1,
+                2001,
+                "testUsername",
+                "testEmail",
+                "testLastName",
+                "testFirstName",
+                "testPhone",
+                "testHomePhone",
+                new Address("Switzerland", 1000, "Lausanne", "Vaud", 1, "Rue du Test"),
+                false,
+                true,
+                User.Gender.MALE,
+                birthday,
+                "testProfession",
+                url,
+                null,
+                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testEventAttendedException() throws ParserException {
+        user = new User(1,
+                2001,
+                "testUsername",
+                "testEmail",
+                "testLastName",
+                "testFirstName",
+                "testPhone",
+                "testHomePhone",
+                new Address("Switzerland", 1000, "Lausanne", "Vaud", 1, "Rue du Test"),
+                false,
+                true,
+                User.Gender.MALE,
+                birthday,
+                "testProfession",
+                url,
+                new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
+                null);
+    }
+
 
 
 }
