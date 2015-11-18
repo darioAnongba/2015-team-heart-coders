@@ -30,14 +30,14 @@ import java.io.IOException;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
-import static ch.epfl.sweng.swissaffinity.MainActivity.*;
+import static ch.epfl.sweng.swissaffinity.MainActivity.SERVER_URL;
 import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREFS;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.GENDER;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
@@ -76,7 +76,7 @@ public class AboutActivity extends AppCompatActivity {
                                         Log.v("AboutActivity", rep.toString());
                                         if (jsonObject != null) {
                                             fillUserData(jsonObject);
-                                            new DownloadUserTask().execute();
+                                            new ConnectionToServer().execute();
                                         } else {
                                             //TODO: no data...
                                             onError(null);
@@ -127,7 +127,7 @@ public class AboutActivity extends AppCompatActivity {
 
     private static String getFields() {
         return ID.get() + "," + NAME.get() + "," + FIRST_NAME.get() + "," + LAST_NAME.get() + "," +
-               EMAIL.get() + "," + GENDER.get() + "," + BIRTHDAY.get();
+                EMAIL.get() + "," + GENDER.get() + "," + BIRTHDAY.get();
     }
 
     private void fillUserData(SafeJSONObject jsonObject) {
@@ -139,27 +139,28 @@ public class AboutActivity extends AppCompatActivity {
         String birthday = jsonObject.get(BIRTHDAY.get(), "");
         String email = jsonObject.get(EMAIL.get(), "");
         SHARED_PREFS.edit()
-                    .putString(FACEBOOK_ID.get(), facebookID)
-                    .putString(USERNAME.get(), userName)
-                    .putString(LAST_NAME.get(), lastName)
-                    .putString(FIRST_NAME.get(), firstName)
-                    .putString(GENDER.get(), gender)
-                    .putString(BIRTHDAY.get(), birthday)
-                    .putString(EMAIL.get(), email)
-                    .apply();
+                .putString(FACEBOOK_ID.get(), facebookID)
+                .putString(USERNAME.get(), userName)
+                .putString(LAST_NAME.get(), lastName)
+                .putString(FIRST_NAME.get(), firstName)
+                .putString(GENDER.get(), gender)
+                .putString(BIRTHDAY.get(), birthday)
+                .putString(EMAIL.get(), email)
+                .apply();
     }
 
     private void deleteUserData() {
         SHARED_PREFS.edit()
-                    .putString(FACEBOOK_ID.get(), null)
-                    .putString(USERNAME.get(), null)
-                    .putString(LAST_NAME.get(), null)
-                    .putString(FIRST_NAME.get(), null)
-                    .putString(GENDER.get(), null)
-                    .putString(BIRTHDAY.get(), null)
-                    .putString(EMAIL.get(), null)
-                    .apply();
+                .putString(FACEBOOK_ID.get(), null)
+                .putString(USERNAME.get(), null)
+                .putString(LAST_NAME.get(), null)
+                .putString(FIRST_NAME.get(), null)
+                .putString(GENDER.get(), null)
+                .putString(BIRTHDAY.get(), null)
+                .putString(EMAIL.get(), null)
+                .apply();
     }
+
 
     private void setLoggedText() {
         TextView logged = ((TextView) findViewById(R.id.aboutLogedText));
@@ -174,7 +175,8 @@ public class AboutActivity extends AppCompatActivity {
         }
     }
 
-    private class DownloadUserTask extends AsyncTask<String, Void, Boolean> {
+
+    private class ConnectionToServer extends AsyncTask<String, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(String... params) {
@@ -193,6 +195,7 @@ public class AboutActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean code) {
             if (code) {
                 //FIXME: I don't think you want to start main again !!!
+                //Why not ? if the user already in the server , you go back to MainActivity
                 Intent registerIntent = new Intent(AboutActivity.this, MainActivity.class);
                 startActivity(registerIntent);
             } else {

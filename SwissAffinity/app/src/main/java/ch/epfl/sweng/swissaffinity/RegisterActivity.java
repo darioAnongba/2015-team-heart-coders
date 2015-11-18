@@ -1,5 +1,7 @@
 package ch.epfl.sweng.swissaffinity;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -7,12 +9,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import ch.epfl.sweng.swissaffinity.users.User.Gender;
+import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
+import ch.epfl.sweng.swissaffinity.utilities.network.users.NetworkUserClient;
+import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 
 import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREFS;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
@@ -30,8 +36,9 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText firstNameText;
     private EditText lastNameText;
     private EditText birthdayText;
-    private String gender;
     private String facebookId;
+    private String gender = "";
+    private final String SERVER_URL = "http://beecreative.ch/api/users";
     private EditText passwordText;
     private EditText passwordConfirmation;
 
@@ -40,24 +47,37 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        final RadioGroup.OnCheckedChangeListener radioChecker = new RadioGroup.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                if (checkedId == R.id.registerFemale) {
+                    gender = "female";
+                } else if (checkedId == R.id.registerMale) {
+                    gender = "male";
+                }
+            }
+        };
+
         fillData();
 
         Button registerButton = (Button) findViewById(R.id.userRegistration);
-        registerButton.setClickable(false); //TODO: why is that?
-        registerButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        JSONObject json = createJson();
-                        if (json != null) {
-                            Log.v("UserJson", json.toString());
-                        }
-                        Toast.makeText(
-                                getApplicationContext(),
-                                "Not implemented yet ;)",
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                JSONObject json = createJson();
+                if (json != null) {
+                    Log.v("UserJson", json.toString());
+                    new UploadUserTask().execute(json.toString());
+                } else {
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "There has been a problem",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
     }
 
     public void fillData() {
@@ -91,29 +111,31 @@ public class RegisterActivity extends AppCompatActivity {
 
     private JSONObject createJson() {
         JSONObject jsonObject = null;
+        JSONObject jsonRequest = null;
+
 
         if (emailText.getText().toString().isEmpty() ||
-            emailText.getText().toString().length() > 100 ||
-            !isValidEmail(emailText.getText().toString()))
+                emailText.getText().toString().length() > 100 ||
+                !isValidEmail(emailText.getText().toString()))
         {
             Toast.makeText(
                     RegisterActivity.this,
                     "Mail is not in a valid format , empty or over 100 characters",
                     Toast.LENGTH_SHORT).show();
         } else if ((userNameText.getText().toString().isEmpty() ||
-                    userNameText.getText().toString().length() > 50))
+                userNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
                     RegisterActivity.this, "Username is empty , or over 50 characters",
                     Toast.LENGTH_SHORT).show();
         } else if ((firstNameText.getText().toString().isEmpty() ||
-                    firstNameText.getText().toString().length() > 50))
+                firstNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
                     RegisterActivity.this, "First Name is empty , or over 50 characters",
                     Toast.LENGTH_SHORT).show();
         } else if ((lastNameText.getText().toString().isEmpty() ||
-                    lastNameText.getText().toString().length() > 50))
+                lastNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
                     RegisterActivity.this, "Last Name is empty , or over 50 characters",
@@ -124,7 +146,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         } else if (!passwordText.getText().toString().equals(
                 passwordConfirmation.getText()
-                                    .toString()))
+                        .toString()))
         {
             Toast.makeText(
                     RegisterActivity.this, "Password do not match ",
@@ -134,7 +156,7 @@ public class RegisterActivity extends AppCompatActivity {
                     RegisterActivity.this, "No value found for Gender ",
                     Toast.LENGTH_SHORT).show();
         } else if (birthdayText.getText().toString().length() == 0 ||
-                   birthdayText.getText().toString().length() > 20)
+                birthdayText.getText().toString().length() > 20)
         {
             Toast.makeText(
                     RegisterActivity.this, "Birth Date is empty or too long ",
@@ -142,6 +164,7 @@ public class RegisterActivity extends AppCompatActivity {
         } else {
             try {
                 jsonObject = new JSONObject();
+                jsonRequest = new JSONObject();
                 jsonObject.put("email", emailText.getText().toString());
                 jsonObject.put("username", userNameText.getText().toString());
                 jsonObject.put("firstName", firstNameText.getText().toString());
@@ -150,17 +173,40 @@ public class RegisterActivity extends AppCompatActivity {
                 jsonObject.put("birthDate", birthdayText.getText().toString());
                 jsonObject.put("facebookId", facebookId);
                 jsonObject.put("plainPassword", passwordText.getText().toString());
+                jsonRequest.put("rest_user_registration",jsonObject);
             } catch (JSONException e) {
+                Log.e("Got a problem with Json",jsonRequest.toString());
             }
         }
-        return jsonObject;
+        return jsonRequest;
     }
 
-    public void post() {
-        //TODO: faire le post sur le serveur.
-    }
 
     public static boolean isValidEmail(CharSequence target) {
         return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
+
+    private class UploadUserTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+
+            NetworkUserClient networkUserClient = new NetworkUserClient(SERVER_URL, new DefaultNetworkProvider());
+            JSONObject response = new JSONObject();
+            try {
+                JSONObject jsonObject = new JSONObject(params[0]);
+                response = networkUserClient.postUser(SERVER_URL, jsonObject);
+            } catch (UserClientException | JSONException e) {
+            }
+            return response.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            //TODO : choose what to do in function of response.
+            Toast.makeText(
+                    RegisterActivity.this, response,
+                    Toast.LENGTH_LONG).show();
+        }
+    };
+
 }
