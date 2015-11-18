@@ -30,6 +30,7 @@ import java.io.IOException;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
+import static ch.epfl.sweng.swissaffinity.MainActivity.*;
 import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREFS;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
@@ -42,9 +43,8 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
 public class AboutActivity extends AppCompatActivity {
+
     private CallbackManager callbackManager;
-    private DefaultNetworkProvider networkProvider;
-    private final String SERVER_URL = "http://www.beecreative.ch";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +52,10 @@ public class AboutActivity extends AppCompatActivity {
         Context context = getApplicationContext();
         FacebookSdk.sdkInitialize(context);
         callbackManager = CallbackManager.Factory.create();
-        networkProvider = new DefaultNetworkProvider();
         setContentView(R.layout.activity_about);
+
         setLoggedText();
+
         LoginButton loginBtn = (LoginButton) findViewById(R.id.login_button);
         loginBtn.setReadPermissions("public_profile", "email", "user_birthday");
         loginBtn.registerCallback(
@@ -76,7 +77,6 @@ public class AboutActivity extends AppCompatActivity {
                                         if (jsonObject != null) {
                                             fillUserData(jsonObject);
                                             new DownloadUserTask().execute();
-                                            finish();
                                         } else {
                                             //TODO: no data...
                                             onError(null);
@@ -84,21 +84,7 @@ public class AboutActivity extends AppCompatActivity {
                                     }
                                 });
                         Bundle parameters = new Bundle();
-                        String fields = new StringBuilder()
-                                .append(ID.get())
-                                .append(",")
-                                .append(NAME.get())
-                                .append(",")
-                                .append(FIRST_NAME.get())
-                                .append(",")
-                                .append(LAST_NAME.get())
-                                .append(",")
-                                .append(EMAIL.get())
-                                .append(",")
-                                .append(GENDER.get())
-                                .append(",")
-                                .append(BIRTHDAY.get())
-                                .toString();
+                        String fields = getFields();
                         parameters.putString("fields", fields);
                         request.setParameters(parameters);
                         request.executeAsync();
@@ -117,8 +103,7 @@ public class AboutActivity extends AppCompatActivity {
                         Toast.makeText(
                                 AboutActivity.this,
                                 "Login attempt failed",
-                                Toast.LENGTH_SHORT)
-                             .show();
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
         new AccessTokenTracker() {
@@ -138,6 +123,11 @@ public class AboutActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private static String getFields() {
+        return ID.get() + "," + NAME.get() + "," + FIRST_NAME.get() + "," + LAST_NAME.get() + "," +
+               EMAIL.get() + "," + GENDER.get() + "," + BIRTHDAY.get();
     }
 
     private void fillUserData(SafeJSONObject jsonObject) {
@@ -191,17 +181,18 @@ public class AboutActivity extends AppCompatActivity {
             boolean code = false;
             String facebookId = SHARED_PREFS.getString(FACEBOOK_ID.get(), "");
             try {
-                code = networkProvider.checkCode(SERVER_URL + "/api/users/" + facebookId);
+                code = DefaultNetworkProvider.checkConnection(
+                        SERVER_URL + "/api/users/" + facebookId);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("CheckCode", e.getMessage());
             }
             return code;
         }
 
-
         @Override
         protected void onPostExecute(Boolean code) {
             if (code) {
+                //FIXME: I don't think you want to start main again !!!
                 Intent registerIntent = new Intent(AboutActivity.this, MainActivity.class);
                 startActivity(registerIntent);
             } else {

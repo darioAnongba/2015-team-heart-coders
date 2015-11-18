@@ -4,15 +4,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.user.UserParser;
 
 
 /**
- * User Client parser Created by Max on 06/11/2015.
+ * Representation of a user client.
  */
 public class NetworkUserClient implements UserClient {
 
@@ -40,8 +43,8 @@ public class NetworkUserClient implements UserClient {
         try {
             String content =
                     mNetworkProvider.getContent(mServerUrl + USERS + nameOrId);
-            JSONObject jsonObject = new JSONObject(content);
-            return new UserParser(jsonObject).parse();
+            SafeJSONObject jsonObject = new SafeJSONObject(content);
+            return new UserParser().parse(jsonObject);
         } catch (ParserException | JSONException | IOException e) {
             throw new UserClientException(e);
         }

@@ -16,19 +16,15 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ZIP_CODE;
  */
 public class AddressParser extends Parser<Address> {
 
-    public AddressParser(JSONObject jsonObject) {
-        super(jsonObject);
-    }
-
     @Override
-    public Address parse() throws ParserException {
+    public Address parse(SafeJSONObject jsonObject) throws ParserException {
 
-        String street = mJsonObject.get(STREET.get(), "");
-        int streetNum = mJsonObject.get(STREET_NUMBER.get(), -1);
-        int zipCode = mJsonObject.get(ZIP_CODE.get(), -1);
-        String city = mJsonObject.get(CITY.get(), "");
-        String province = mJsonObject.get(PROVINCE.get(), "");
-        String country = mJsonObject.get(COUNTRY.get(), "");
+        String street = jsonObject.get(STREET.get(), "");
+        int streetNum = jsonObject.get(STREET_NUMBER.get(), -1);
+        int zipCode = jsonObject.get(ZIP_CODE.get(), -1);
+        String city = jsonObject.get(CITY.get(), "");
+        String province = jsonObject.get(PROVINCE.get(), "");
+        String country = jsonObject.get(COUNTRY.get(), "");
 
         return new Address(country, zipCode, city, province, streetNum, street);
     }
