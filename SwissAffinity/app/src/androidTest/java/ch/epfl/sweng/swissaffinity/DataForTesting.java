@@ -110,7 +110,7 @@ public class DataForTesting {
                     new GregorianCalendar(2015, 11, 30, 23, 59)
             ));
 
-    public static SpeedDatingEvent speedDatingEventCreator() throws ParserException {
+    public static SpeedDatingEvent createSpeedDatingEvent() throws ParserException {
 
         Date date1 = DateParser.parseFromString("2015-10-31T20:00:00+0100");
         Date date2 = DateParser.parseFromString("2015-10-31T23:59:59+0100");
@@ -138,7 +138,7 @@ public class DataForTesting {
         return builder.build();
     }
 
-    public static User userCreator() throws MalformedURLException, ParserException {
+    public static User createUser() throws MalformedURLException, ParserException {
         Date birthday = DateParser.parseFromString("1983-11-16T16:00:00+0100");
         return new User(
                 1,
@@ -157,7 +157,7 @@ public class DataForTesting {
                 "testProfession",
                 "http://testUrl.com",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
-                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+                new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent())));
     }
 
     public static JSONObject createJSONEvent() {

@@ -11,6 +11,9 @@ public class SpeedDatingEvent extends Event implements Serializable {
     private final int mMenSeats;
     private final int mWomenSeats;
     private final int mMenRegistered;
+
+
+
     private final int mWomenRegistered;
     private final int mMinAge;
     private final int mMaxAge;
@@ -26,6 +29,32 @@ public class SpeedDatingEvent extends Event implements Serializable {
         this.mMaxAge = builder.mMaxAge;
         this.mEstablishment = builder.mEstablishment;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null){
+            return false;
+        }
+        if (getClass() != obj.getClass()){
+            return false;
+        }
+        final SpeedDatingEvent other = (SpeedDatingEvent) obj;
+        if (this.mMenSeats != other.getMenSeats() ||
+                this.mWomenSeats != other.getWomenSeats() ||
+                this.mMenRegistered != other.getMenRegistered() ||
+                this.mWomenRegistered != other.getWomenRegistered() ||
+                this.mMinAge != other.getMinAge() ||
+                this.mMaxAge != other.getMaxAge()){
+            return false;
+        }
+        if ((this.mEstablishment == null) ? (other.getEstablishment() != null)
+                : !this.mEstablishment.equals(other.getEstablishment())){
+            return false;
+        }
+
+        return true;
+    }
+
 
     /**
      * Getter for men seats
@@ -62,7 +91,16 @@ public class SpeedDatingEvent extends Event implements Serializable {
     public int getWomenRegistered() {
         return mWomenRegistered;
     }
+    public int getMaxAge() {
+        return mMaxAge;
+    }
 
+    public int getMinAge() {
+        return mMinAge;
+    }
+    public Establishment getEstablishment() {
+        return mEstablishment;//TODO: deep copy
+    }
     /**
      * Builder for a speed dating event.
      */
