@@ -134,7 +134,7 @@ public class SpeedDatingEventTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testDescriptionException() {
-        builder.setDescrition(null);
+        builder.setDescription(null);
     }
 
     @Test(expected = IllegalArgumentException.class)

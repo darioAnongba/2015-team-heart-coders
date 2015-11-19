@@ -124,7 +124,7 @@ public class DataForTesting {
         builder.setDateBegin(date1).setDateEnd(date2);
         builder.setBasePrice(49.95);
         builder.setState("confirmed");
-        builder.setDescrition("test description for Halloween");
+        builder.setDescription("test description for Halloween");
         builder.setImagePath("image test Path");
         builder.setLastUpdate(new Date());
         builder.setMenSeats(10);
