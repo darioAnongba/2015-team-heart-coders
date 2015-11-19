@@ -1,6 +1,5 @@
 package ch.epfl.sweng.swissaffinity.users;
 
-import junit.framework.TestCase;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,9 +17,12 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 
-import static ch.epfl.sweng.swissaffinity.DataForTesting.*;
+import static ch.epfl.sweng.swissaffinity.DataForTesting.LOCATIONS;
+import static ch.epfl.sweng.swissaffinity.DataForTesting.createSpeedDatingEvent;
+import static ch.epfl.sweng.swissaffinity.DataForTesting.createUser;
+import static org.junit.Assert.assertEquals;
 
-public class UserTest extends TestCase {
+public class UserTest {
 
     private User user;
     private Address address;
@@ -31,10 +33,10 @@ public class UserTest extends TestCase {
 
     @Before
     public void setUp() throws MalformedURLException, ParserException {
-        user = userCreator();
+        user = createUser();
         address = new Address("Switzerland",1000,"Lausanne","Vaud",1,"Rue du Test");
         locations = new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1)));
-        events = new ArrayList<Event>(Arrays.asList(speedDatingEventCreator()));
+        events = new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent()));
         birthday = DateParser.parseFromString("1983-11-16T16:00:00+0100");
         url = new URL("http://testUrl.com");
     }
@@ -142,7 +144,7 @@ public class UserTest extends TestCase {
                 "testProfession",
                 "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
-                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+                new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent())));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -163,7 +165,7 @@ public class UserTest extends TestCase {
                 "testProfession",
                 "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
-                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+                new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent())));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -184,7 +186,7 @@ public class UserTest extends TestCase {
                 "testProfession",
                 "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
-                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+                new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent())));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -205,7 +207,7 @@ public class UserTest extends TestCase {
                 "testProfession",
                 "imgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
-                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+                new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent())));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -226,7 +228,7 @@ public class UserTest extends TestCase {
                 "testProfession",
                 "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
-                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+                new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent())));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -247,7 +249,7 @@ public class UserTest extends TestCase {
                 "testProfession",
                 "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
-                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+                new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent())));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -268,7 +270,7 @@ public class UserTest extends TestCase {
                 "testProfession",
                 "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
-                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+                new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent())));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -289,12 +291,13 @@ public class UserTest extends TestCase {
                 "testProfession",
                 "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
-                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+                new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent())));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testAddressException() throws ParserException {
-        user = new User(1,
+
+        new User(1,
                 2001,
                 "testUsername",
                 "testEmail",
@@ -310,7 +313,7 @@ public class UserTest extends TestCase {
                 "testProfession",
                 "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
-                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+                new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent())));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -331,7 +334,7 @@ public class UserTest extends TestCase {
                 "testProfession",
                 "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
-                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+                new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent())));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -352,7 +355,7 @@ public class UserTest extends TestCase {
                 "testProfession",
                 "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
-                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+                new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent())));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -373,7 +376,7 @@ public class UserTest extends TestCase {
                 null,
                 "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
-                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+                new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent())));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -394,7 +397,7 @@ public class UserTest extends TestCase {
                 "testProfession",
                 null,
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
-                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+                new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent())));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -415,7 +418,7 @@ public class UserTest extends TestCase {
                 "testProfession",
                 "ImgURL",
                 null,
-                new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
+                new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent())));
     }
 
     @Test(expected = IllegalArgumentException.class)

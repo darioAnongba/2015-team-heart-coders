@@ -45,6 +45,38 @@ public class Address implements Serializable {
         mStreet = street;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null){
+            return false;
+        }
+        if (getClass() != obj.getClass()){
+            return false;
+        }
+        final Address other = (Address) obj;
+        if (this.mStreetNumber != other.getStreetNumber() ||
+                this.mZipCode != other.getZipCode()){
+            return false;
+        }
+        if ((this.mStreet == null) ? (other.getStreet() != null) :
+                (! this.mStreet.equals(other.getStreet()))){
+            return false;
+        }
+        if ((this.mCity == null) ? (other.getCity() != null) :
+                (! this.mCity.equals(other.getCity()))){
+            return false;
+        }
+        if ((this.mProvince == null) ? (other.getProvince() != null) :
+                (! this.mProvince.equals(other.getProvince()))){
+            return false;
+        }
+        if ((this.mCountry == null) ? (other.getCountry() != null) :
+                (! this.mCountry.equals(other.getCountry()))){
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Get the street name
      *
