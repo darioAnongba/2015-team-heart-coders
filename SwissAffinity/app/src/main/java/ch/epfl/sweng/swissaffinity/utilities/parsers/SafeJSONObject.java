@@ -44,14 +44,14 @@ public class SafeJSONObject extends JSONObject {
      * Getter to generically have a default fallback value.
      */
     @SuppressWarnings("unchecked")
-    public <A> A get(String name, A defaultValue) {
+    public <A> A get(String name, A defaultValue){
         A value = defaultValue;
         try {
             Object o = super.get(name);
             if (o.getClass().equals(defaultValue.getClass())) {
                 value = (A) o;
             }
-        } catch (JSONException e) {
+        } catch (JSONException e){
             Log.d("SafeJSONObject", e.getMessage());
         }
         return value;

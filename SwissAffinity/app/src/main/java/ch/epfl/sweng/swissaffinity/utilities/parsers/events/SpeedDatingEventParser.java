@@ -35,6 +35,7 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.WOMEN_SEA
  */
 public class SpeedDatingEventParser extends Parser<SpeedDatingEvent> {
 
+
     @Override
     public SpeedDatingEvent parse(SafeJSONObject jsonObject) throws ParserException {
         SpeedDatingEvent.Builder builder = new SpeedDatingEvent.Builder();
