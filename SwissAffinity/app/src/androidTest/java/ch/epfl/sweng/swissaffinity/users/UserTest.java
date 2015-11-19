@@ -1,6 +1,5 @@
 package ch.epfl.sweng.swissaffinity.users;
 
-import junit.framework.TestCase;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,9 +17,12 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 
-import static ch.epfl.sweng.swissaffinity.DataForTesting.*;
+import static ch.epfl.sweng.swissaffinity.DataForTesting.LOCATIONS;
+import static ch.epfl.sweng.swissaffinity.DataForTesting.speedDatingEventCreator;
+import static ch.epfl.sweng.swissaffinity.DataForTesting.userCreator;
+import static org.junit.Assert.assertEquals;
 
-public class UserTest extends TestCase {
+public class UserTest {
 
     private User user;
     private Address address;
@@ -294,7 +296,8 @@ public class UserTest extends TestCase {
 
     @Test(expected = IllegalArgumentException.class)
     public void testAddressException() throws ParserException {
-        user = new User(1,
+
+        new User(1,
                 2001,
                 "testUsername",
                 "testEmail",
