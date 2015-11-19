@@ -38,7 +38,8 @@ public class SafeJSONObject extends JSONObject {
     public SafeJSONObject(JSONObject jsonObject) throws JSONException {
         this(jsonObject.toString());
     }
-
+    //TODO: good initiative to refactor checking, yet invocations are too ad-hoc.
+    //
     /**
      * Getter to generically have a default fallback value.
      */

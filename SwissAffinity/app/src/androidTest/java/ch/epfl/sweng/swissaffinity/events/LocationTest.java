@@ -27,13 +27,13 @@ public class LocationTest {
         assertEquals("Lausanne", location.getName());
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testIDException() throws Exception {
+    @Test(expected = IllegalArgumentException.class)
+    public void testIDException(){
         location = new Location(-1, "Genève");
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testNameException() throws Exception {
+    @Test(expected = IllegalArgumentException.class)
+    public void testNameException(){
         location = new Location(1, null);
     }
 }

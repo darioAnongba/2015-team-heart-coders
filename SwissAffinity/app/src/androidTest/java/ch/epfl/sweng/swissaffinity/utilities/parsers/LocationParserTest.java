@@ -16,17 +16,17 @@ import static org.junit.Assert.assertEquals;
  */
 public class LocationParserTest {
 
-    JSONObject json;
+    JSONObject jsonLocation;
     Location location;
 
     @Before
     public void setUp() throws ParserException, JSONException {
-        json = DataForTesting.createJSONEvent().getJSONObject(ServerTags.LOCATION.get());
-        location = new LocationParser().parse(new SafeJSONObject(json));
+        jsonLocation = DataForTesting.createJSONEvent().getJSONObject(ServerTags.LOCATION.get());
+        location = new LocationParser().parse(new SafeJSONObject(jsonLocation));
     }
 
     @Test
     public void nameTest() throws JSONException {
-        assertEquals(location.getName(), json.getString(ServerTags.NAME.get()));
+        assertEquals(location.getName(), jsonLocation.getString(ServerTags.NAME.get()));
     }
 }

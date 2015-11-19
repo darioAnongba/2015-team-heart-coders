@@ -140,7 +140,7 @@ public class UserTest extends TestCase {
                 User.Gender.MALE,
                 birthday,
                 "testProfession",
-                url,
+                "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
                 new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
     }
@@ -161,7 +161,7 @@ public class UserTest extends TestCase {
                 User.Gender.MALE,
                 birthday,
                 "testProfession",
-                url,
+                "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
                 new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
     }
@@ -182,7 +182,7 @@ public class UserTest extends TestCase {
                 User.Gender.MALE,
                 birthday,
                 "testProfession",
-                url,
+                "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
                 new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
     }
@@ -203,7 +203,7 @@ public class UserTest extends TestCase {
                 User.Gender.MALE,
                 birthday,
                 "testProfession",
-                url,
+                "imgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
                 new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
     }
@@ -224,7 +224,7 @@ public class UserTest extends TestCase {
                 User.Gender.MALE,
                 birthday,
                 "testProfession",
-                url,
+                "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
                 new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
     }
@@ -245,7 +245,7 @@ public class UserTest extends TestCase {
                 User.Gender.MALE,
                 birthday,
                 "testProfession",
-                url,
+                "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
                 new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
     }
@@ -266,7 +266,7 @@ public class UserTest extends TestCase {
                 User.Gender.MALE,
                 birthday,
                 "testProfession",
-                url,
+                "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
                 new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
     }
@@ -287,7 +287,7 @@ public class UserTest extends TestCase {
                 User.Gender.MALE,
                 birthday,
                 "testProfession",
-                url,
+                "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
                 new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
     }
@@ -308,7 +308,7 @@ public class UserTest extends TestCase {
                 User.Gender.MALE,
                 birthday,
                 "testProfession",
-                url,
+                "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
                 new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
     }
@@ -329,7 +329,7 @@ public class UserTest extends TestCase {
                 null,
                 birthday,
                 "testProfession",
-                url,
+                "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
                 new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
     }
@@ -350,7 +350,7 @@ public class UserTest extends TestCase {
                 User.Gender.MALE,
                 null,
                 "testProfession",
-                url,
+                "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
                 new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
     }
@@ -371,7 +371,7 @@ public class UserTest extends TestCase {
                 User.Gender.MALE,
                 birthday,
                 null,
-                url,
+                "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
                 new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
     }
@@ -413,7 +413,7 @@ public class UserTest extends TestCase {
                 User.Gender.MALE,
                 birthday,
                 "testProfession",
-                url,
+                "ImgURL",
                 null,
                 new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
     }
@@ -434,7 +434,7 @@ public class UserTest extends TestCase {
                 User.Gender.MALE,
                 birthday,
                 "testProfession",
-                url,
+                "ImgURL",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
                 null);
     }
