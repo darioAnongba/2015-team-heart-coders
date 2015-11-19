@@ -82,7 +82,7 @@ public class Establishment implements Serializable {
             int maxSeats,
             String logoPath)
     {
-        if (id < 0 || name == null || type == null || address == null || phoneNumber == null ||
+        if (id < 0 || maxSeats<=0 || name == null || type == null || address == null || phoneNumber == null ||
             description == null || url == null || logoPath == null)
         {
             throw new IllegalArgumentException();
