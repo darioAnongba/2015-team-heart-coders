@@ -24,6 +24,25 @@ public class Location implements Serializable {
         mName = name;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null){
+            return false;
+        }
+        if (getClass() != obj.getClass()){
+            return false;
+        }
+        final Location other = (Location) obj;
+        if (this.mId != other.getId()){
+            return false;
+        }
+        if ((this.mName == null) ? (other.getName() != null) :
+                (! this.mName.equals(other.getName()))){
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Getter for the ID
      *
