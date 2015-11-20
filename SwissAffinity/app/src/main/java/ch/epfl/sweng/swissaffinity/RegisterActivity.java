@@ -12,8 +12,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sweng.swissaffinity.users.User.Gender;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
@@ -38,9 +41,12 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText birthdayText;
     private String facebookId;
     private String gender = "";
-    private final String SERVER_URL = "http://beecreative.ch/api/users";
+    private final String SERVER_URL = "http://beecreative.ch";
     private EditText passwordText;
     private EditText passwordConfirmation;
+    private JSONObject jsonObject = null;
+    private JSONObject jsonRequest = null;
+    private JSONObject jsonRequestSupposed = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +74,13 @@ public class RegisterActivity extends AppCompatActivity {
                 JSONObject json = createJson();
                 if (json != null) {
                     Log.v("UserJson", json.toString());
-                    new UploadUserTask().execute(json.toString());
+                    try {
+                        new UploadUserTask().execute(json.toString()).get();
+                    } catch (InterruptedException e) {
+                        Log.e("Interuption",e.getMessage());
+                    } catch (ExecutionException e) {
+                        Log.e("Excution problem",e.getMessage());
+                    }
                 } else {
                     Toast.makeText(
                             getApplicationContext(),
@@ -110,9 +122,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private JSONObject createJson() {
-        JSONObject jsonObject = null;
-        JSONObject jsonRequest = null;
-
 
         if (emailText.getText().toString().isEmpty() ||
                 emailText.getText().toString().length() > 100 ||
@@ -202,7 +211,25 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String response) {
-            //TODO : choose what to do in function of response.
+            JSONArray location = null;
+            try {
+                location = new JSONArray("[{\"id\":7,\"name\":\"Berne\"},{\"id\":8,\"name\":\"Bulle\"},{\"id\":4,\"name\":\"Fribourg\"},{\"id\":2,\"name\":\"Genève\"},{\"id\":3,\"name\":\"Lausanne\"},{\"id\":6,\"name\":\"Zürich\"}]");
+            } catch (JSONException e) {
+                Log.e("error",e.getMessage());
+            }
+            try {
+                jsonObject.put("locations_of_interest",location);
+                jsonRequestSupposed = new JSONObject();
+                jsonRequestSupposed.put("rest_user_registration",jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if(jsonRequestSupposed.equals(jsonRequest)) {
+                Toast.makeText(
+                        RegisterActivity.this, "you have been registered",
+                        Toast.LENGTH_LONG).show();
+                finish();
+            }
             Toast.makeText(
                     RegisterActivity.this, response,
                     Toast.LENGTH_LONG).show();

@@ -26,6 +26,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
@@ -76,7 +80,13 @@ public class AboutActivity extends AppCompatActivity {
                                         Log.v("AboutActivity", rep.toString());
                                         if (jsonObject != null) {
                                             fillUserData(jsonObject);
-                                            new ConnectionToServer().execute();
+                                            try {
+                                                new ConnectionToServer().execute().get();
+                                            } catch (InterruptedException e) {
+                                                Log.e("Interuption", e.getMessage());
+                                            } catch (ExecutionException e) {
+                                                Log.e("Excution problem", e.getMessage());
+                                            }
                                         } else {
                                             //TODO: no data...
                                             onError(null);
@@ -131,13 +141,24 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     private void fillUserData(SafeJSONObject jsonObject) {
-        String facebookID = jsonObject.get(ID.get(), "");
-        String userName = jsonObject.get(NAME.get(), "");
-        String lastName = jsonObject.get(LAST_NAME.get(), "");
-        String firstName = jsonObject.get(FIRST_NAME.get(), "");
-        String gender = jsonObject.get(GENDER.get(), "");
-        String birthday = jsonObject.get(BIRTHDAY.get(), "");
-        String email = jsonObject.get(EMAIL.get(), "");
+        String facebookID = jsonObject.get(ID.get(), SafeJSONObject.DEFAULT_STRING);
+        String userName = jsonObject.get(NAME.get(), SafeJSONObject.DEFAULT_STRING);
+        String lastName = jsonObject.get(LAST_NAME.get(), SafeJSONObject.DEFAULT_STRING);
+        String firstName = jsonObject.get(FIRST_NAME.get(), SafeJSONObject.DEFAULT_STRING);
+        String gender = jsonObject.get(GENDER.get(), SafeJSONObject.DEFAULT_STRING);
+        String preBirthday = jsonObject.get(BIRTHDAY.get(), SafeJSONObject.DEFAULT_STRING);
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        Date convertedCurrentDate = null;
+        String birthday = SafeJSONObject.DEFAULT_STRING;
+        try {
+            convertedCurrentDate = sdf.parse(preBirthday);
+        } catch (ParseException e) {
+            Log.e("Parser",e.getMessage());
+        }
+        if(convertedCurrentDate!=null) {
+             birthday = sdf.format(convertedCurrentDate);
+        }
+        String email = jsonObject.get(EMAIL.get(), SafeJSONObject.DEFAULT_STRING);
         SHARED_PREFS.edit()
                 .putString(FACEBOOK_ID.get(), facebookID)
                 .putString(USERNAME.get(), userName)
@@ -180,6 +201,7 @@ public class AboutActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(String... params) {
+
             boolean code = false;
             String facebookId = SHARED_PREFS.getString(FACEBOOK_ID.get(), "");
             try {
@@ -194,10 +216,7 @@ public class AboutActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean code) {
             if (code) {
-                //FIXME: I don't think you want to start main again !!!
-                //Why not ? if the user already in the server , you go back to MainActivity
-                Intent registerIntent = new Intent(AboutActivity.this, MainActivity.class);
-                startActivity(registerIntent);
+                finish();
             } else {
                 Intent registerIntent = new Intent(AboutActivity.this, RegisterActivity.class);
                 startActivity(registerIntent);

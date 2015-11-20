@@ -41,7 +41,7 @@ public class NetworkUserClient implements UserClient {
     @Override
     public JSONObject postUser(String url, JSONObject jsonObject) throws UserClientException {
         try {
-            String content = mNetworkProvider.postContent(url,jsonObject);
+            String content = mNetworkProvider.postContent(url + USERS,jsonObject);
             return new JSONObject(content);
         } catch (IOException | JSONException e) {
             throw new UserClientException(e);
