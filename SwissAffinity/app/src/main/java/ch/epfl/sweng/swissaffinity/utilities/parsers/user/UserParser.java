@@ -4,8 +4,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,34 +42,41 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
  * A parser for the User class.
  */
 public class UserParser extends Parser<User> {
-
+    public static final String LOG_SIMPLE_FIELD = "SIMPLE_FIELD";
+    public static final String LOG_COMPOSITE_FIELD = "COMPOSITE_FIELD";
     @Override
     public User parse(SafeJSONObject jsonObject) throws ParserException {
 
-        int id = jsonObject.get(ID.get(), -1);
-        long facebookId = jsonObject.get(FACEBOOK_ID.get(), -1L);
-        String username = jsonObject.get(USERNAME.get(), "");
-        String email = jsonObject.get(EMAIL.get(), "");
-        String firstName = jsonObject.get(FIRST_NAME.get(), "");
-        String lastName = jsonObject.get(LAST_NAME.get(), "");
-        String mobilePhone = jsonObject.get(MOBILE_PHONE.get(), "");
-        String homePhone = jsonObject.get(HOME_PHONE.get(), "");
         SafeJSONObject jsonAddress;
+        long facebookId;
+        int id;
+        //Critical attributes
         try {
             jsonAddress = new SafeJSONObject(jsonObject.getJSONObject(ADDRESS.get()));
-        } catch (JSONException e) {
+            facebookId = jsonObject.getLong(FACEBOOK_ID.get());
+            id = jsonObject.get(ID.get(), SafeJSONObject.DEFAULT_ID);
+        } catch (JSONException e){
             throw new ParserException(e);
         }
+
+        String username = jsonObject.get(USERNAME.get(), SafeJSONObject.DEFAULT_STRING);
+        String email = jsonObject.get(EMAIL.get(), SafeJSONObject.DEFAULT_STRING);
+        String firstName = jsonObject.get(FIRST_NAME.get(), SafeJSONObject.DEFAULT_STRING);
+        String lastName = jsonObject.get(LAST_NAME.get(), SafeJSONObject.DEFAULT_STRING);
+        String mobilePhone = jsonObject.get(MOBILE_PHONE.get(), SafeJSONObject.DEFAULT_STRING);
+        String homePhone = jsonObject.get(HOME_PHONE.get(), SafeJSONObject.DEFAULT_STRING);
         Address address = new AddressParser().parse(jsonAddress);
         boolean locked = jsonObject.get(LOCKED.get(), true);
-        boolean enabled = jsonObject.get(ENABLED.get(), true);
-        Gender gender = Gender.getGender(jsonObject.get(GENDER.get(), "male"));
-        String birthDate = jsonObject.get(BIRTH_DATE.get(), "");
-        String profession = jsonObject.get(PROFESSION.get(), "");
-        String profilePicture = jsonObject.get(PROFILE_PICTURE.get(), "");
+        boolean enabled = jsonObject.get(ENABLED.get(), false);
+        Gender gender = Gender.getGender(jsonObject.get(GENDER.get(), SafeJSONObject.DEFAULT_GENDER.get()));
+        String birthDate = jsonObject.get(BIRTH_DATE.get(), SafeJSONObject.DEFAULT_STRING);
+        String profession = jsonObject.get(PROFESSION.get(), SafeJSONObject.DEFAULT_STRING);
+        String profilePicture = jsonObject.get(PROFILE_PICTURE.get(), SafeJSONObject.DEFAULT_STRING);
 
-        JSONArray areas = jsonObject.get(LOCATIONS_INTEREST.get(), new JSONArray());
+
+
         List<Location> areasOfInterest = new ArrayList<>();
+        JSONArray areas = jsonObject.get(LOCATIONS_INTEREST.get(), new JSONArray());
         for (int i = 0; i < areas.length(); i++) {
             try {
                 JSONObject jsonArea = areas.getJSONObject(i);
@@ -82,8 +87,8 @@ public class UserParser extends Parser<User> {
             }
         }
 
-        JSONArray events = jsonObject.get(EVENTS_ATTENDED.get(), new JSONArray());
         List<Event> eventsAttended = new ArrayList<>();
+        JSONArray events = jsonObject.get(EVENTS_ATTENDED.get(), new JSONArray());
         for (int i = 0; i < events.length(); i++) {
             try {
                 SafeJSONObject jsonEvent = new SafeJSONObject(events.getJSONObject(i));
@@ -96,13 +101,16 @@ public class UserParser extends Parser<User> {
 
         }
 
+
+
+
         return new User(
                 id,
                 facebookId,
                 username,
                 email,
-                firstName,
                 lastName,
+                firstName,
                 mobilePhone,
                 homePhone,
                 address,

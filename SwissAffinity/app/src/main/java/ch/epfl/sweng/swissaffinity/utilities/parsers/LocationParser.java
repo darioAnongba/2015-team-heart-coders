@@ -16,7 +16,7 @@ public class LocationParser extends Parser<Location> {
     public Location parse(SafeJSONObject jsonObject) throws ParserException {
         try {
             int id = jsonObject.getInt(ID.get());
-            String name = jsonObject.getString(NAME.get());//TODO: check for String type, it's not done by default.
+            String name = jsonObject.get(NAME.get(), "");//TODO: check for String type, it's not done by default.
             return new Location(id, name);
         } catch (JSONException e) {
             throw new ParserException(e);

@@ -1,7 +1,6 @@
 package ch.epfl.sweng.swissaffinity.utilities.parsers.events;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import ch.epfl.sweng.swissaffinity.events.Establishment;
 import ch.epfl.sweng.swissaffinity.events.Establishment.Type;
@@ -25,6 +24,8 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.URL;
  * Parser for the Establishment class.
  */
 public class EstablishmentParser extends Parser<Establishment> {
+    public static final int DEFAULT_COUNT = 0;
+    public static final String DEFAULT_STRING = "default_string";
 
     @Override
     public Establishment parse(SafeJSONObject jsonObject) throws ParserException {
@@ -35,11 +36,11 @@ public class EstablishmentParser extends Parser<Establishment> {
             SafeJSONObject jsonAddress =
                     new SafeJSONObject(jsonObject.getJSONObject(ADDRESS.get()));
             Address address = new AddressParser().parse(jsonAddress);
-            String phoneNum = jsonObject.get(PHONE_NUMBER.get(), "");
-            String description = jsonObject.get(DESCRIPTION.get(), "");
-            String url = jsonObject.get(URL.get(), "");
-            int maxSeats = jsonObject.get(MAX_SEATS.get(), -1);
-            String logoPath = jsonObject.get(LOGO_PATH.get(), "");
+            String phoneNum = jsonObject.get(PHONE_NUMBER.get(), DEFAULT_STRING);
+            String description = jsonObject.get(DESCRIPTION.get(), DEFAULT_STRING);
+            String url = jsonObject.get(URL.get(), DEFAULT_STRING);
+            int maxSeats = jsonObject.get(MAX_SEATS.get(), DEFAULT_COUNT);
+            String logoPath = jsonObject.get(LOGO_PATH.get(), DEFAULT_STRING);
 
             return new Establishment(
                     id,
