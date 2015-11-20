@@ -40,7 +40,7 @@ public class DefaultNetworkProvider implements NetworkProvider {
      * @return true if the server return 200 as response code , false else
      * @throws IOException
      */
-    public static boolean isConnectionSuccess(HttpURLConnection conn) throws IOException {
+    private static boolean isConnectionSuccess(HttpURLConnection conn) throws IOException {
         conn.setReadTimeout(10000 /* milliseconds */);
         conn.setConnectTimeout(15000 /* milliseconds */);
         conn.setRequestMethod("GET");

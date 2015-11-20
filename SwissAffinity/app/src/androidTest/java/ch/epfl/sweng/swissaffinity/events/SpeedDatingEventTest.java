@@ -6,7 +6,6 @@ import org.junit.Test;
 import java.util.Date;
 
 import ch.epfl.sweng.swissaffinity.DataForTesting;
-import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 
@@ -21,7 +20,7 @@ public class SpeedDatingEventTest {
 
     @Before
     public void setup() throws ParserException {
-        speedDatingEvent = DataForTesting.speedDatingEventCreator();
+        speedDatingEvent = DataForTesting.createSpeedDatingEvent();
         builder = new SpeedDatingEvent.Builder();
 
         try {
@@ -135,7 +134,7 @@ public class SpeedDatingEventTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testDescriptionException() {
-        builder.setDescrition(null);
+        builder.setDescription(null);
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -1,7 +1,6 @@
 package ch.epfl.sweng.swissaffinity.utilities.parsers.events;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import ch.epfl.sweng.swissaffinity.events.Establishment;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
@@ -73,7 +72,7 @@ public class SpeedDatingEventParser extends Parser<SpeedDatingEvent> {
                    .setDateEnd(DateParser.parseFromString(dateEnd))
                    .setBasePrice(basePrice)
                    .setState(state)
-                   .setDescrition(description)
+                   .setDescription(description)
                    .setImagePath(imageUrl)
                    .setLastUpdate(DateParser.parseFromString(lastUpdate));
             return builder.setMenSeats(menSeats)

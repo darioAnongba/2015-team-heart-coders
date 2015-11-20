@@ -82,7 +82,7 @@ public class Establishment implements Serializable {
             int maxSeats,
             String logoPath)
     {
-        if (id < 0 || name == null || type == null || address == null || phoneNumber == null ||
+        if (id < 0 || maxSeats<=0 || name == null || type == null || address == null || phoneNumber == null ||
             description == null || url == null || logoPath == null)
         {
             throw new IllegalArgumentException();
@@ -96,6 +96,54 @@ public class Establishment implements Serializable {
         mUrl = url;
         mMaxSeats = maxSeats;
         mLogoPath = logoPath;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null){
+            return false;
+        }
+        if (getClass() != obj.getClass()){
+            return false;
+        }
+        final Establishment other = (Establishment) obj;
+        if (this.mId != other.getId() ||
+                this.mMaxSeats != other.getmMaxSeats()){
+            return false;
+        }
+        if ((this.mName == null)? (other.getName() != null) :
+                (!this.mName.equals(other.getName()))){
+            return false;
+        }
+        if ((this.mType == null) ? (other.getType() != null) :
+                (! this.mType.equals(other.getType()))){
+            return false;
+        }
+        if ((this.mAddress == null) ? (other.getAddress() != null) :
+                (! this.mAddress.equals(other.getAddress()))){
+            return false;
+        }
+        if ((this.mPhoneNumber == null) ? (other.getPhoneNumber() != null) :
+                (! this.mPhoneNumber.equals(other.getPhoneNumber()))){
+            return false;
+        }
+        if ((this.mDescription == null) ? (other.getDescription() != null) :
+                (! this.mDescription.equals(other.getDescription()))){
+            return false;
+        }
+        if ((this.mUrl == null) ? (other.getUrl() != null) :
+                (! this.mUrl.equals(other.getUrl()))){
+            return false;
+        }
+        if ((this.mLogoPath == null)? (other.getLogoPath()!= null) :
+                (! this.mLogoPath.equals(other.getLogoPath()))){
+            return false;
+        }
+        return true;
+    }
+
+    public int getmMaxSeats() {
+        return mMaxSeats;
     }
 
     /**
@@ -159,5 +207,9 @@ public class Establishment implements Serializable {
      */
     public Type getType() {
         return mType;
+    }
+
+    public String getPhoneNumber() {
+        return mPhoneNumber;
     }
 }
