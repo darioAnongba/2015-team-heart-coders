@@ -8,6 +8,7 @@ import org.junit.Test;
 import ch.epfl.sweng.swissaffinity.DataForTesting;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
 import static org.junit.Assert.assertEquals;
 
@@ -21,7 +22,7 @@ public class SpeedDatingEventParserTest {
     @Before
     public void setUp() throws Exception {
         json = DataForTesting.createJSONEvent();
-        event = new SpeedDatingEventParser(json).parse();
+        event = new SpeedDatingEventParser().parse(new SafeJSONObject(json));
     }
 
     @Test
@@ -49,12 +50,14 @@ public class SpeedDatingEventParserTest {
     }
 
     @Test(expected = ParserException.class)
-    public void nullTest() throws ParserException {
+    public void malformedJsonTest() throws ParserException {
+        SafeJSONObject safeJson = null;
         try {
             json = new JSONObject("{\"id\":4}");
+            safeJson = new SafeJSONObject(json);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        event = new SpeedDatingEventParser(json).parse();
+        event = new SpeedDatingEventParser().parse(safeJson);
     }
 }
