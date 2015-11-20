@@ -28,8 +28,7 @@ import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
-import ch.epfl.sweng.swissaffinity.utilities.parsers.events.SpeedDatingEventParser;
-import ch.epfl.sweng.swissaffinity.utilities.parsers.user.UserParser;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -59,9 +58,9 @@ public class NetworkEndToEndTest {
         assertTrue("Unexpected first name",user.getFirstName().equals("Dario"));
         assertTrue("Unexpected last name",user.getLastName().equals("Anongba"));
         assertTrue("Unexpected profession",user.getProfession().equals("Student"));
-        assertTrue("Unexpected home phone",user.getHomePhone().equals(UserParser.DEFAULT_STRING));
+        assertTrue("Unexpected home phone",user.getHomePhone().equals(SafeJSONObject.DEFAULT_STRING));
         assertTrue("Unexpected mobile phone",user.getMobilePhone().equals("+41799585615"));
-        assertTrue("Unexpected profile picture",user.getProfilePicture().equals(UserParser.DEFAULT_STRING));
+        assertTrue("Unexpected profile picture",user.getProfilePicture().equals(SafeJSONObject.DEFAULT_STRING));
         assertTrue("Unexpected email",user.getEmail().equals("dario.anongba@epfl.ch"));
         assertTrue("Unexpected id",user.getId() == 1);
         assertTrue("Unexpected fb id",user.getFacebookId()==1271175799);
@@ -114,9 +113,9 @@ public class NetworkEndToEndTest {
                         new Address("CH",8004,"Zürich","Zürich",120,"Badenerstrasse" ),
                         "+41 43 243 88 88",
                         "Located at the corner of Badenerstrasse, Forum is an airy lounge bar and restaurant, ideal for kicking back and unwinding.",
-                        SpeedDatingEventParser.DEFAULT_STRING,
+                        SafeJSONObject.DEFAULT_STRING,
                         250,
-                        SpeedDatingEventParser.DEFAULT_STRING))
+                        SafeJSONObject.DEFAULT_STRING))
         );
     }
 

@@ -4,7 +4,6 @@ import org.json.JSONException;
 
 import ch.epfl.sweng.swissaffinity.events.Establishment;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
-import ch.epfl.sweng.swissaffinity.utilities.Address;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.LocationParser;
@@ -35,25 +34,20 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.WOMEN_SEA
  * Parser for the SpeedDatingEvent class.
  */
 public class SpeedDatingEventParser extends Parser<SpeedDatingEvent> {
-    public static final int DEFAULT_ID = Integer.MAX_VALUE;
-    public static final int DEFAULT_COUNT = 0;
-    public static final String DEFAULT_STRING = "default_string";
-    public static final Address DEFAULT_ADDRESS = new Address("",0,"","",0,"");
-    public static final Location DEFAULT_LOCATION = new Location(0, "");
 
     @Override
     public SpeedDatingEvent parse(SafeJSONObject jsonObject) throws ParserException {
         SpeedDatingEvent.Builder builder = new SpeedDatingEvent.Builder();
-        int id = DEFAULT_ID;
+        int id;
         double basePrice;
-        String name = DEFAULT_STRING;
+        String name;
         SafeJSONObject jsonLocation;
         SafeJSONObject jsonEstablishment;
 
         //Should only throw exceptions when main attributes are not present.
         try{
             id = jsonObject.getInt(ID.get());
-            name = jsonObject.get(NAME.get(), DEFAULT_STRING);
+            name = jsonObject.get(NAME.get(), SafeJSONObject.DEFAULT_STRING);
             jsonLocation = new SafeJSONObject(jsonObject.getJSONObject(LOCATION.get()));
             jsonEstablishment = new SafeJSONObject(
                     jsonObject.getJSONObject(ESTABLISHMENT.get()));
@@ -66,19 +60,19 @@ public class SpeedDatingEventParser extends Parser<SpeedDatingEvent> {
         Location location = new LocationParser().parse(jsonLocation);
         Establishment establishment =
                 new EstablishmentParser().parse(jsonEstablishment);
-        int maxPeople = jsonObject.get(MAX_PEOPLE.get(), DEFAULT_COUNT);
-        String dateBegin = jsonObject.get(DATE_BEGIN.get(), DEFAULT_STRING);
-        String dateEnd = jsonObject.get(DATE_END.get(), DEFAULT_STRING);
-        String state = jsonObject.get(STATE.get(), DEFAULT_STRING);
-        String description = jsonObject.get(DESCRIPTION.get(), DEFAULT_STRING);
-        String imageUrl = jsonObject.get(IMAGE_PATH.get(), DEFAULT_STRING);
-        String lastUpdate = jsonObject.get(LAST_UPDATE.get(), DEFAULT_STRING);
-        int menSeats = jsonObject.get(MEN_SEATS.get(), DEFAULT_COUNT);
-        int womenSeats = jsonObject.get(WOMEN_SEATS.get(), DEFAULT_COUNT);
-        int menRegistered = jsonObject.get(MEN_REGISTERED.get(), DEFAULT_COUNT);
-        int womenRegistered = jsonObject.get(WOMEN_REGISTERED.get(), DEFAULT_COUNT);
-        int minAge = jsonObject.get(MIN_AGE.get(), DEFAULT_COUNT);
-        int maxAge = jsonObject.get(MAX_AGE.get(), DEFAULT_COUNT);
+        int maxPeople = jsonObject.get(MAX_PEOPLE.get(), SafeJSONObject.DEFAULT_COUNT);
+        String dateBegin = jsonObject.get(DATE_BEGIN.get(), SafeJSONObject.DEFAULT_STRING);
+        String dateEnd = jsonObject.get(DATE_END.get(), SafeJSONObject.DEFAULT_STRING);
+        String state = jsonObject.get(STATE.get(), SafeJSONObject.DEFAULT_STRING);
+        String description = jsonObject.get(DESCRIPTION.get(), SafeJSONObject.DEFAULT_STRING);
+        String imageUrl = jsonObject.get(IMAGE_PATH.get(), SafeJSONObject.DEFAULT_STRING);
+        String lastUpdate = jsonObject.get(LAST_UPDATE.get(), SafeJSONObject.DEFAULT_STRING);
+        int menSeats = jsonObject.get(MEN_SEATS.get(), SafeJSONObject.DEFAULT_COUNT);
+        int womenSeats = jsonObject.get(WOMEN_SEATS.get(), SafeJSONObject.DEFAULT_COUNT);
+        int menRegistered = jsonObject.get(MEN_REGISTERED.get(), SafeJSONObject.DEFAULT_COUNT);
+        int womenRegistered = jsonObject.get(WOMEN_REGISTERED.get(), SafeJSONObject.DEFAULT_COUNT);
+        int minAge = jsonObject.get(MIN_AGE.get(), SafeJSONObject.DEFAULT_COUNT);
+        int maxAge = jsonObject.get(MAX_AGE.get(), SafeJSONObject.DEFAULT_COUNT);
 
 
 

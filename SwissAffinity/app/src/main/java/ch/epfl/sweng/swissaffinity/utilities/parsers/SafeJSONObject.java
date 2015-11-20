@@ -5,11 +5,21 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ch.epfl.sweng.swissaffinity.users.User;
+import ch.epfl.sweng.swissaffinity.utilities.Address;
+import ch.epfl.sweng.swissaffinity.utilities.Location;
+
 /**
  * Representation of a safe JSONObject class.
  */
 public class SafeJSONObject extends JSONObject {
-
+    public static final int DEFAULT_ID = Integer.MAX_VALUE;
+    public static final Long DEFAULT_FB_ID = new Long(-1L);
+    public static final int DEFAULT_COUNT = 0;
+    public static final String DEFAULT_STRING = "default_string";
+    public static final Address DEFAULT_ADDRESS = new Address("",0,"","",0,"");
+    public static final Location DEFAULT_LOCATION = new Location(0, "");
+    public static final User.Gender DEFAULT_GENDER = User.Gender.MALE;
     /**
      * Default constructor
      */
