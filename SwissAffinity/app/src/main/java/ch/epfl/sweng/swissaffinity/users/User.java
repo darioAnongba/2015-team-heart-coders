@@ -371,18 +371,18 @@ public final class User implements Serializable {
      * @return a collecction of locations
      */
     public Collection<Location> getAreasOfInterest() {
-        HashSet<Location> hash = new HashSet<>();
+        HashSet<Location> hashSet = new HashSet<>();
 
         if (mAreasOfInterest.size() != 0) {                     // To avoid iterator next problems.
             Iterator<Location> iter = mAreasOfInterest.iterator();
             do{
                 Location temp = iter.next();
                 Location location = new Location(temp.getId(), temp.getName());
-                hash.add(location);
+                hashSet.add(location);
             }while (iter.hasNext());
         }
 
-        return hash;
+        return hashSet;
     }
 
     /**
@@ -391,7 +391,16 @@ public final class User implements Serializable {
      * @param areasOfInterest a collection of locations
      */
     public void setAreasOfInterest(Collection<Location> areasOfInterest) {
-        mAreasOfInterest = new HashSet<>(areasOfInterest);
+        mAreasOfInterest = new HashSet<>();
+
+        if (areasOfInterest.size() != 0){
+            Iterator<Location> iter = areasOfInterest.iterator();
+            do{
+                Location temp = iter.next();
+                Location location = new Location(temp.getId(), temp.getName());
+                mAreasOfInterest.add(location);
+            }while(iter.hasNext());
+        }
     }
 
     /**

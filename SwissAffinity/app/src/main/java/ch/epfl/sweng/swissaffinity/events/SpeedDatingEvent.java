@@ -19,8 +19,11 @@ public class SpeedDatingEvent extends Event implements Serializable {
     private final int mMaxAge;
     private final Establishment mEstablishment;
 
+    private Builder builder;
+
     private SpeedDatingEvent(Builder builder) {
         super(builder);
+        this.builder = (Builder) builder.clone();
         this.mMenSeats = builder.mMenSeats;
         this.mWomenSeats = builder.mWomenSeats;
         this.mMenRegistered = builder.mMenRegistered;
@@ -55,7 +58,13 @@ public class SpeedDatingEvent extends Event implements Serializable {
         return true;
     }
 
-
+    /*
+     * @Override
+     * public Event clone(){
+     * return new SpeedDatingEvent(builder);
+     * }
+     *
+     */
     /**
      * Getter for men seats
      *

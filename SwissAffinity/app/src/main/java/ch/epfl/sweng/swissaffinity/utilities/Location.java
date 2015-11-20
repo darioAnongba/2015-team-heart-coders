@@ -23,7 +23,10 @@ public class Location implements Serializable {
         mId = id;
         mName = name;
     }
-
+    @Override
+    public Location clone(){
+        return new Location(mId, mName);
+    }
     @Override
     public boolean equals(Object obj) {
         if (obj == null){

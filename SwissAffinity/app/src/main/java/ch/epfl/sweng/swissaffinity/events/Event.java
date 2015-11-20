@@ -76,6 +76,7 @@ public abstract class Event implements Serializable {
         mLastUpdate = builder.mLastUpdate;
     }
 
+
     /**
      * Getter for the name
      *
@@ -206,7 +207,7 @@ public abstract class Event implements Serializable {
             if (location == null){
                 throw new IllegalArgumentException();
             }
-            mLocation = location;
+            mLocation = location.clone();
             return this;
         }
 
@@ -328,6 +329,23 @@ public abstract class Event implements Serializable {
             }
             mLastUpdate = lastUpdate;
             return this;
+        }
+
+        @Override
+        public Builder clone(){
+            Builder temp =  new Builder();
+            temp.setLastUpdate(mLastUpdate);
+            temp.setImagePath(mImagePath);
+            temp.setId(mId);
+            temp.setMaxPeople(mMaxPeople);
+            temp.setDescription(mDescription);
+            temp.setState(mState.get());
+            temp.setLocation(mLocation.clone());
+            temp.setBasePrice(mBasePrice);
+            temp.setName(mName);
+            temp.setDateBegin(mDateBegin);
+            temp.setDateEnd(mDateEnd);
+            return temp;
         }
     }
 }
