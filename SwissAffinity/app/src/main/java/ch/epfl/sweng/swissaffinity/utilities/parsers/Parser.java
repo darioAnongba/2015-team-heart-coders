@@ -12,18 +12,6 @@ import org.json.JSONObject;
  */
 public abstract class Parser<A> {
 
-    protected final SafeJSONObject mJsonObject;
-
-    protected Parser(JSONObject jsonObject) {
-        SafeJSONObject safeJSONObject = null;
-        try {
-            safeJSONObject = new SafeJSONObject(jsonObject);
-        } catch (JSONException e) {
-            Log.e("Parser", e.getMessage());
-        }
-        mJsonObject = safeJSONObject;
-    }
-
     /**
      * Allows to parse to get an instance of type A.
      *
@@ -31,5 +19,5 @@ public abstract class Parser<A> {
      *
      * @throws ParserException in case a problem occurs while parsing.
      */
-    public abstract A parse() throws ParserException;
+    public abstract A parse(SafeJSONObject jsonObject) throws ParserException;
 }

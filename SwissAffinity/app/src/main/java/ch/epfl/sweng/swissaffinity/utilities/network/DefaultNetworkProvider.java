@@ -1,11 +1,13 @@
 package ch.epfl.sweng.swissaffinity.utilities.network;
 
 
-import android.util.Log;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -13,6 +15,7 @@ import java.net.URL;
  * The class that get the HTTP connection from the server URL.
  */
 public class DefaultNetworkProvider implements NetworkProvider {
+
     public final static int HTTP_SUCCESS_START = 200;
     public final static int HTTP_SUCCESS_END = 299;
 
@@ -24,34 +27,71 @@ public class DefaultNetworkProvider implements NetworkProvider {
     @Override
     public String getContent(String serverURL) throws IOException {
         URL url = new URL(serverURL);
-        HttpURLConnection connection = getConnection(url);
-        connection.setReadTimeout(10000 /* milliseconds */);
-        connection.setConnectTimeout(15000 /* milliseconds */);
-        connection.setRequestMethod("GET");
-        connection.setDoInput(true);
-        connection.connect();
-        int responseCode = connection.getResponseCode();
-        if (responseCode < HTTP_SUCCESS_START || responseCode > HTTP_SUCCESS_END) {
-            throw new IOException("Connection bad response code: " + responseCode);
+        HttpURLConnection conn = getConnection(url);
+        if (!isConnectionSuccess(conn)) {
+            throw new IOException("Connection bad response code: " + conn.getResponseCode());
         }
-        return fetchContent(connection);
+        return fetchContent(conn);
     }
 
-    public Boolean checkCode(String serverURL) throws IOException{
-        URL url = new URL(serverURL);
-
-        HttpURLConnection conn = getConnection(url);
+    /**
+     *The method to check if the connection is successful
+     * @param conn the urlConnection
+     * @return true if the server return 200 as response code , false else
+     * @throws IOException
+     */
+    public static boolean isConnectionSuccess(HttpURLConnection conn) throws IOException {
         conn.setReadTimeout(10000 /* milliseconds */);
         conn.setConnectTimeout(15000 /* milliseconds */);
         conn.setRequestMethod("GET");
         conn.setDoInput(true);
         conn.connect();
         int response = conn.getResponseCode();
-        return (response==200);
+        return response == HTTP_SUCCESS_START;
     }
 
-    public void yieldPUTContent(String serverURL) throws IOException {
-        throw new IOException("Not yet implemented");
+    /**
+     * Checkthe connection using the IsConnectionSuccess
+     * @param serverURL the server Url
+     * @return The boolean to see if you get http response code == 200
+     * @throws IOException
+     */
+    public static Boolean checkConnection(String serverURL) throws IOException {
+        URL url = new URL(serverURL);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        return isConnectionSuccess(conn);
+    }
+
+    /**
+     *The method to write a user into the server and get his response
+     * @param serverURL The server where you're posting the json
+     * @param json The json of that you want to send to the servers
+     * @return The server response (error or the good content of a json that is written in the database
+     * @throws IOException if one constructor is not valid ( OutputStreamWritter);
+     */
+    public  String postContent(String serverURL, JSONObject json) throws IOException {
+        URL url = new URL(serverURL);
+        String response = null;
+        HttpURLConnection conn = getConnection(url);
+        conn.setDoInput(true);
+        conn.setDoOutput(true);
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.connect();
+        OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
+        out.write(json.toString());
+        out.flush();
+        out.close();
+        int responseCode = conn.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            response =fetchContent(conn);
+        } else if(responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR){
+            throw new ConnectException();
+        } else if(responseCode == HttpURLConnection.HTTP_BAD_REQUEST) {
+            response =fetchErrorContent(conn);
+        } else {
+            throw new ConnectException();
+        }
+        return response;
     }
 
     /**
@@ -66,7 +106,6 @@ public class DefaultNetworkProvider implements NetworkProvider {
             while ((line = reader.readLine()) != null) {
                 stringBuilder.append(line).append("\n");
             }
-            Log.d("HTTPFetchContent", "Fetched string of length " + stringBuilder.length());
             return stringBuilder.toString();
         } finally {
             if (reader != null) {
@@ -74,4 +113,28 @@ public class DefaultNetworkProvider implements NetworkProvider {
             }
         }
     }
+
+    /**
+     *
+     * @param connection the HttpUrlConnection from where you're reading the errorStream
+     * @return The errorStream that the server sent you
+     * @throws IOException If the connection.getErrorStream cannot be open
+     */
+    private String fetchErrorContent(HttpURLConnection connection) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append("\n");
+            }
+            return stringBuilder.toString();
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+    }
+
 }

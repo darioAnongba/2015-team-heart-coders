@@ -18,7 +18,22 @@ public class LocationTest {
     }
 
     @Test
+    public void testGetID() throws Exception {
+        assertEquals(1, location.getId());
+    }
+
+    @Test
     public void testGetName() throws Exception {
         assertEquals("Lausanne", location.getName());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testIDException() throws Exception {
+        location = new Location(-1, "Genève");
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testNameException() throws Exception {
+        location = new Location(1, null);
     }
 }

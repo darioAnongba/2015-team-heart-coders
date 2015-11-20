@@ -6,23 +6,24 @@ import org.junit.Test;
 import java.util.Date;
 
 import ch.epfl.sweng.swissaffinity.DataForTesting;
+import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by yannick on 13.11.15.
- */
 public class SpeedDatingEventTest {
 
     private SpeedDatingEvent speedDatingEvent;
-    Date date1;
-    Date date2;
+    private SpeedDatingEvent.Builder builder;
+    private Date date1;
+    private Date date2;
 
     @Before
     public void setup() throws ParserException {
         speedDatingEvent = DataForTesting.speedDatingEventCreator();
+        builder = new SpeedDatingEvent.Builder();
+
         try {
             date1 = DateParser.parseFromString("2015-10-31T20:00:00+0100");
             date2 = DateParser.parseFromString("2015-10-31T23:59:59+0100");
@@ -91,4 +92,99 @@ public class SpeedDatingEventTest {
         assertEquals(10, speedDatingEvent.getWomenSeats());
     }
 
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testIDException() {
+        builder.setId(-10);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNameException() {
+        builder.setName(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testLocationException() {
+        builder.setLocation(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMaxPeopleException() {
+        builder.setMaxPeople(-1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDateBeginException() {
+        builder.setDateBegin(null).setDateEnd(date2);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDateEndException() {
+        builder.setDateBegin(date1).setDateEnd(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testBasePriceException() {
+        builder.setBasePrice(-10.0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testStateException() {
+        builder.setState(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDescriptionException() {
+        builder.setDescrition(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testIamgePathException() {
+        builder.setImagePath(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testLastUpdateException() {
+        builder.setLastUpdate(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMenSeatsException() {
+        builder.setMenSeats(-10);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testWomenSeatsException() {
+        builder.setWomenSeats(-10);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMenRegisteredException() {
+        builder.setMenRegistered(-10);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testWomenRegisteredException() {
+        builder.setWomenRegistered(-10);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMinAgeException() {
+        builder.setMinAge(-10);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMaxAgeException() {
+        builder.setMaxAge(-10);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMaxSuperiorToMinException() {
+        builder.setMinAge(20).setMaxAge(10);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testEstablishmentException() {
+        builder.setEstablishment(null);
+    }
 }

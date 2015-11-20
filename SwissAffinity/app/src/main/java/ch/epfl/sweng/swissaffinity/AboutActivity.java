@@ -30,21 +30,21 @@ import java.io.IOException;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
+import static ch.epfl.sweng.swissaffinity.MainActivity.SERVER_URL;
 import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREFS;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.GENDER;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
 public class AboutActivity extends AppCompatActivity {
+
     private CallbackManager callbackManager;
-    private DefaultNetworkProvider networkProvider;
-    private final String SERVER_URL = "http://www.beecreative.ch";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +52,10 @@ public class AboutActivity extends AppCompatActivity {
         Context context = getApplicationContext();
         FacebookSdk.sdkInitialize(context);
         callbackManager = CallbackManager.Factory.create();
-        networkProvider = new DefaultNetworkProvider();
         setContentView(R.layout.activity_about);
+
         setLoggedText();
+
         LoginButton loginBtn = (LoginButton) findViewById(R.id.login_button);
         loginBtn.setReadPermissions("public_profile", "email", "user_birthday");
         loginBtn.registerCallback(
@@ -75,8 +76,7 @@ public class AboutActivity extends AppCompatActivity {
                                         Log.v("AboutActivity", rep.toString());
                                         if (jsonObject != null) {
                                             fillUserData(jsonObject);
-                                            new DownloadUserTask().execute();
-                                            finish();
+                                            new ConnectionToServer().execute();
                                         } else {
                                             //TODO: no data...
                                             onError(null);
@@ -84,21 +84,7 @@ public class AboutActivity extends AppCompatActivity {
                                     }
                                 });
                         Bundle parameters = new Bundle();
-                        String fields = new StringBuilder()
-                                .append(ID.get())
-                                .append(",")
-                                .append(NAME.get())
-                                .append(",")
-                                .append(FIRST_NAME.get())
-                                .append(",")
-                                .append(LAST_NAME.get())
-                                .append(",")
-                                .append(EMAIL.get())
-                                .append(",")
-                                .append(GENDER.get())
-                                .append(",")
-                                .append(BIRTHDAY.get())
-                                .toString();
+                        String fields = getFields();
                         parameters.putString("fields", fields);
                         request.setParameters(parameters);
                         request.executeAsync();
@@ -117,8 +103,7 @@ public class AboutActivity extends AppCompatActivity {
                         Toast.makeText(
                                 AboutActivity.this,
                                 "Login attempt failed",
-                                Toast.LENGTH_SHORT)
-                             .show();
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
         new AccessTokenTracker() {
@@ -140,6 +125,11 @@ public class AboutActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    private static String getFields() {
+        return ID.get() + "," + NAME.get() + "," + FIRST_NAME.get() + "," + LAST_NAME.get() + "," +
+                EMAIL.get() + "," + GENDER.get() + "," + BIRTHDAY.get();
+    }
+
     private void fillUserData(SafeJSONObject jsonObject) {
         String facebookID = jsonObject.get(ID.get(), "");
         String userName = jsonObject.get(NAME.get(), "");
@@ -149,27 +139,28 @@ public class AboutActivity extends AppCompatActivity {
         String birthday = jsonObject.get(BIRTHDAY.get(), "");
         String email = jsonObject.get(EMAIL.get(), "");
         SHARED_PREFS.edit()
-                    .putString(FACEBOOK_ID.get(), facebookID)
-                    .putString(USERNAME.get(), userName)
-                    .putString(LAST_NAME.get(), lastName)
-                    .putString(FIRST_NAME.get(), firstName)
-                    .putString(GENDER.get(), gender)
-                    .putString(BIRTHDAY.get(), birthday)
-                    .putString(EMAIL.get(), email)
-                    .apply();
+                .putString(FACEBOOK_ID.get(), facebookID)
+                .putString(USERNAME.get(), userName)
+                .putString(LAST_NAME.get(), lastName)
+                .putString(FIRST_NAME.get(), firstName)
+                .putString(GENDER.get(), gender)
+                .putString(BIRTHDAY.get(), birthday)
+                .putString(EMAIL.get(), email)
+                .apply();
     }
 
     private void deleteUserData() {
         SHARED_PREFS.edit()
-                    .putString(FACEBOOK_ID.get(), null)
-                    .putString(USERNAME.get(), null)
-                    .putString(LAST_NAME.get(), null)
-                    .putString(FIRST_NAME.get(), null)
-                    .putString(GENDER.get(), null)
-                    .putString(BIRTHDAY.get(), null)
-                    .putString(EMAIL.get(), null)
-                    .apply();
+                .putString(FACEBOOK_ID.get(), null)
+                .putString(USERNAME.get(), null)
+                .putString(LAST_NAME.get(), null)
+                .putString(FIRST_NAME.get(), null)
+                .putString(GENDER.get(), null)
+                .putString(BIRTHDAY.get(), null)
+                .putString(EMAIL.get(), null)
+                .apply();
     }
+
 
     private void setLoggedText() {
         TextView logged = ((TextView) findViewById(R.id.aboutLogedText));
@@ -184,24 +175,27 @@ public class AboutActivity extends AppCompatActivity {
         }
     }
 
-    private class DownloadUserTask extends AsyncTask<String, Void, Boolean> {
+
+    private class ConnectionToServer extends AsyncTask<String, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(String... params) {
             boolean code = false;
             String facebookId = SHARED_PREFS.getString(FACEBOOK_ID.get(), "");
             try {
-                code = networkProvider.checkCode(SERVER_URL + "/api/users/" + facebookId);
+                code = DefaultNetworkProvider.checkConnection(
+                        SERVER_URL + "/api/users/" + facebookId);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("CheckCode", e.getMessage());
             }
             return code;
         }
 
-
         @Override
         protected void onPostExecute(Boolean code) {
             if (code) {
+                //FIXME: I don't think you want to start main again !!!
+                //Why not ? if the user already in the server , you go back to MainActivity
                 Intent registerIntent = new Intent(AboutActivity.this, MainActivity.class);
                 startActivity(registerIntent);
             } else {

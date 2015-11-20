@@ -92,6 +92,7 @@ public class DataForTesting {
                             "",
                             100,
                             "logoTest")
+
             ));
 
     public static List<GregorianCalendar> DATES = new ArrayList<>(
@@ -154,7 +155,7 @@ public class DataForTesting {
                 User.Gender.MALE,
                 birthday,
                 "testProfession",
-                new URL("http://testUrl.com"),
+                "http://testUrl.com",
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
                 new ArrayList<Event>(Arrays.asList(speedDatingEventCreator())));
     }

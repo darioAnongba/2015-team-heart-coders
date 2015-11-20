@@ -6,12 +6,10 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import ch.epfl.sweng.swissaffinity.DataForTesting;
 import ch.epfl.sweng.swissaffinity.events.Establishment;
 import ch.epfl.sweng.swissaffinity.utilities.network.ServerTags;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.events.EstablishmentParser;
 
 import static org.junit.Assert.assertEquals;
 
@@ -27,7 +25,7 @@ public class EstablishmentParserTest {
     public void setUp() throws Exception {
         json = DataForTesting.createJSONEvent();
         estJson = json.getJSONObject(ServerTags.ESTABLISHMENT.get());
-        est = new EstablishmentParser(estJson).parse();
+        est = new EstablishmentParser().parse(new SafeJSONObject(estJson));
     }
 
     @Test
