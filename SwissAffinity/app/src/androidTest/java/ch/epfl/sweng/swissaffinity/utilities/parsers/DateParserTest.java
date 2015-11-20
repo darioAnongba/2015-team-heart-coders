@@ -36,7 +36,7 @@ public class DateParserTest {
     }
 
 
-    /* TODO dateParser class's dateToString method has a TODO on null chech!
+    /* TODO dateParser class's dateToString method has a TODO on null check!
      * This should be modified after that TODO!
      */
     @Test(expected = IllegalArgumentException.class)
