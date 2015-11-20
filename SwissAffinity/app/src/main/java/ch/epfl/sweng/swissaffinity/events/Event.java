@@ -173,6 +173,9 @@ public abstract class Event implements Serializable {
          * @return this
          */
         public Builder setId(int id) {
+            if(id < 0){
+                throw new IllegalArgumentException();
+            }
             mId = id;
             return this;
         }
@@ -185,6 +188,9 @@ public abstract class Event implements Serializable {
          * @return this
          */
         public Builder setName(String name) {
+            if (name == null){
+                throw new IllegalArgumentException();
+            }
             mName = name;
             return this;
         }
@@ -197,6 +203,9 @@ public abstract class Event implements Serializable {
          * @return this
          */
         public Builder setLocation(Location location) {
+            if (location == null){
+                throw new IllegalArgumentException();
+            }
             mLocation = location;
             return this;
         }
@@ -209,6 +218,9 @@ public abstract class Event implements Serializable {
          * @return this
          */
         public Builder setMaxPeople(int maxPeople) {
+            if (maxPeople < 0){
+                throw new IllegalArgumentException();
+            }
             mMaxPeople = maxPeople;
             return this;
         }
@@ -221,6 +233,9 @@ public abstract class Event implements Serializable {
          * @return this
          */
         public Builder setDateBegin(Date dateBegin) {
+            if(dateBegin == null){
+                throw new IllegalArgumentException();
+            }
             mDateBegin = dateBegin;
             return this;
         }
@@ -233,6 +248,9 @@ public abstract class Event implements Serializable {
          * @return this
          */
         public Builder setDateEnd(Date dateEnd) {
+            if(dateEnd == null){
+                throw new IllegalArgumentException();
+            }
             mDateEnd = dateEnd;
             return this;
         }
@@ -245,6 +263,9 @@ public abstract class Event implements Serializable {
          * @return this
          */
         public Builder setBasePrice(double basePrice) {
+            if(basePrice < 0){
+                throw new IllegalArgumentException();
+            }
             mBasePrice = basePrice;
             return this;
         }
@@ -257,6 +278,9 @@ public abstract class Event implements Serializable {
          * @return this
          */
         public Builder setState(String state) {
+            if (state == null){
+                throw new IllegalArgumentException();
+            }
             mState = State.getState(state);
             return this;
         }
@@ -264,12 +288,15 @@ public abstract class Event implements Serializable {
         /**
          * Setter for the description
          *
-         * @param descrition the description
+         * @param description the description
          *
          * @return this
          */
-        public Builder setDescrition(String descrition) {
-            mDescription = descrition;
+        public Builder setDescription(String description) {
+            if (description == null){
+                throw  new IllegalArgumentException();
+            }
+            mDescription = description;
             return this;
         }
 
@@ -281,6 +308,9 @@ public abstract class Event implements Serializable {
          * @return this
          */
         public Builder setImagePath(String imagePath) {
+            if(imagePath == null){
+                throw new IllegalArgumentException();
+            }
             mImagePath = imagePath;
             return this;
         }
@@ -293,6 +323,9 @@ public abstract class Event implements Serializable {
          * @return this
          */
         public Builder setLastUpdate(Date lastUpdate) {
+            if(lastUpdate == null){
+                throw new IllegalArgumentException();
+            }
             mLastUpdate = lastUpdate;
             return this;
         }

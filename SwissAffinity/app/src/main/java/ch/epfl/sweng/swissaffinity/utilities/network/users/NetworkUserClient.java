@@ -4,8 +4,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
@@ -38,6 +36,18 @@ public class NetworkUserClient implements UserClient {
     public User fetchByFacebookID(String id) throws UserClientException {
         return fetch(id);
     }
+
+
+    @Override
+    public JSONObject postUser(String url, JSONObject jsonObject) throws UserClientException {
+        try {
+            String content = mNetworkProvider.postContent(url,jsonObject);
+            return new JSONObject(content);
+        } catch (IOException | JSONException e) {
+            throw new UserClientException(e);
+        }
+    }
+
 
     private User fetch(String nameOrId) throws UserClientException {
         try {

@@ -9,8 +9,6 @@ import static org.junit.Assert.assertEquals;
 
 public class EstablishmentTest {
 
-    // IllegalArgumentException
-
     private Establishment establishment;
 
     @Before
