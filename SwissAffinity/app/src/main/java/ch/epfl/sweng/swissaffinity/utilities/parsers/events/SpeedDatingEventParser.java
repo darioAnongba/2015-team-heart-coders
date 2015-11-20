@@ -4,6 +4,7 @@ import org.json.JSONException;
 
 import ch.epfl.sweng.swissaffinity.events.Establishment;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
+import ch.epfl.sweng.swissaffinity.utilities.Address;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.LocationParser;
@@ -34,58 +35,71 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.WOMEN_SEA
  * Parser for the SpeedDatingEvent class.
  */
 public class SpeedDatingEventParser extends Parser<SpeedDatingEvent> {
-
+    public static final int DEFAULT_ID = Integer.MAX_VALUE;
+    public static final int DEFAULT_COUNT = 0;
+    public static final String DEFAULT_STRING = "default_string";
+    public static final Address DEFAULT_ADDRESS = new Address("",0,"","",0,"");
+    public static final Location DEFAULT_LOCATION = new Location(0, "");
 
     @Override
     public SpeedDatingEvent parse(SafeJSONObject jsonObject) throws ParserException {
         SpeedDatingEvent.Builder builder = new SpeedDatingEvent.Builder();
-        try {
-            int id = jsonObject.getInt(ID.get());
-            String name = jsonObject.getString(NAME.get());
-            SafeJSONObject jsonLocation =
-                    new SafeJSONObject(jsonObject.getJSONObject(LOCATION.get()));
-            Location location = new LocationParser().parse(jsonLocation);
-            int maxPeople = jsonObject.getInt(MAX_PEOPLE.get());
-            String dateBegin = jsonObject.getString(DATE_BEGIN.get());
-            String dateEnd = jsonObject.getString(DATE_END.get());
-            double basePrice = jsonObject.getDouble(BASE_PRICE.get());
-            String state = jsonObject.getString(STATE.get());
-            String description = jsonObject.getString(DESCRIPTION.get());
-            String imageUrl = jsonObject.getString(IMAGE_PATH.get());
-            String lastUpdate = jsonObject.getString(LAST_UPDATE.get());
-            int menSeats = jsonObject.getInt(MEN_SEATS.get());
-            int womenSeats = jsonObject.getInt(WOMEN_SEATS.get());
-            int menRegistered = jsonObject.getInt(MEN_REGISTERED.get());
-            int womenRegistered = jsonObject.getInt(WOMEN_REGISTERED.get());
-            int minAge = jsonObject.getInt(MIN_AGE.get());
-            int maxAge = jsonObject.getInt(MAX_AGE.get());
+        int id = DEFAULT_ID;
+        double basePrice;
+        String name = DEFAULT_STRING;
+        SafeJSONObject jsonLocation;
+        SafeJSONObject jsonEstablishment;
 
-            SafeJSONObject jsonEstablishment = new SafeJSONObject(
+        //Should only throw exceptions when main attributes are not present.
+        try{
+            id = jsonObject.getInt(ID.get());
+            name = jsonObject.get(NAME.get(), DEFAULT_STRING);
+            jsonLocation = new SafeJSONObject(jsonObject.getJSONObject(LOCATION.get()));
+            jsonEstablishment = new SafeJSONObject(
                     jsonObject.getJSONObject(ESTABLISHMENT.get()));
-            Establishment establishment =
-                    new EstablishmentParser().parse(jsonEstablishment);
-
-            builder.setId(id)
-                   .setName(name)
-                   .setLocation(location)
-                   .setMaxPeople(maxPeople)
-                   .setDateBegin(DateParser.parseFromString(dateBegin))
-                   .setDateEnd(DateParser.parseFromString(dateEnd))
-                   .setBasePrice(basePrice)
-                   .setState(state)
-                   .setDescription(description)
-                   .setImagePath(imageUrl)
-                   .setLastUpdate(DateParser.parseFromString(lastUpdate));
-            return builder.setMenSeats(menSeats)
-                          .setWomenSeats(womenSeats)
-                          .setMenRegistered(menRegistered)
-                          .setWomenRegistered(womenRegistered)
-                          .setMinAge(minAge)
-                          .setMaxAge(maxAge)
-                          .setEstablishment(establishment)
-                          .build();
-        } catch (JSONException e) {
+            basePrice = jsonObject.getDouble(BASE_PRICE.get());
+        } catch (JSONException e){
             throw new ParserException(e);
         }
+
+
+        Location location = new LocationParser().parse(jsonLocation);
+        Establishment establishment =
+                new EstablishmentParser().parse(jsonEstablishment);
+        int maxPeople = jsonObject.get(MAX_PEOPLE.get(), DEFAULT_COUNT);
+        String dateBegin = jsonObject.get(DATE_BEGIN.get(), DEFAULT_STRING);
+        String dateEnd = jsonObject.get(DATE_END.get(), DEFAULT_STRING);
+        String state = jsonObject.get(STATE.get(), DEFAULT_STRING);
+        String description = jsonObject.get(DESCRIPTION.get(), DEFAULT_STRING);
+        String imageUrl = jsonObject.get(IMAGE_PATH.get(), DEFAULT_STRING);
+        String lastUpdate = jsonObject.get(LAST_UPDATE.get(), DEFAULT_STRING);
+        int menSeats = jsonObject.get(MEN_SEATS.get(), DEFAULT_COUNT);
+        int womenSeats = jsonObject.get(WOMEN_SEATS.get(), DEFAULT_COUNT);
+        int menRegistered = jsonObject.get(MEN_REGISTERED.get(), DEFAULT_COUNT);
+        int womenRegistered = jsonObject.get(WOMEN_REGISTERED.get(), DEFAULT_COUNT);
+        int minAge = jsonObject.get(MIN_AGE.get(), DEFAULT_COUNT);
+        int maxAge = jsonObject.get(MAX_AGE.get(), DEFAULT_COUNT);
+
+
+
+        builder.setId(id)
+            .setName(name)
+            .setLocation(location)
+            .setMaxPeople(maxPeople)
+            .setDateBegin(DateParser.parseFromString(dateBegin))
+            .setDateEnd(DateParser.parseFromString(dateEnd))
+            .setBasePrice(basePrice)
+            .setState(state)
+            .setDescription(description)
+            .setImagePath(imageUrl)
+                .setLastUpdate(DateParser.parseFromString(lastUpdate));
+        return builder.setMenSeats(menSeats)
+                .setWomenSeats(womenSeats)
+                .setMenRegistered(menRegistered)
+                .setWomenRegistered(womenRegistered)
+                .setMinAge(minAge)
+                .setMaxAge(maxAge)
+                .setEstablishment(establishment)
+                .build();
     }
 }

@@ -13,16 +13,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import ch.epfl.sweng.swissaffinity.events.Establishment;
+import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.Address;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
+import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClient;
+import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClientException;
+import ch.epfl.sweng.swissaffinity.utilities.network.events.NetworkEventClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.NetworkUserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.events.SpeedDatingEventParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.user.UserParser;
 
 import static junit.framework.Assert.assertTrue;
@@ -70,12 +76,50 @@ public class NetworkEndToEndTest {
         assertTrue("Unexpected events attended",user.getEventsAttended().size()==0);
 
     }
-    /**
+
     @Test
-    public void testGetEvent() throws EventClientException{
-        return;
+    public void testGetSpeedDatingEvent() throws EventClientException {
+        NetworkProvider networkProvider = new DefaultNetworkProvider();
+        EventClient eventClient = new NetworkEventClient("http://beecreative.ch", networkProvider);
+        SpeedDatingEvent event = (SpeedDatingEvent) eventClient.fetchBy(6);
+        //Oktoberfest event at Zurich.
+        Date beginDate;
+        Date endDate;
+        try{
+            beginDate = DateParser.parseFromString("2016-10-15T21:00:00+0200");
+            endDate = DateParser.parseFromString("2016-10-16T00:00:00+0200");
+        } catch (ParserException e){
+            throw new EventClientException(e);
+        }
+
+        assertTrue("Unexpected event name", event.getName().equals("Let's celebrate Oktoberfest"));
+        assertTrue("Unexpected event description", event.getDescription().equals("Come and join us" +
+                " to celebrate the Oktoberfest , and use this occasion to meet new People . The event" +
+                " will take place to Forum , a bar in the center of Zürich."));
+        assertTrue("Unexcpected event image path", event.getImagePath().equals("5647627162808.jpg"));
+        assertTrue("Unexcpected min age", event.getMinAge() == 21);
+        assertTrue("Unexpected max age", event.getMaxAge() == 32);
+        assertTrue("Unexcpected max people", event.getMaxPeople() == 40);
+        assertTrue("Unexpected men seats", event.getMenSeats() == 20);
+        assertTrue("Unexpected women seats", event.getWomenSeats() == 20);
+        assertTrue("Unexpected women registered", event.getWomenRegistered() == 0);
+        assertTrue("Unexpected men registered", event.getMenRegistered() == 0);
+        assertTrue("Unexpected base price", event.getBasePrice() == 35.0);
+        assertTrue("Unexpected begin date", event.getDateBegin().equals(beginDate));
+        assertTrue("Unexpected end date", event.getDateEnd().equals(endDate));
+        assertTrue("Unexpected Location", event.getLocation().equals(
+                new Location(6,"Zürich")));
+        assertTrue("Unexpected Establishment", event.getEstablishment().equals(
+                new Establishment(2,"Forum", Establishment.Type.BAR,
+                        new Address("CH",8004,"Zürich","Zürich",120,"Badenerstrasse" ),
+                        "+41 43 243 88 88",
+                        "Located at the corner of Badenerstrasse, Forum is an airy lounge bar and restaurant, ideal for kicking back and unwinding.",
+                        SpeedDatingEventParser.DEFAULT_STRING,
+                        250,
+                        SpeedDatingEventParser.DEFAULT_STRING))
+        );
     }
-    **/
+
     private class CollectionComparator<E>{
         boolean compare (Collection<E> coll1, Collection<E> coll2){
             if (coll1.size()!=coll2.size()){
