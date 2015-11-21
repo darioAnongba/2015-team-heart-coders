@@ -45,6 +45,26 @@ import static junit.framework.Assert.assertTrue;
 public class NetworkEndToEndTest {
     /**Admin (Dario) is used as test user here.
      * */
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidServerAddressForUser(){
+        NetworkProvider networkProvider = new DefaultNetworkProvider();
+        new NetworkUserClient("http://notASwissAffinityServer.ch", networkProvider);
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullNetworkProviderForUser(){
+        NetworkProvider networkProvider = null;
+        new NetworkUserClient("http://beecreative.ch", networkProvider);
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidServerAddressForEvent(){
+        NetworkProvider networkProvider = new DefaultNetworkProvider();
+        new NetworkUserClient("http://notASwissAffinityServer.ch", networkProvider);
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullNetworkProviderForEvent(){
+        NetworkProvider networkProvider = null;
+        new NetworkUserClient("http://beecreative.ch", networkProvider);
+    }
     @Test
     public void testGetUser() throws UserClientException{
         NetworkProvider networkProvider = new DefaultNetworkProvider();
@@ -84,7 +104,7 @@ public class NetworkEndToEndTest {
     @Test
     public void postUserTest() throws UserClientException {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
-        UserClient userClient = new NetworkUserClient("http://beecreative.ch/api/users", networkProvider);
+        UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
         List<Location> locationsOfInterest = new ArrayList<>();
         locationsOfInterest.add(new Location(2, "Genève"));
         locationsOfInterest.add(new Location(3, "Lausanne"));
@@ -107,7 +127,7 @@ public class NetworkEndToEndTest {
             jsonUser.put("facebookId", "666");
             jsonUser.put("plainPassword", "dumbpassword");
             jsonRequest.put("rest_user_registration", jsonUser);
-            responseJSON = userClient.postUser("http://beecreative.ch/api/users",jsonRequest);
+            responseJSON = userClient.postUser(jsonRequest);
             confirmationObject = new SafeJSONObject(responseJSON);
         } catch (JSONException e){
             throw new UserClientException(e);

@@ -31,5 +31,5 @@ public interface UserClient {
      */
     User fetchByFacebookID(String id) throws UserClientException;
 
-    JSONObject postUser(String url , JSONObject jsonObject) throws UserClientException;
+    JSONObject postUser(JSONObject jsonObject) throws UserClientException;
 }
