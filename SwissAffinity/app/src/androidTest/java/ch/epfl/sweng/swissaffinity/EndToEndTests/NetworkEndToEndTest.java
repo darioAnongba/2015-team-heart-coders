@@ -1,17 +1,20 @@
-package ch.epfl.sweng.swissaffinity.NetworkTests;
+package ch.epfl.sweng.swissaffinity.EndToEndTests;
 
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import ch.epfl.sweng.swissaffinity.events.Establishment;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
@@ -20,6 +23,7 @@ import ch.epfl.sweng.swissaffinity.utilities.Address;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
+import ch.epfl.sweng.swissaffinity.utilities.network.ServerTags;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClientException;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.NetworkEventClient;
@@ -27,6 +31,7 @@ import ch.epfl.sweng.swissaffinity.utilities.network.users.NetworkUserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.LocationParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
@@ -45,7 +50,7 @@ public class NetworkEndToEndTest {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
         UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
         User user = userClient.fetchByFacebookID(Integer.toString(1271175799)); //Dario's fb id
-        Set<Location> locationsOfInterest = new HashSet<Location>();
+        List<Location> locationsOfInterest = new ArrayList<>();
         locationsOfInterest.add(new Location(3, "Lausanne"));
         Date birthDay;
         try{
@@ -71,8 +76,93 @@ public class NetworkEndToEndTest {
         assertTrue("Unexpected birthday", birthDay.compareTo(user.getBirthDate()) == 0);
         assertTrue("Unexpected gender", User.Gender.MALE.equals(user.getGender()));
         assertTrue("Unexpected areas of interest",
-                new CollectionComparator<Location>().compare(user.getAreasOfInterest(),locationsOfInterest));
+                new CollectionComparator<Location>().compare(new ArrayList<Location>(user.getAreasOfInterest()), locationsOfInterest));
         assertTrue("Unexpected events attended",user.getEventsAttended().size()==0);
+
+    }
+
+    @Test
+    public void postUserTest() throws UserClientException {
+        NetworkProvider networkProvider = new DefaultNetworkProvider();
+        UserClient userClient = new NetworkUserClient("http://beecreative.ch/api/users", networkProvider);
+        List<Location> locationsOfInterest = new ArrayList<>();
+        locationsOfInterest.add(new Location(2, "Genève"));
+        locationsOfInterest.add(new Location(3, "Lausanne"));
+        locationsOfInterest.add(new Location(4, "Fribourg"));
+        locationsOfInterest.add(new Location(6, "Zürich"));
+        locationsOfInterest.add(new Location(7, "Berne"));
+        locationsOfInterest.add(new Location(8, "Bulle"));
+
+        JSONObject jsonUser = new JSONObject();
+        JSONObject jsonRequest = new JSONObject();
+        SafeJSONObject confirmationObject;
+        JSONObject responseJSON;
+        try {
+            jsonUser.put("email", "dumbuser666@gmail.com");
+            jsonUser.put("username", "DumbUser666");
+            jsonUser.put("firstName", "Dumb");
+            jsonUser.put("lastName", "User");
+            jsonUser.put("gender", "male");
+            jsonUser.put("birthDate", "18/02/1993");
+            jsonUser.put("facebookId", "666");
+            jsonUser.put("plainPassword", "dumbpassword");
+            jsonRequest.put("rest_user_registration", jsonUser);
+            responseJSON = userClient.postUser("http://beecreative.ch/api/users",jsonRequest);
+            confirmationObject = new SafeJSONObject(responseJSON);
+        } catch (JSONException e){
+            throw new UserClientException(e);
+        }
+
+        List<Location> areasOfInterest = new ArrayList<>();
+        JSONArray areas;
+        try {
+            areas = confirmationObject.get(ServerTags.LOCATIONS_INTEREST.get(), new JSONArray());
+            for (int i = 0; i < areas.length(); i++) {
+
+                JSONObject jsonArea = areas.getJSONObject(i);
+                Location location = new LocationParser().parse(new SafeJSONObject(jsonArea));
+                areasOfInterest.add(location);
+            }
+        } catch (JSONException | ParserException e){
+            throw new UserClientException(e);
+        }
+        int fb_id;
+        try{
+            fb_id = confirmationObject.getInt(ServerTags.FACEBOOK_ID.get());
+        } catch (JSONException e){
+            throw new UserClientException(e);
+        }
+
+        assertTrue("Unexpected email", confirmationObject.get(ServerTags.EMAIL.get(), SafeJSONObject.DEFAULT_STRING).equals("dumbuser666@gmail.com"));
+        assertTrue("Unexpected username", confirmationObject.get(ServerTags.USERNAME.get(),
+                SafeJSONObject.DEFAULT_STRING).equals("DumbUser666"));
+        assertTrue("Unexpected firstName", confirmationObject.get(ServerTags.FIRST_NAME.get(),
+                SafeJSONObject.DEFAULT_STRING).equals("Dumb"));
+        assertTrue("Unexpected lastName", confirmationObject.get(ServerTags.LAST_NAME.get(),
+                SafeJSONObject.DEFAULT_STRING).equals("User"));
+        assertTrue("Unexpected gender", confirmationObject.get(ServerTags.GENDER.get(),
+                SafeJSONObject.DEFAULT_STRING).equals("male"));
+        assertTrue("Unexpected birthDate", confirmationObject.get(ServerTags.BIRTH_DATE.get(),
+                SafeJSONObject.DEFAULT_STRING).equals("1993-02-18T00:00:00+0100"));
+        assertTrue("Unexpected facebookId", fb_id == 666);
+        assertTrue("Unexpected User should not be locked", confirmationObject.get(ServerTags.LOCKED.get(),
+                true) == false);
+        assertTrue("Unexpected User should be enable", confirmationObject.get(ServerTags.ENABLED.get(),
+                false) == false);
+        assertTrue("Unexpected locations of preference",
+                new CollectionComparator<Location>().compare(locationsOfInterest, areasOfInterest));
+
+        URL url;
+        HttpURLConnection conn;
+        int respCode;
+        try {
+            url = new URL("http://beecreative.ch/api/users/DumbUser666");
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("DELETE");
+            respCode = conn.getResponseCode();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -107,27 +197,27 @@ public class NetworkEndToEndTest {
         assertTrue("Unexpected begin date", event.getDateBegin().equals(beginDate));
         assertTrue("Unexpected end date", event.getDateEnd().equals(endDate));
         assertTrue("Unexpected Location", event.getLocation().equals(
-                new Location(6,"Zürich")));
+                new Location(6, "Zürich")));
         assertTrue("Unexpected Establishment", event.getEstablishment().equals(
-                new Establishment(2,"Forum", Establishment.Type.BAR,
-                        new Address("CH",8004,"Zürich","Zürich",120,"Badenerstrasse" ),
-                        "+41 43 243 88 88",
-                        "Located at the corner of Badenerstrasse, Forum is an airy lounge bar and restaurant, ideal for kicking back and unwinding.",
-                        SafeJSONObject.DEFAULT_STRING,
-                        250,
-                        SafeJSONObject.DEFAULT_STRING))
+                        new Establishment(2,"Forum", Establishment.Type.BAR,
+                                new Address("CH",8004,"Zürich","Zürich",120,"Badenerstrasse" ),
+                                "+41 43 243 88 88",
+                                "Located at the corner of Badenerstrasse, Forum is an airy lounge bar and restaurant, ideal for kicking back and unwinding.",
+                                SafeJSONObject.DEFAULT_STRING,
+                                250,
+                                SafeJSONObject.DEFAULT_STRING))
         );
     }
 
+
     private class CollectionComparator<E>{
-        boolean compare (Collection<E> coll1, Collection<E> coll2){
+        boolean compare (List<E> coll1, List<E> coll2){
             if (coll1.size()!=coll2.size()){
                 return false;
             }
-            List coll1List = new ArrayList(coll1);
-            List coll2List = new ArrayList(coll2);
-            for (int i = 0; i < coll1List.size() ; i++) {
-                if(!coll1List.get(i).equals(coll2List.get(i))){
+
+            for (int i = 0; i < coll1.size() ; i++) {
+                if(!coll1.get(i).equals(coll2.get(i))){
                     return false;
                 }
             }
@@ -135,4 +225,3 @@ public class NetworkEndToEndTest {
         }
     }
 }
-
