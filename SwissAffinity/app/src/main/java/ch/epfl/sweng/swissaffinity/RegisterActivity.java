@@ -120,7 +120,6 @@ public class RegisterActivity extends AppCompatActivity {
     private JSONObject createJson() {
 
         JSONObject jsonObject = null;
-        JSONObject jsonRequest = null;
 
         if (emailText.getText().toString().isEmpty() ||
                 emailText.getText().toString().length() > 100 ||
@@ -174,9 +173,8 @@ public class RegisterActivity extends AppCompatActivity {
                 jsonObject.put("birthDate", birthdayText.getText().toString());
                 jsonObject.put("facebookId", facebookId);
                 jsonObject.put("plainPassword", passwordText.getText().toString());
-                jsonRequest.put("rest_user_registration", jsonObject);
             } catch (JSONException e) {
-                Log.e("Got a problem with Json", jsonRequest.toString());
+                Log.e("Got a problem with Json", jsonObject.toString());
             }
         }
         return jsonObject;
