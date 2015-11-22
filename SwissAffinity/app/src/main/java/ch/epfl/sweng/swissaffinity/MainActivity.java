@@ -1,8 +1,10 @@
 package ch.epfl.sweng.swissaffinity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
@@ -82,6 +85,15 @@ public class MainActivity extends AppCompatActivity {
         return network != null && network.isConnected();
     }
 
+    public static ProgressDialog getLoadingDialog(Context context) {
+        ProgressDialog dialog = new ProgressDialog(context);
+        Drawable drawable = context.getResources().getDrawable(R.drawable.circular_progress_bar);
+        dialog.setIndeterminateDrawable(drawable);
+        dialog.setMessage(context.getString(R.string.loading));
+        dialog.setIndeterminate(true);
+        return dialog;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +143,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class DownloadEventsTask extends AsyncTask<Void, Void, List<List<Event>>> {
+        private ProgressDialog dialog = getLoadingDialog(MainActivity.this);
+
+        @Override
+        protected void onPreExecute() {
+            dialog.show();
+            super.onPreExecute();
+        }
 
         @Override
         protected List<List<Event>> doInBackground(Void... args) {
@@ -188,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < mListAdapter.getGroupCount(); ++i) {
                 listView.expandGroup(i);
             }
+            dialog.dismiss();
             super.onPostExecute(events);
         }
     }
@@ -216,7 +236,9 @@ public class MainActivity extends AppCompatActivity {
                         getString(R.string.welcome_registered_text),
                         mUser.getUsername());
             }
-            ((TextView) findViewById(R.id.mainWelcomeText)).setText(welcomeText);
+            TextView welcome = ((TextView) findViewById(R.id.mainWelcomeText));
+            welcome.setText(welcomeText);
+            welcome.setVisibility(View.VISIBLE);
             super.onPostExecute(user);
         }
     }
