@@ -15,10 +15,13 @@ import java.util.List;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
+import ch.epfl.sweng.swissaffinity.utilities.network.ServerTags;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.Parser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserFactory;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
+
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.*;
 
 /**
  * Representation of an event client with network.
@@ -27,6 +30,8 @@ public class NetworkEventClient implements EventClient {
 
     private static final String API = "/api";
     private static final String EVENTS = "/events";
+    private static final String USERS = "/users/";
+    private static final String REGISTRATIONS = "/registrations";
     private static final String LOCATIONS = "/locations/";
     private static final String IMAGES = "/images/events/";
 
@@ -34,7 +39,7 @@ public class NetworkEventClient implements EventClient {
     private final NetworkProvider mNetworkProvider;
 
     public NetworkEventClient(String serverUrl, NetworkProvider networkProvider) {
-        if (networkProvider == null){
+        if (networkProvider == null) {
             throw new IllegalArgumentException("Null networkProvider");
         }
         mServerUrl = serverUrl;
@@ -44,7 +49,27 @@ public class NetworkEventClient implements EventClient {
     @Override
     public List<Event> fetchAll() throws EventClientException {
         List<Event> events = new ArrayList<>();
+
         fetchEvents(events, API + EVENTS);
+        return events;
+    }
+
+    @Override
+    public List<Event> fetchAllForUser(String userName) throws EventClientException {
+        List<Event> events = new ArrayList<>();
+        try {
+            String content = mNetworkProvider.getContent(mServerUrl + API + USERS + userName + REGISTRATIONS);
+            JSONArray jsonRegistrations = new JSONArray(content);
+            for (int i = 0; i < jsonRegistrations.length(); ++i) {
+                SafeJSONObject jsonObject =
+                        new SafeJSONObject(jsonRegistrations.getJSONObject(i).getJSONObject(EVENT.get()));
+                Parser<? extends Event> parser = ParserFactory.parserFor(jsonObject);
+                Event event = parser.parse(jsonObject);
+                events.add(event);
+            }
+        } catch (ParserException | JSONException | IOException e) {
+            throw new EventClientException(e);
+        }
         return events;
     }
 
@@ -87,7 +112,7 @@ public class NetworkEventClient implements EventClient {
             URL url = new URL(imagePath);
             image = BitmapFactory.decodeStream(
                     mNetworkProvider.getConnection(url)
-                                    .getInputStream());
+                            .getInputStream());
         } catch (IOException e) {
             throw new EventClientException(e);
         }

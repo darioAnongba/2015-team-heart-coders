@@ -102,8 +102,13 @@ public class NetworkEndToEndTest {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
         UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
 
-        userClient.registerUser(userToRegister, eventIdToRegister);
-
+        try {
+            userClient.registerUser(userToRegister, eventIdToRegister);
+        } catch (UserClientException e) {
+            if (e.getMessage().equals("You are already registered to this event")) {
+                //SUCCESS
+            }
+        }
         String registrationsString;
         JSONArray registrations;
         try{
