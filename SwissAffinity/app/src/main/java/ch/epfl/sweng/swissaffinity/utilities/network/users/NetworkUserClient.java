@@ -24,10 +24,7 @@ public class NetworkUserClient implements UserClient {
     private final NetworkProvider mNetworkProvider;
 
     public NetworkUserClient(String serverUrl, NetworkProvider networkProvider) {
-        if (! serverUrl.equals("http://beecreative.ch")){
-            throw new IllegalArgumentException("This is not SwissAffinity server adress!!");
-        }
-        if (null == networkProvider){
+        if (networkProvider == null){
             throw new IllegalArgumentException("Null networkProvider");
         }
         mServerUrl = serverUrl;
