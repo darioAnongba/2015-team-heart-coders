@@ -32,6 +32,7 @@ import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
 /**
  * The main activity of the application.
@@ -129,12 +130,19 @@ public class MainActivity extends AppCompatActivity {
         new DownloadEventsTask().execute();
     }
 
-    private class DownloadEventsTask extends AsyncTask<Void, Void, List<Event>> {
+    private class DownloadEventsTask extends AsyncTask<Void, Void, List<List<Event>>> {
+
         @Override
-        protected List<Event> doInBackground(Void... args) {
-            List<Event> result = new ArrayList<>();
+        protected List<List<Event>> doInBackground(Void... args) {
+            List<List<Event>> result = new ArrayList<>(2);
+            List<Event> myEvents = new ArrayList<>();
+            List<Event> allEvents = new ArrayList<>();
+            result.add(myEvents);
+            result.add(allEvents);
             try {
-                result.addAll(EVENT_CLIENT.fetchAll());
+                myEvents.addAll(EVENT_CLIENT.fetchAllForUser(SHARED_PREFS.getString(USERNAME.get(), "")));
+                allEvents.addAll(EVENT_CLIENT.fetchAll());
+                allEvents.removeAll(myEvents);
             } catch (EventClientException e) {
                 Log.e("FetchEvents", e.getMessage());
             }
@@ -142,15 +150,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(List<Event> events) {
+        protected void onPostExecute(List<List<Event>> events) {
+            assert events.size() == 2;
             String myEvents = getString(R.string.my_events);
             String upcomingEvents = getString(R.string.upcoming_events);
             if (mUser != null) {
                 mListAdapter.addGroup(myEvents);
-                // TODO : add the events the user is registered to.
+                for (Event event : events.get(0)) {
+                    mListAdapter.addChild(myEvents, event);
+                }
             }
             mListAdapter.addGroup(upcomingEvents);
-            for (Event event : events) {
+            for (Event event : events.get(1)) {
                 mListAdapter.addChild(upcomingEvents, event);
             }
             ExpandableListView listView =
@@ -164,8 +175,7 @@ public class MainActivity extends AppCompatActivity {
                                 View v,
                                 int groupPosition,
                                 int childPosition,
-                                long id)
-                        {
+                                long id) {
                             Intent intent =
                                     new Intent(getApplicationContext(), EventActivity.class);
                             Event event =
@@ -175,10 +185,8 @@ public class MainActivity extends AppCompatActivity {
                             return true;
                         }
                     });
-            if (mListAdapter.getChildrenCount(0) == 0) {
-                listView.expandGroup(1);
-            } else {
-                listView.expandGroup(0);
+            for (int i = 0; i < mListAdapter.getGroupCount(); ++i) {
+                listView.expandGroup(i);
             }
             super.onPostExecute(events);
         }
@@ -203,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
             String welcomeText = getString(R.string.welcome_not_registered_text);
             if (user != null) {
                 mUser = user;
+                SHARED_PREFS.edit().putString(USERNAME.get(), user.getUsername()).apply();
                 welcomeText = String.format(
                         getString(R.string.welcome_registered_text),
                         mUser.getUsername());

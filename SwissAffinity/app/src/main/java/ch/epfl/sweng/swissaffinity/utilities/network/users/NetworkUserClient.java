@@ -42,7 +42,6 @@ public class NetworkUserClient implements UserClient {
         return fetch(id);
     }
 
-
     @Override
     public JSONObject postUser(JSONObject jsonObject) throws UserClientException {
         try{

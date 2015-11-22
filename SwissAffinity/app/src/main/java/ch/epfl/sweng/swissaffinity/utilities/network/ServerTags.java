@@ -51,6 +51,7 @@ public enum ServerTags {
     MAX_SEATS("max_seats"),
     LOGO_PATH("logo_path"),
     EVENT_TYPE("discr"),
+    EVENT("event"),
     SPEED_DATING_TYPE("speed_dating");
 
     private final String mName;
