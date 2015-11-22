@@ -18,7 +18,7 @@ public enum ServerTags {
     ENABLED("enabled"),
     GENDER("gender"),
     BIRTH_DATE("birth_date"),
-    BIRTHDAY("birthday"),
+    BIRTHDAY("birthday"),//TODO: this is redundant and was causing bugs in the tests. BIRTHDAY should be removed.
     PROFESSION("profession"),
     PROFILE_PICTURE("profile_picture"),
     LOCATIONS_INTEREST("locations_of_interest"),
@@ -51,6 +51,7 @@ public enum ServerTags {
     MAX_SEATS("max_seats"),
     LOGO_PATH("logo_path"),
     EVENT_TYPE("discr"),
+    EVENT("event"),
     SPEED_DATING_TYPE("speed_dating");
 
     private final String mName;

@@ -37,7 +37,6 @@ public abstract class Event implements Serializable {
          * Getter for the state of an event
          *
          * @param state the server API state
-         *
          * @return the corresponding state
          */
         public static State getState(String state) {
@@ -76,6 +75,15 @@ public abstract class Event implements Serializable {
         mLastUpdate = builder.mLastUpdate;
     }
 
+
+    /**
+     * Getter for the ID
+     *
+     * @return the id
+     */
+    public String getId() {
+        return String.valueOf(mId);
+    }
 
     /**
      * Getter for the name
@@ -170,11 +178,10 @@ public abstract class Event implements Serializable {
          * Setter for ID
          *
          * @param id the ID
-         *
          * @return this
          */
         public Builder setId(int id) {
-            if(id < 0){
+            if (id < 0) {
                 throw new IllegalArgumentException();
             }
             mId = id;
@@ -185,11 +192,10 @@ public abstract class Event implements Serializable {
          * Setter for name
          *
          * @param name the name
-         *
          * @return this
          */
         public Builder setName(String name) {
-            if (name == null){
+            if (name == null) {
                 throw new IllegalArgumentException();
             }
             mName = name;
@@ -200,11 +206,10 @@ public abstract class Event implements Serializable {
          * Setter for location
          *
          * @param location the location {@link Location}
-         *
          * @return this
          */
         public Builder setLocation(Location location) {
-            if (location == null){
+            if (location == null) {
                 throw new IllegalArgumentException();
             }
             mLocation = location.clone();
@@ -215,11 +220,10 @@ public abstract class Event implements Serializable {
          * Setter for maximum number of people
          *
          * @param maxPeople the maximum number of people
-         *
          * @return this
          */
         public Builder setMaxPeople(int maxPeople) {
-            if (maxPeople < 0){
+            if (maxPeople < 0) {
                 throw new IllegalArgumentException();
             }
             mMaxPeople = maxPeople;
@@ -230,11 +234,10 @@ public abstract class Event implements Serializable {
          * Setter for the beginning date
          *
          * @param dateBegin the beginning date and time {@link Date}
-         *
          * @return this
          */
         public Builder setDateBegin(Date dateBegin) {
-            if(dateBegin == null){
+            if (dateBegin == null) {
                 throw new IllegalArgumentException();
             }
             mDateBegin = dateBegin;
@@ -245,11 +248,10 @@ public abstract class Event implements Serializable {
          * Setter for the ending date
          *
          * @param dateEnd the ending date and time {@link Date}
-         *
          * @return this
          */
         public Builder setDateEnd(Date dateEnd) {
-            if(dateEnd == null){
+            if (dateEnd == null) {
                 throw new IllegalArgumentException();
             }
             mDateEnd = dateEnd;
@@ -260,11 +262,10 @@ public abstract class Event implements Serializable {
          * Setter for price
          *
          * @param basePrice the price
-         *
          * @return this
          */
         public Builder setBasePrice(double basePrice) {
-            if(basePrice < 0){
+            if (basePrice < 0) {
                 throw new IllegalArgumentException();
             }
             mBasePrice = basePrice;
@@ -275,11 +276,10 @@ public abstract class Event implements Serializable {
          * Setter for event state
          *
          * @param state the state {@link State}
-         *
          * @return this
          */
         public Builder setState(String state) {
-            if (state == null){
+            if (state == null) {
                 throw new IllegalArgumentException();
             }
             mState = State.getState(state);
@@ -290,12 +290,11 @@ public abstract class Event implements Serializable {
          * Setter for the description
          *
          * @param description the description
-         *
          * @return this
          */
         public Builder setDescription(String description) {
-            if (description == null){
-                throw  new IllegalArgumentException();
+            if (description == null) {
+                throw new IllegalArgumentException();
             }
             mDescription = description;
             return this;
@@ -305,11 +304,10 @@ public abstract class Event implements Serializable {
          * Setter for the image path
          *
          * @param imagePath the image relative path
-         *
          * @return this
          */
         public Builder setImagePath(String imagePath) {
-            if(imagePath == null){
+            if (imagePath == null) {
                 throw new IllegalArgumentException();
             }
             mImagePath = imagePath;
@@ -320,11 +318,10 @@ public abstract class Event implements Serializable {
          * Setter for the last updated date
          *
          * @param lastUpdate the last updated date and time {@link Date}
-         *
          * @return this
          */
         public Builder setLastUpdate(Date lastUpdate) {
-            if(lastUpdate == null){
+            if (lastUpdate == null) {
                 throw new IllegalArgumentException();
             }
             mLastUpdate = lastUpdate;
