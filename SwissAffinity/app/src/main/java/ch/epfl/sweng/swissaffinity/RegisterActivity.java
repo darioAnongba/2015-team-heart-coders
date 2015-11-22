@@ -11,8 +11,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sweng.swissaffinity.users.User.Gender;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
@@ -67,7 +70,13 @@ public class RegisterActivity extends AppCompatActivity {
                 JSONObject json = createJson();
                 if (json != null) {
                     Log.v("UserJson", json.toString());
-                    new UploadUserTask().execute(json.toString());
+                    try {
+                        new UploadUserTask().execute(json.toString()).get();
+                    } catch (InterruptedException e) {
+                        Log.e("Interuption", e.getMessage());
+                    } catch (ExecutionException e) {
+                        Log.e("Excution problem", e.getMessage());
+                    }
                 } else {
                     Toast.makeText(
                             getApplicationContext(),
@@ -109,31 +118,28 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private JSONObject createJson() {
+
         JSONObject jsonObject = null;
 
         if (emailText.getText().toString().isEmpty() ||
                 emailText.getText().toString().length() > 100 ||
-                !isValidEmail(emailText.getText().toString()))
-        {
+                !isValidEmail(emailText.getText().toString())) {
             Toast.makeText(
                     RegisterActivity.this,
                     "Mail is not in a valid format , empty or over 100 characters",
                     Toast.LENGTH_SHORT).show();
         } else if ((userNameText.getText().toString().isEmpty() ||
-                userNameText.getText().toString().length() > 50))
-        {
+                userNameText.getText().toString().length() > 50)) {
             Toast.makeText(
                     RegisterActivity.this, "Username is empty , or over 50 characters",
                     Toast.LENGTH_SHORT).show();
         } else if ((firstNameText.getText().toString().isEmpty() ||
-                firstNameText.getText().toString().length() > 50))
-        {
+                firstNameText.getText().toString().length() > 50)) {
             Toast.makeText(
                     RegisterActivity.this, "First Name is empty , or over 50 characters",
                     Toast.LENGTH_SHORT).show();
         } else if ((lastNameText.getText().toString().isEmpty() ||
-                lastNameText.getText().toString().length() > 50))
-        {
+                lastNameText.getText().toString().length() > 50)) {
             Toast.makeText(
                     RegisterActivity.this, "Last Name is empty , or over 50 characters",
                     Toast.LENGTH_SHORT).show();
@@ -143,8 +149,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         } else if (!passwordText.getText().toString().equals(
                 passwordConfirmation.getText()
-                        .toString()))
-        {
+                        .toString())) {
             Toast.makeText(
                     RegisterActivity.this, "Password do not match ",
                     Toast.LENGTH_SHORT).show();
@@ -153,8 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
                     RegisterActivity.this, "No value found for Gender ",
                     Toast.LENGTH_SHORT).show();
         } else if (birthdayText.getText().toString().length() == 0 ||
-                birthdayText.getText().toString().length() > 20)
-        {
+                birthdayText.getText().toString().length() > 20) {
             Toast.makeText(
                     RegisterActivity.this, "Birth Date is empty or too long ",
                     Toast.LENGTH_SHORT).show();
@@ -197,11 +201,26 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String response) {
-            //TODO : choose what to do in function of response.
-            Toast.makeText(
-                    RegisterActivity.this, response,
-                    Toast.LENGTH_LONG).show();
-        }
-    };
+            JSONObject responseJson;
+            try {
+                responseJson = new JSONObject(response);
+                if (responseJson != null && responseJson.getString("email").equals(emailText.getText().toString()) && responseJson.getString("username").equals(userNameText.getText().toString())) {
+                    Toast.makeText(
+                            RegisterActivity.this, "you have been registered",
+                            Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
+                    Toast.makeText(
+                            RegisterActivity.this, response,
+                            Toast.LENGTH_LONG).show();
+                }
+            } catch (JSONException e) {
+                Log.e("No response", response);
+            }
 
+        }
+
+        ;
+
+    }
 }
