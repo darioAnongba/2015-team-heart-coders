@@ -43,8 +43,6 @@ public class RegisterActivity extends AppCompatActivity {
     private final String SERVER_URL = "http://beecreative.ch";
     private EditText passwordText;
     private EditText passwordConfirmation;
-    private JSONObject jsonObject = null;
-    private JSONObject jsonRequest = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +119,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     private JSONObject createJson() {
 
+        JSONObject jsonObject = null;
+        JSONObject jsonRequest = null;
+
         if (emailText.getText().toString().isEmpty() ||
                 emailText.getText().toString().length() > 100 ||
                 !isValidEmail(emailText.getText().toString())) {
@@ -165,7 +166,6 @@ public class RegisterActivity extends AppCompatActivity {
         } else {
             try {
                 jsonObject = new JSONObject();
-                jsonRequest = new JSONObject();
                 jsonObject.put("email", emailText.getText().toString());
                 jsonObject.put("username", userNameText.getText().toString());
                 jsonObject.put("firstName", firstNameText.getText().toString());
@@ -179,7 +179,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Log.e("Got a problem with Json", jsonRequest.toString());
             }
         }
-        return jsonRequest;
+        return jsonObject;
     }
 
 
