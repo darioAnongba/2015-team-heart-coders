@@ -1,5 +1,6 @@
 package ch.epfl.sweng.swissaffinity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -80,13 +81,7 @@ public class AboutActivity extends AppCompatActivity {
                                         Log.v("AboutActivity", rep.toString());
                                         if (jsonObject != null) {
                                             fillUserData(jsonObject);
-                                            try {
-                                                new ConnectionToServer().execute().get();
-                                            } catch (InterruptedException e) {
-                                                Log.e("Interuption", e.getMessage());
-                                            } catch (ExecutionException e) {
-                                                Log.e("Excution problem", e.getMessage());
-                                            }
+                                                new ConnectionToServer().execute();
                                         } else {
                                             //TODO: no data...
                                             onError(null);
@@ -187,6 +182,13 @@ public class AboutActivity extends AppCompatActivity {
 
 
     private class ConnectionToServer extends AsyncTask<String, Void, Boolean> {
+        private ProgressDialog dialog = MainActivity.getLoadingDialog(AboutActivity.this);
+
+        @Override
+        protected void onPreExecute() {
+            dialog.show();
+            super.onPreExecute();
+        }
 
         @Override
         protected Boolean doInBackground(String... params) {
@@ -204,6 +206,7 @@ public class AboutActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean code) {
+            dialog.dismiss();
             if (code) {
                 finish();
             } else {

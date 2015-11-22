@@ -1,5 +1,6 @@
 package ch.epfl.sweng.swissaffinity;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -70,13 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
                 JSONObject json = createJson();
                 if (json != null) {
                     Log.v("UserJson", json.toString());
-                    try {
-                        new UploadUserTask().execute(json.toString()).get();
-                    } catch (InterruptedException e) {
-                        Log.e("Interuption", e.getMessage());
-                    } catch (ExecutionException e) {
-                        Log.e("Excution problem", e.getMessage());
-                    }
+                        new UploadUserTask().execute(json.toString());
                 } else {
                     Toast.makeText(
                             getApplicationContext(),
@@ -186,6 +181,15 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private class UploadUserTask extends AsyncTask<String, Void, String> {
+
+        private ProgressDialog dialog = MainActivity.getLoadingDialog(RegisterActivity.this);
+
+        @Override
+        protected void onPreExecute() {
+            dialog.show();
+            super.onPreExecute();
+        }
+
         @Override
         protected String doInBackground(String... params) {
 
@@ -201,6 +205,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String response) {
+            dialog.dismiss();
             JSONObject responseJson;
             try {
                 responseJson = new JSONObject(response);
