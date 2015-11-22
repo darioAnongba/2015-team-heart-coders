@@ -78,7 +78,6 @@ public class NetworkEndToEndTest {
         } catch(ParserException e){
             throw new UserClientException(e);
         }
-
         assertTrue("Unexpected username",user.getUsername().equals("Admin"));
         assertTrue("Unexpected first name",user.getFirstName().equals("Dario"));
         assertTrue("Unexpected last name",user.getLastName().equals("Anongba"));
@@ -100,7 +99,7 @@ public class NetworkEndToEndTest {
         assertTrue("Unexpected events attended",user.getEventsAttended().size()==0);
 
     }
-
+    
     @Test
     public void postUserTest() throws UserClientException {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
@@ -114,7 +113,6 @@ public class NetworkEndToEndTest {
         locationsOfInterest.add(new Location(8, "Bulle"));
 
         JSONObject jsonUser = new JSONObject();
-        JSONObject jsonRequest = new JSONObject();
         SafeJSONObject confirmationObject;
         JSONObject responseJSON;
         try {
@@ -126,8 +124,7 @@ public class NetworkEndToEndTest {
             jsonUser.put("birthDate", "18/02/1993");
             jsonUser.put("facebookId", "666");
             jsonUser.put("plainPassword", "dumbpassword");
-            jsonRequest.put("rest_user_registration", jsonUser);
-            responseJSON = userClient.postUser(jsonRequest);
+            responseJSON = userClient.postUser(jsonUser);
             confirmationObject = new SafeJSONObject(responseJSON);
         } catch (JSONException e){
             throw new UserClientException(e);
@@ -138,7 +135,6 @@ public class NetworkEndToEndTest {
         try {
             areas = confirmationObject.get(ServerTags.LOCATIONS_INTEREST.get(), new JSONArray());
             for (int i = 0; i < areas.length(); i++) {
-
                 JSONObject jsonArea = areas.getJSONObject(i);
                 Location location = new LocationParser().parse(new SafeJSONObject(jsonArea));
                 areasOfInterest.add(location);

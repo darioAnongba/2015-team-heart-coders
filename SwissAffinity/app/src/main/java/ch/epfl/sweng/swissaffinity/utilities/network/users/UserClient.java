@@ -31,5 +31,8 @@ public interface UserClient {
      */
     User fetchByFacebookID(String id) throws UserClientException;
 
-    JSONObject postUser(JSONObject jsonObject) throws UserClientException;
+    JSONObject postUser(JSONObject jsonUserObject) throws UserClientException;
+
+    //TODO: as code develops, calls to this method should be restrained to the User class. It will probably be relocated.
+    JSONObject registerUser(String username, int eventId) throws UserClientException;
 }

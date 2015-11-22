@@ -33,6 +33,38 @@ public class DefaultNetworkProvider implements NetworkProvider {
         }
         return fetchContent(conn);
     }
+    /**
+     *The method to write a user into the server and get his response
+     * @param serverURL The server where you're posting the json
+     * @param json The json of that you want to send to the servers
+     * @return The server response (error or the good content of a json that is written in the database
+     * @throws IOException if one constructor is not valid ( OutputStreamWritter);
+     */
+    @Override
+    public  String postContent(String serverURL, JSONObject json) throws IOException {
+        URL url = new URL(serverURL);
+        String response = null;
+        HttpURLConnection conn = getConnection(url);
+        conn.setDoInput(true);
+        conn.setDoOutput(true);
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.connect();
+        OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
+        out.write(json.toString());
+        out.flush();
+        out.close();
+        int responseCode = conn.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            response = fetchContent(conn);
+        } else if(responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR){
+            throw new ConnectException();
+        } else if(responseCode == HttpURLConnection.HTTP_BAD_REQUEST) {
+            response = fetchErrorContent(conn);
+        } else {
+            throw new ConnectException();
+        }
+        return response;
+    }
 
     /**
      *The method to check if the connection is successful
@@ -62,37 +94,7 @@ public class DefaultNetworkProvider implements NetworkProvider {
         return isConnectionSuccess(conn);
     }
 
-    /**
-     *The method to write a user into the server and get his response
-     * @param serverURL The server where you're posting the json
-     * @param json The json of that you want to send to the servers
-     * @return The server response (error or the good content of a json that is written in the database
-     * @throws IOException if one constructor is not valid ( OutputStreamWritter);
-     */
-    public  String postContent(String serverURL, JSONObject json) throws IOException {
-        URL url = new URL(serverURL);
-        String response = null;
-        HttpURLConnection conn = getConnection(url);
-        conn.setDoInput(true);
-        conn.setDoOutput(true);
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.connect();
-        OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-        out.write(json.toString());
-        out.flush();
-        out.close();
-        int responseCode = conn.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            response = fetchContent(conn);
-        } else if(responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR){
-            throw new ConnectException();
-        } else if(responseCode == HttpURLConnection.HTTP_BAD_REQUEST) {
-            response = fetchErrorContent(conn);
-        } else {
-            throw new ConnectException();
-        }
-        return response;
-    }
+
 
     /**
      * make a String out of the GET request to the server
