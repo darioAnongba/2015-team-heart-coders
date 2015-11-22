@@ -1,6 +1,5 @@
 package ch.epfl.sweng.swissaffinity;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText birthdayText;
     private String facebookId;
     private String gender = "";
-    private final String SERVER_URL = "http://beecreative.ch/api/users";
+    private final String SERVER_URL = "http://beecreative.ch";
     private EditText passwordText;
     private EditText passwordConfirmation;
 
@@ -194,7 +193,7 @@ public class RegisterActivity extends AppCompatActivity {
             JSONObject response = new JSONObject();
             try {
                 JSONObject jsonObject = new JSONObject(params[0]);
-                response = networkUserClient.postUser(SERVER_URL, jsonObject);
+                response = networkUserClient.postUser(jsonObject);
             } catch (UserClientException | JSONException e) {
             }
             return response.toString();

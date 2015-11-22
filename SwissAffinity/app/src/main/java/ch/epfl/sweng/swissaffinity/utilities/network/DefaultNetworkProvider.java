@@ -83,11 +83,11 @@ public class DefaultNetworkProvider implements NetworkProvider {
         out.close();
         int responseCode = conn.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
-            response =fetchContent(conn);
+            response = fetchContent(conn);
         } else if(responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR){
             throw new ConnectException();
         } else if(responseCode == HttpURLConnection.HTTP_BAD_REQUEST) {
-            response =fetchErrorContent(conn);
+            response = fetchErrorContent(conn);
         } else {
             throw new ConnectException();
         }
