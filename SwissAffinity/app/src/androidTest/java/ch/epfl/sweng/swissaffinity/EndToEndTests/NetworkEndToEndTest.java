@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.events.Establishment;
@@ -78,7 +79,6 @@ public class NetworkEndToEndTest {
         } catch(ParserException e){
             throw new UserClientException(e);
         }
-
         assertTrue("Unexpected username",user.getUsername().equals("Admin"));
         assertTrue("Unexpected first name",user.getFirstName().equals("Dario"));
         assertTrue("Unexpected last name",user.getLastName().equals("Anongba"));
@@ -100,7 +100,51 @@ public class NetworkEndToEndTest {
         assertTrue("Unexpected events attended",user.getEventsAttended().size()==0);
 
     }
+    @Test
+    public void postRegistrationToEvent() throws UserClientException{
+        final int eventIdToRegister = 7;
+        final String userToRegister = "lio";
+        NetworkProvider networkProvider = new DefaultNetworkProvider();
+        UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
 
+        userClient.registerUser(userToRegister, eventIdToRegister);
+
+        String registrationsString;
+        JSONArray registrations;
+        try{
+            registrationsString  = networkProvider.getContent("http://beecreative.ch/api/users/"+ userToRegister +"/registrations");
+            registrations = new JSONArray(registrationsString);
+        } catch (JSONException | IOException e){
+            throw new UserClientException(e);
+        }
+
+
+        HashMap<Integer, Integer> eventToRegistration = new HashMap<>();
+        for (int i = 0; i < registrations.length(); i++) {
+            try {
+                JSONObject jsonRegistration = registrations.getJSONObject(i);
+                JSONObject jsonEvent = jsonRegistration.getJSONObject("event");
+                eventToRegistration.put(jsonEvent.getInt("id"), jsonRegistration.getInt("id"));
+            } catch (JSONException e){
+                throw new UserClientException(e);
+            }
+        }
+        Integer testRegistrationId = eventToRegistration.get(eventIdToRegister);
+        assertTrue("Registration was not successful.", testRegistrationId != null);
+
+        URL url;
+        HttpURLConnection conn;
+        int respCode;
+        try {
+            url = new URL("http://beecreative.ch/api/registrations/" + testRegistrationId.toString());
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("DELETE");
+            respCode = conn.getResponseCode();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
     @Test
     public void postUserTest() throws UserClientException {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
@@ -114,7 +158,6 @@ public class NetworkEndToEndTest {
         locationsOfInterest.add(new Location(8, "Bulle"));
 
         JSONObject jsonUser = new JSONObject();
-        JSONObject jsonRequest = new JSONObject();
         SafeJSONObject confirmationObject;
         JSONObject responseJSON;
         try {
@@ -126,8 +169,7 @@ public class NetworkEndToEndTest {
             jsonUser.put("birthDate", "18/02/1993");
             jsonUser.put("facebookId", "666");
             jsonUser.put("plainPassword", "dumbpassword");
-            jsonRequest.put("rest_user_registration", jsonUser);
-            responseJSON = userClient.postUser(jsonRequest);
+            responseJSON = userClient.postUser(jsonUser);
             confirmationObject = new SafeJSONObject(responseJSON);
         } catch (JSONException e){
             throw new UserClientException(e);
@@ -138,7 +180,6 @@ public class NetworkEndToEndTest {
         try {
             areas = confirmationObject.get(ServerTags.LOCATIONS_INTEREST.get(), new JSONArray());
             for (int i = 0; i < areas.length(); i++) {
-
                 JSONObject jsonArea = areas.getJSONObject(i);
                 Location location = new LocationParser().parse(new SafeJSONObject(jsonArea));
                 areasOfInterest.add(location);
