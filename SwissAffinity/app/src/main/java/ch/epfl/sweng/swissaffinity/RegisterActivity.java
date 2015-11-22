@@ -1,6 +1,5 @@
 package ch.epfl.sweng.swissaffinity;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -46,7 +45,6 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText passwordConfirmation;
     private JSONObject jsonObject = null;
     private JSONObject jsonRequest = null;
-    private JSONObject jsonRequestSupposed = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +75,9 @@ public class RegisterActivity extends AppCompatActivity {
                     try {
                         new UploadUserTask().execute(json.toString()).get();
                     } catch (InterruptedException e) {
-                        Log.e("Interuption",e.getMessage());
+                        Log.e("Interuption", e.getMessage());
                     } catch (ExecutionException e) {
-                        Log.e("Excution problem",e.getMessage());
+                        Log.e("Excution problem", e.getMessage());
                     }
                 } else {
                     Toast.makeText(
@@ -125,27 +123,23 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (emailText.getText().toString().isEmpty() ||
                 emailText.getText().toString().length() > 100 ||
-                !isValidEmail(emailText.getText().toString()))
-        {
+                !isValidEmail(emailText.getText().toString())) {
             Toast.makeText(
                     RegisterActivity.this,
                     "Mail is not in a valid format , empty or over 100 characters",
                     Toast.LENGTH_SHORT).show();
         } else if ((userNameText.getText().toString().isEmpty() ||
-                userNameText.getText().toString().length() > 50))
-        {
+                userNameText.getText().toString().length() > 50)) {
             Toast.makeText(
                     RegisterActivity.this, "Username is empty , or over 50 characters",
                     Toast.LENGTH_SHORT).show();
         } else if ((firstNameText.getText().toString().isEmpty() ||
-                firstNameText.getText().toString().length() > 50))
-        {
+                firstNameText.getText().toString().length() > 50)) {
             Toast.makeText(
                     RegisterActivity.this, "First Name is empty , or over 50 characters",
                     Toast.LENGTH_SHORT).show();
         } else if ((lastNameText.getText().toString().isEmpty() ||
-                lastNameText.getText().toString().length() > 50))
-        {
+                lastNameText.getText().toString().length() > 50)) {
             Toast.makeText(
                     RegisterActivity.this, "Last Name is empty , or over 50 characters",
                     Toast.LENGTH_SHORT).show();
@@ -155,8 +149,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         } else if (!passwordText.getText().toString().equals(
                 passwordConfirmation.getText()
-                        .toString()))
-        {
+                        .toString())) {
             Toast.makeText(
                     RegisterActivity.this, "Password do not match ",
                     Toast.LENGTH_SHORT).show();
@@ -165,8 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
                     RegisterActivity.this, "No value found for Gender ",
                     Toast.LENGTH_SHORT).show();
         } else if (birthdayText.getText().toString().length() == 0 ||
-                birthdayText.getText().toString().length() > 20)
-        {
+                birthdayText.getText().toString().length() > 20) {
             Toast.makeText(
                     RegisterActivity.this, "Birth Date is empty or too long ",
                     Toast.LENGTH_SHORT).show();
@@ -182,9 +174,9 @@ public class RegisterActivity extends AppCompatActivity {
                 jsonObject.put("birthDate", birthdayText.getText().toString());
                 jsonObject.put("facebookId", facebookId);
                 jsonObject.put("plainPassword", passwordText.getText().toString());
-                jsonRequest.put("rest_user_registration",jsonObject);
+                jsonRequest.put("rest_user_registration", jsonObject);
             } catch (JSONException e) {
-                Log.e("Got a problem with Json",jsonRequest.toString());
+                Log.e("Got a problem with Json", jsonRequest.toString());
             }
         }
         return jsonRequest;
@@ -203,7 +195,7 @@ public class RegisterActivity extends AppCompatActivity {
             JSONObject response = new JSONObject();
             try {
                 JSONObject jsonObject = new JSONObject(params[0]);
-                response = networkUserClient.postUser(SERVER_URL, jsonObject);
+                response = networkUserClient.postUser(jsonObject);
             } catch (UserClientException | JSONException e) {
             }
             return response.toString();
@@ -211,29 +203,26 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String response) {
-            JSONArray location = null;
+            JSONObject responseJson;
             try {
-                location = new JSONArray("[{\"id\":7,\"name\":\"Berne\"},{\"id\":8,\"name\":\"Bulle\"},{\"id\":4,\"name\":\"Fribourg\"},{\"id\":2,\"name\":\"Genève\"},{\"id\":3,\"name\":\"Lausanne\"},{\"id\":6,\"name\":\"Zürich\"}]");
+                responseJson = new JSONObject(response);
+                if (responseJson != null && responseJson.getString("email").equals(emailText.getText().toString()) && responseJson.getString("username").equals(userNameText.getText().toString())) {
+                    Toast.makeText(
+                            RegisterActivity.this, "you have been registered",
+                            Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
+                    Toast.makeText(
+                            RegisterActivity.this, response,
+                            Toast.LENGTH_LONG).show();
+                }
             } catch (JSONException e) {
-                Log.e("error",e.getMessage());
+                Log.e("No response", response);
             }
-            try {
-                jsonObject.put("locations_of_interest",location);
-                jsonRequestSupposed = new JSONObject();
-                jsonRequestSupposed.put("rest_user_registration",jsonObject);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            if(jsonRequestSupposed.equals(jsonRequest)) {
-                Toast.makeText(
-                        RegisterActivity.this, "you have been registered",
-                        Toast.LENGTH_LONG).show();
-                finish();
-            }
-            Toast.makeText(
-                    RegisterActivity.this, response,
-                    Toast.LENGTH_LONG).show();
-        }
-    };
 
+        }
+
+        ;
+
+    }
 }

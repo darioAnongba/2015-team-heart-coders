@@ -1,8 +1,10 @@
 package ch.epfl.sweng.swissaffinity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,13 +19,56 @@ import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.Address;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
+import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClientException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.Parser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserFactory;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
 /**
  * Class created to test events display and eventParser
  */
 public class DataForTesting {
+
+    public static String event4JSONcontent =
+            "{\"id\":4,\"name\":\"First Speed Dating Event !\",\"location\":{\"id\":3,\"name\":\"Lausanne\"}," +
+                    "\"max_people\":30,\"date_start\":\"2015-11-19T20:00:00+0100\"," +
+                    "\"date_end\":\"2015-11-19T22:00:00+0100\",\"base_price\":49.5," +
+                    "\"state\":\"pending\",\"description\":\"The super description\"," +
+                    "\"image_path\":\"563c01a709848.jpg\",\"updated_at\":\"2015-11-06T02:25:59+0100\"," +
+                    "\"men_seats\":15,\"women_seats\":15,\"num_men_registered\":0," +
+                    "\"num_women_registered\":0,\"min_age\":25,\"max_age\":45,\"establishment\":{\"id\":1,\"name\":\"King Size Pub\"," +
+                    "\"address\":{\"id\":20,\"street\":\"Lausanne Flon\"," +
+                    "\"street_number\":27,\"province\":\"Vaud\",\"city\":\"Lausanne\",\"zip_code\":1004,\"country\":\"CH\"}," +
+                    "\"phone_number\":\"079 000 00 00\",\"type\":\"bar\"," +
+                    "\"description\":\"Irish Pub in Lausanne !\",\"url\":\"http:\\/\\/kingsizepub.com\"," +
+                    "\"max_seats\":200,\"logo_path\":\"563c0126e5dea.jpg\"," +
+                    "\"updated_at\":\"2015-11-06T02:23:50+0100\"},\"discr\":\"speed_dating\"}";
+
+    public static String event5JSONcontent =
+            "{\"id\":5,\"name\":\"Speed dating\",\"location\":{\"id\":3,\"name\":\"Lausanne\"}," +
+                    "\"max_people\":30,\"date_start\":\"2015-11-13T20:00:00+0100\",\"date_end\":\"2015-11-13T23:00:00+0100\"," +
+                    "\"base_price\":50,\"state\":\"pending\",\"description\":\"It'a good day to meet with a beer.\"," +
+                    "\"image_path\":\"563cc882884f6.png\",\"updated_at\":\"2015-11-06T16:34:26+0100\",\"men_seats\":15,\"women_seats\":15," +
+                    "\"num_men_registered\":0,\"num_women_registered\":0,\"min_age\":20,\"max_age\":30,\"establishment\":" +
+                    "{\"id\":1,\"name\":\"King Size Pub\",\"address\":{\"id\":20,\"street\":\"Lausanne Flon\",\"street_number\":27," +
+                    "\"province\":\"Vaud\",\"city\":\"Lausanne\",\"zip_code\":1004,\"country\":\"CH\"}," +
+                    "\"phone_number\":\"079 000 00 00\",\"type\":\"bar\",\"description\":\"Irish Pub in Lausanne !\"," +
+                    "\"url\":\"http:\\/\\/kingsizepub.com\",\"max_seats\":200,\"logo_path\":\"563c0126e5dea.jpg\"," +
+                    "\"updated_at\":\"2015-11-06T02:23:50+0100\"},\"discr\":\"speed_dating\"}";
+
+    public static String eventsLausanneJSONcontent =
+            "[" + event4JSONcontent + "," + event5JSONcontent + "]";
+
+
+    public static String allEventsJSONcontent =
+            "[{\"id\":6,\"name\":\"Let's celebrate Oktoberfest\",\"location\":{\"id\":6,\"name\":\"Z\\u00fcrich\"},\"max_people\":40,\"date_start\":\"2016-10-15T21:00:00+0200\",\"date_end\":\"2016-10-16T00:00:00+0200\",\"base_price\":35,\"state\":\"pending\",\"description\":\"Come and join us to celebrate the Oktoberfest , and use this occasion to meet new People . The event will take place to Forum , a bar in the center of Z\\u00fcrich.\",\"image_path\":\"5647627162808.jpg\",\"updated_at\":\"2015-11-14T17:33:53+0100\",\"men_seats\":20,\"women_seats\":20,\"num_men_registered\":0,\"num_women_registered\":0,\"min_age\":21,\"max_age\":32,\"establishment\":{\"id\":2,\"name\":\"Forum\",\"address\":{\"id\":21,\"street\":\"Badenerstrasse\",\"street_number\":120,\"province\":\"Z\\u00fcrich\",\"city\":\"Z\\u00fcrich\",\"zip_code\":8004,\"country\":\"CH\"},\"phone_number\":\"+41 43 243 88 88\",\"type\":\"bar\",\"description\":\"Located at the corner of Badenerstrasse, Forum is an airy lounge bar and restaurant, ideal for kicking back and unwinding.\",\"max_seats\":250},\"discr\":\"speed_dating\"}," +
+                    "{\"id\":7,\"name\":\"Xmas Dating\",\"location\":{\"id\":3,\"name\":\"Lausanne\"},\"max_people\":20,\"date_start\":\"2015-12-22T20:00:00+0100\",\"date_end\":\"2015-12-22T23:00:00+0100\",\"base_price\":30,\"state\":\"pending\",\"description\":\"Christmas is coming ! To celebrate , we will organize an event at the King Size pub in Lausanne . The goal is to bring a little present to offer the person you like the most at the end of the Date !\",\"image_path\":\"5647639f22cad.jpg\",\"updated_at\":\"2015-11-14T17:38:55+0100\",\"men_seats\":10,\"women_seats\":10,\"num_men_registered\":0,\"num_women_registered\":0,\"min_age\":26,\"max_age\":46,\"establishment\":{\"id\":1,\"name\":\"King Size Pub\",\"address\":{\"id\":20,\"street\":\"Lausanne Flon\",\"street_number\":27,\"province\":\"Vaud\",\"city\":\"Lausanne\",\"zip_code\":1004,\"country\":\"CH\"},\"phone_number\":\"079 000 00 00\",\"type\":\"bar\",\"description\":\"Irish Pub in Lausanne !\",\"url\":\"http:\\/\\/kingsizepub.com\",\"max_seats\":200,\"logo_path\":\"563c0126e5dea.jpg\",\"updated_at\":\"2015-11-06T02:23:50+0100\"},\"discr\":\"speed_dating\"}," +
+                    "{\"id\":9,\"name\":\"Let's be class\",\"location\":{\"id\":6,\"name\":\"Z\\u00fcrich\"},\"max_people\":50,\"date_start\":\"2015-12-20T20:00:00+0100\",\"date_end\":\"2015-12-20T23:45:00+0100\",\"base_price\":57.5,\"state\":\"pending\",\"description\":\"Do you want to meet a guy with a good looking suit ? Or are you looking for a girl that look perfect in a dress ? This event is done for you . The dress code is primordial , so be sure to be the most elegant , and to enjoy you're drink at the Forum .\",\"image_path\":\"5647670481907.jpg\",\"updated_at\":\"2015-11-14T17:53:24+0100\",\"men_seats\":25,\"women_seats\":25,\"num_men_registered\":0,\"num_women_registered\":0,\"min_age\":21,\"max_age\":32,\"establishment\":{\"id\":2,\"name\":\"Forum\",\"address\":{\"id\":21,\"street\":\"Badenerstrasse\",\"street_number\":120,\"province\":\"Z\\u00fcrich\",\"city\":\"Z\\u00fcrich\",\"zip_code\":8004,\"country\":\"CH\"},\"phone_number\":\"+41 43 243 88 88\",\"type\":\"bar\",\"description\":\"Located at the corner of Badenerstrasse, Forum is an airy lounge bar and restaurant, ideal for kicking back and unwinding.\",\"max_seats\":250},\"discr\":\"speed_dating\"}," +
+                    "{\"id\":8,\"name\":\"Let's diner Meeting\",\"location\":{\"id\":3,\"name\":\"Lausanne\"},\"max_people\":10,\"date_start\":\"2015-11-25T20:00:00+0100\",\"date_end\":\"2015-11-25T22:30:00+0100\",\"base_price\":70,\"state\":\"pending\",\"description\":\"Do you want a fantastic meal while meeting new people ? This event is for you , it takes place in one of the best restaurant of Lausanne ( from internet users point of view's) and you will have plenty of time to maybe meet the love of your life.\",\"image_path\":\"564765c648b6f.jpg\",\"updated_at\":\"2015-11-14T17:48:06+0100\",\"men_seats\":5,\"women_seats\":5,\"num_men_registered\":0,\"num_women_registered\":0,\"min_age\":28,\"max_age\":45,\"establishment\":{\"id\":3,\"name\":\"Restaurant Tandem\",\"address\":{\"id\":22,\"street\":\"Avenue des Mousquines\",\"street_number\":1,\"province\":\"Vaud\",\"city\":\"Lausanne\",\"zip_code\":1005,\"country\":\"CH\"},\"phone_number\":\"+41 21 323 32 04\",\"type\":\"restaurant\",\"description\":\"A local restaurant , really calm , and with a delicious variety of meal. The owner is really kind and all the product are fresh.\",\"max_seats\":30},\"discr\":\"speed_dating\"}," +
+                    "{\"id\":4,\"name\":\"First Speed Dating Event !\",\"location\":{\"id\":3,\"name\":\"Lausanne\"},\"max_people\":30,\"date_start\":\"2015-11-19T20:00:00+0100\",\"date_end\":\"2015-11-19T22:00:00+0100\",\"base_price\":49.5,\"state\":\"pending\",\"description\":\"Mega long description of an event taking place in King size pub Lausanne. You should not miss that one and come have a beer with us. It's a great opportunity to meet new people and maybe fall in love... Try to see if the app handles this kind of long string descriptions feature.\\r\\nIf that's displayed correctly, we're not that bad doing.\",\"image_path\":\"563c01a709848.jpg\",\"updated_at\":\"2015-11-06T02:25:59+0100\",\"men_seats\":15,\"women_seats\":15,\"num_men_registered\":0,\"num_women_registered\":0,\"min_age\":25,\"max_age\":45,\"establishment\":{\"id\":1,\"name\":\"King Size Pub\",\"address\":{\"id\":20,\"street\":\"Lausanne Flon\",\"street_number\":27,\"province\":\"Vaud\",\"city\":\"Lausanne\",\"zip_code\":1004,\"country\":\"CH\"},\"phone_number\":\"079 000 00 00\",\"type\":\"bar\",\"description\":\"Irish Pub in Lausanne !\",\"url\":\"http:\\/\\/kingsizepub.com\",\"max_seats\":200,\"logo_path\":\"563c0126e5dea.jpg\",\"updated_at\":\"2015-11-06T02:23:50+0100\"},\"discr\":\"speed_dating\"}," +
+                    "{\"id\":5,\"name\":\"Speed dating\",\"location\":{\"id\":3,\"name\":\"Lausanne\"},\"max_people\":30,\"date_start\":\"2015-11-13T20:00:00+0100\",\"date_end\":\"2015-11-13T23:00:00+0100\",\"base_price\":50,\"state\":\"pending\",\"description\":\"It'a good day to meet with a beer.\",\"image_path\":\"563cc882884f6.png\",\"updated_at\":\"2015-11-06T16:34:26+0100\",\"men_seats\":15,\"women_seats\":15,\"num_men_registered\":0,\"num_women_registered\":0,\"min_age\":20,\"max_age\":30,\"establishment\":{\"id\":1,\"name\":\"King Size Pub\",\"address\":{\"id\":20,\"street\":\"Lausanne Flon\",\"street_number\":27,\"province\":\"Vaud\",\"city\":\"Lausanne\",\"zip_code\":1004,\"country\":\"CH\"},\"phone_number\":\"079 000 00 00\",\"type\":\"bar\",\"description\":\"Irish Pub in Lausanne !\",\"url\":\"http:\\/\\/kingsizepub.com\",\"max_seats\":200,\"logo_path\":\"563c0126e5dea.jpg\",\"updated_at\":\"2015-11-06T02:23:50+0100\"},\"discr\":\"speed_dating\"}]";
 
     public static List<Location> LOCATIONS = new ArrayList<>(
             Arrays.asList(
@@ -161,29 +206,12 @@ public class DataForTesting {
     }
 
     public static JSONObject createJSONEvent() {
-
-        String content =
-                "{\"id\":4,\"name\":\"First Speed Dating Event !\",\"location\":{\"id\":3,\"name\":\"Lausanne\"}," +
-                "\"max_people\":30,\"date_start\":\"2015-11-19T20:00:00+0100\"," +
-                "\"date_end\":\"2015-11-19T22:00:00+0100\",\"base_price\":49.5," +
-                "\"state\":\"pending\",\"description\":\"The super description\"," +
-                "\"image_path\":\"563c01a709848.jpg\",\"updated_at\":\"2015-11-06T02:25:59+0100\"," +
-                "\"men_seats\":15,\"women_seats\":15,\"num_men_registered\":0," +
-                "\"num_women_registered\":0,\"min_age\":25,\"max_age\":45," +
-                "\"establishment\":{\"id\":1,\"name\":\"King Size Pub\"," +
-                "\"address\":{\"id\":20,\"street\":\"Lausanne Flon\"," +
-                "\"street_number\":27,\"province\":\"Vaud\",\"city\":\"Lausanne\"," +
-                "\"zip_code\":1004,\"country\":\"CH\"}," +
-                "\"phone_number\":\"079 000 00 00\",\"type\":\"bar\"," +
-                "\"description\":\"Irish Pub in Lausanne !\",\"url\":\"http:\\/\\/kingsizepub.com\"," +
-                "\"max_seats\":200,\"logo_path\":\"563c0126e5dea.jpg\"," +
-                "\"updated_at\":\"2015-11-06T02:23:50+0100\"},\"discr\":\"speed_dating\"}";
-
         try {
-            return new JSONObject(content);
+            return new JSONObject(event4JSONcontent);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
     }
+
 }

@@ -146,18 +146,7 @@ public class AboutActivity extends AppCompatActivity {
         String lastName = jsonObject.get(LAST_NAME.get(), SafeJSONObject.DEFAULT_STRING);
         String firstName = jsonObject.get(FIRST_NAME.get(), SafeJSONObject.DEFAULT_STRING);
         String gender = jsonObject.get(GENDER.get(), SafeJSONObject.DEFAULT_STRING);
-        String preBirthday = jsonObject.get(BIRTHDAY.get(), SafeJSONObject.DEFAULT_STRING);
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-        Date convertedCurrentDate = null;
-        String birthday = SafeJSONObject.DEFAULT_STRING;
-        try {
-            convertedCurrentDate = sdf.parse(preBirthday);
-        } catch (ParseException e) {
-            Log.e("Parser",e.getMessage());
-        }
-        if(convertedCurrentDate!=null) {
-             birthday = sdf.format(convertedCurrentDate);
-        }
+        String birthday = jsonObject.get(BIRTHDAY.get(), SafeJSONObject.DEFAULT_STRING);
         String email = jsonObject.get(EMAIL.get(), SafeJSONObject.DEFAULT_STRING);
         SHARED_PREFS.edit()
                 .putString(FACEBOOK_ID.get(), facebookID)
@@ -203,7 +192,7 @@ public class AboutActivity extends AppCompatActivity {
         protected Boolean doInBackground(String... params) {
 
             boolean code = false;
-            String facebookId = SHARED_PREFS.getString(FACEBOOK_ID.get(), "");
+            String facebookId = SHARED_PREFS.getString(FACEBOOK_ID.get(), SafeJSONObject.DEFAULT_STRING);
             try {
                 code = DefaultNetworkProvider.checkConnection(
                         SERVER_URL + "/api/users/" + facebookId);

@@ -17,12 +17,19 @@ import ch.epfl.sweng.swissaffinity.utilities.parsers.user.UserParser;
  */
 public class NetworkUserClient implements UserClient {
 
-    private static final String USERS = "/api/users/";
+    //DO NOT CHANGE THIS STRING!! It can cause various bugs.
+    private static final String USERS = "/api/users";
 
     private final String mServerUrl;
     private final NetworkProvider mNetworkProvider;
 
     public NetworkUserClient(String serverUrl, NetworkProvider networkProvider) {
+        if (! serverUrl.equals("http://beecreative.ch")){
+            throw new IllegalArgumentException("This is not SwissAffinity server adress!!");
+        }
+        if (null == networkProvider){
+            throw new IllegalArgumentException("Null networkProvider");
+        }
         mServerUrl = serverUrl;
         mNetworkProvider = networkProvider;
     }
@@ -39,9 +46,9 @@ public class NetworkUserClient implements UserClient {
 
 
     @Override
-    public JSONObject postUser(String url, JSONObject jsonObject) throws UserClientException {
+    public JSONObject postUser(JSONObject jsonObject) throws UserClientException {
         try {
-            String content = mNetworkProvider.postContent(url + USERS,jsonObject);
+            String content = mNetworkProvider.postContent(mServerUrl + USERS,jsonObject);
             return new JSONObject(content);
         } catch (IOException | JSONException e) {
             throw new UserClientException(e);
@@ -52,7 +59,7 @@ public class NetworkUserClient implements UserClient {
     private User fetch(String nameOrId) throws UserClientException {
         try {
             String content =
-                    mNetworkProvider.getContent(mServerUrl + USERS + nameOrId);
+                    mNetworkProvider.getContent(mServerUrl + USERS +"/"+ nameOrId);
             SafeJSONObject jsonObject = new SafeJSONObject(content);
             return new UserParser().parse(jsonObject);
         } catch (ParserException | JSONException | IOException e) {
