@@ -80,20 +80,23 @@ public class NetworkUserClient implements UserClient {
     }
 
     @Override
-    public JSONObject registerUser(String username, int eventId) throws UserClientException {
+    public String registerUser(String username, int eventId) throws UserClientException {
         if ((username == null) || eventId < 0){
             throw new UserClientException(new IllegalArgumentException());
         }
         String response;
         JSONObject registrationObject = new JSONObject();
-        JSONObject jsonWithHeader = new JSONObject();
+        JSONObject requestObject = new JSONObject();
 
         try {
             registrationObject.put("username", username);
             registrationObject.put("eventId", Integer.toString(eventId));
-            jsonWithHeader.put("rest_event_registration", registrationObject);
-            response = mNetworkProvider.postContent(mServerUrl + REGISTRATIONS, jsonWithHeader );
-            return new JSONObject(response);
+            requestObject.put("rest_event_registration", registrationObject);
+            response = mNetworkProvider.postContent(mServerUrl + REGISTRATIONS, requestObject );
+            if (!response.equals("")){
+                throw new UserClientException(response);
+            }
+            return response;
         } catch (IOException | JSONException e){
             throw new UserClientException(e);
         }

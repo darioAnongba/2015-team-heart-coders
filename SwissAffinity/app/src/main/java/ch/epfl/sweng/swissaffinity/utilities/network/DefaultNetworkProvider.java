@@ -53,8 +53,9 @@ public class DefaultNetworkProvider implements NetworkProvider {
         out.write(json.toString());
         out.flush();
         out.close();
+
         int responseCode = conn.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) {
+        if ((responseCode >= HTTP_SUCCESS_START) && (responseCode <= HTTP_SUCCESS_END)) {
             response = fetchContent(conn);
         } else if(responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR){
             throw new ConnectException();
@@ -79,7 +80,7 @@ public class DefaultNetworkProvider implements NetworkProvider {
         conn.setDoInput(true);
         conn.connect();
         int response = conn.getResponseCode();
-        return response == HTTP_SUCCESS_START;
+        return (response >= HTTP_SUCCESS_START) && (response <= HTTP_SUCCESS_END);
     }
 
     /**

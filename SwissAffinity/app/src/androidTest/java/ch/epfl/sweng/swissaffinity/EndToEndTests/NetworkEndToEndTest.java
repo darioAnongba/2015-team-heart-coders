@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.events.Establishment;
@@ -99,7 +100,51 @@ public class NetworkEndToEndTest {
         assertTrue("Unexpected events attended",user.getEventsAttended().size()==0);
 
     }
-    
+    @Test
+    public void postRegistrationToEvent() throws UserClientException{
+        final int eventIdToRegister = 7;
+        final String userToRegister = "lio";
+        NetworkProvider networkProvider = new DefaultNetworkProvider();
+        UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
+
+        userClient.registerUser(userToRegister, eventIdToRegister);
+
+        String registrationsString;
+        JSONArray registrations;
+        try{
+            registrationsString  = networkProvider.getContent("http://beecreative.ch/api/users/"+ userToRegister +"/registrations");
+            registrations = new JSONArray(registrationsString);
+        } catch (JSONException | IOException e){
+            throw new UserClientException(e);
+        }
+
+
+        HashMap<Integer, Integer> eventToRegistration = new HashMap<>();
+        for (int i = 0; i < registrations.length(); i++) {
+            try {
+                JSONObject jsonRegistration = registrations.getJSONObject(i);
+                JSONObject jsonEvent = jsonRegistration.getJSONObject("event");
+                eventToRegistration.put(jsonEvent.getInt("id"), jsonRegistration.getInt("id"));
+            } catch (JSONException e){
+                throw new UserClientException(e);
+            }
+        }
+        Integer testRegistrationId = eventToRegistration.get(eventIdToRegister);
+        assertTrue("Registration was not successful.", testRegistrationId != null);
+
+        URL url;
+        HttpURLConnection conn;
+        int respCode;
+        try {
+            url = new URL("http://beecreative.ch/api/registrations/" + testRegistrationId.toString());
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("DELETE");
+            respCode = conn.getResponseCode();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
     @Test
     public void postUserTest() throws UserClientException {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
