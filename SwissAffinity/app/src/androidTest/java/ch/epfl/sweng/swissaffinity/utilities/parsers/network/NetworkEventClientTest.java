@@ -84,7 +84,7 @@ public class NetworkEventClientTest {
         speedDatingEventParser = new SpeedDatingEventParser();
         testOneEvent = speedDatingEventParser.parse(safeJSONObject);
 
-        mockServerURL = "testURL";
+        mockServerURL = "http://beecreative.ch";
         mockNetworkProvider = mock(DefaultNetworkProvider.class);
         networkEventClient = new NetworkEventClient(mockServerURL, mockNetworkProvider);
     }
