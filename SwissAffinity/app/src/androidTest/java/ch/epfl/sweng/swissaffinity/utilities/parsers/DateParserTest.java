@@ -14,11 +14,13 @@ public class DateParserTest {
     Date testDate;
     @Before
     public void setUp() throws ParserException {
+
         testDate = DateParser.parseFromString("2014-06-09T10:11:12+0100");//GMT + 1 time in Switzlerand.
     }
 
     @Test
     public void dateFromStringTest(){
+
         String str = DateParser.dateToString(testDate);
         assertEquals(str, "09 June 2014 - 11:11");
     }
@@ -27,6 +29,7 @@ public class DateParserTest {
     public void dateExceptionTest() throws ParserException {
         testDate = DateParser.parseFromString("2014-06-09A10:11:12+0100");
     }
+
 
     @Test(expected = IllegalArgumentException.class)
     public void dateNullTest(){

@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.events.Establishment;
@@ -43,64 +44,107 @@ import static junit.framework.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class NetworkEndToEndTest {
-    /**Admin (Dario) is used as test user here.
-     * */
+    /**
+     * Admin (Dario) is used as test user here.
+     */
+
     @Test(expected = IllegalArgumentException.class)
-    public void testInvalidServerAddressForUser(){
-        NetworkProvider networkProvider = new DefaultNetworkProvider();
-        new NetworkUserClient("http://notASwissAffinityServer.ch", networkProvider);
-    }
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullNetworkProviderForUser(){
+    public void testNullNetworkProviderForUser() {
         NetworkProvider networkProvider = null;
         new NetworkUserClient("http://beecreative.ch", networkProvider);
     }
+
     @Test(expected = IllegalArgumentException.class)
-    public void testInvalidServerAddressForEvent(){
-        NetworkProvider networkProvider = new DefaultNetworkProvider();
-        new NetworkUserClient("http://notASwissAffinityServer.ch", networkProvider);
-    }
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullNetworkProviderForEvent(){
+    public void testNullNetworkProviderForEvent() {
         NetworkProvider networkProvider = null;
         new NetworkUserClient("http://beecreative.ch", networkProvider);
     }
+
     @Test
-    public void testGetUser() throws UserClientException{
+    public void testGetUser() throws UserClientException {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
         UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
         User user = userClient.fetchByFacebookID(Integer.toString(1271175799)); //Dario's fb id
         List<Location> locationsOfInterest = new ArrayList<>();
         locationsOfInterest.add(new Location(3, "Lausanne"));
         Date birthDay;
-        try{
+        try {
             birthDay = DateParser.parseFromString("1993-02-02T00:00:00+0100");
-        } catch(ParserException e){
+        } catch (ParserException e) {
             throw new UserClientException(e);
         }
 
-        assertTrue("Unexpected username",user.getUsername().equals("Admin"));
-        assertTrue("Unexpected first name",user.getFirstName().equals("Dario"));
-        assertTrue("Unexpected last name",user.getLastName().equals("Anongba"));
-        assertTrue("Unexpected profession",user.getProfession().equals("Student"));
-        assertTrue("Unexpected home phone",user.getHomePhone().equals(SafeJSONObject.DEFAULT_STRING));
-        assertTrue("Unexpected mobile phone",user.getMobilePhone().equals("+41799585615"));
-        assertTrue("Unexpected profile picture",user.getProfilePicture().equals(SafeJSONObject.DEFAULT_STRING));
-        assertTrue("Unexpected email",user.getEmail().equals("dario.anongba@epfl.ch"));
-        assertTrue("Unexpected id",user.getId() == 1);
-        assertTrue("Unexpected fb id",user.getFacebookId()==1271175799);
-        assertTrue("Unexpected, user should be enabled",user.getEnabled());
-        assertTrue("Unexpected, user should not be locked",!user.getLocked());
+        assertTrue("Unexpected username", user.getUsername().equals("Admin"));
+        assertTrue("Unexpected first name", user.getFirstName().equals("Dario"));
+        assertTrue("Unexpected last name", user.getLastName().equals("Anongba"));
+        assertTrue("Unexpected profession", user.getProfession().equals("Student"));
+        assertTrue("Unexpected home phone", user.getHomePhone().equals(SafeJSONObject.DEFAULT_STRING));
+        assertTrue("Unexpected mobile phone", user.getMobilePhone().equals("+41799585615"));
+        assertTrue("Unexpected profile picture", user.getProfilePicture().equals(SafeJSONObject.DEFAULT_STRING));
+        assertTrue("Unexpected email", user.getEmail().equals("dario.anongba@epfl.ch"));
+        assertTrue("Unexpected id", user.getId() == 1);
+        assertTrue("Unexpected fb id", user.getFacebookId() == 1271175799);
+        assertTrue("Unexpected, user should be enabled", user.getEnabled());
+        assertTrue("Unexpected, user should not be locked", !user.getLocked());
         assertTrue("Unexpected Adress", new Address("CH", 1007, "Lausanne", "Vaud", 15, "Avenue de Cour")
                 .equals(user.getAddress()));
         assertTrue("Unexpected birthday", birthDay.compareTo(user.getBirthDate()) == 0);
         assertTrue("Unexpected gender", User.Gender.MALE.equals(user.getGender()));
         assertTrue("Unexpected areas of interest",
                 new CollectionComparator<Location>().compare(new ArrayList<Location>(user.getAreasOfInterest()), locationsOfInterest));
-        assertTrue("Unexpected events attended",user.getEventsAttended().size()==0);
+        assertTrue("Unexpected events attended", user.getEventsAttended().size() == 0);
 
     }
+    @Test
+    public void postRegistrationToEvent() throws UserClientException{
+        final int eventIdToRegister = 7;
+        final String userToRegister = "lio";
+        NetworkProvider networkProvider = new DefaultNetworkProvider();
+        UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
 
+        try {
+            userClient.registerUser(userToRegister, eventIdToRegister);
+        } catch (UserClientException e) {
+            if (e.getMessage().equals("You are already registered to this event")) {
+                //SUCCESS
+            }
+        }
+        String registrationsString;
+        JSONArray registrations;
+        try{
+            registrationsString  = networkProvider.getContent("http://beecreative.ch/api/users/"+ userToRegister +"/registrations");
+            registrations = new JSONArray(registrationsString);
+        } catch (JSONException | IOException e){
+            throw new UserClientException(e);
+        }
+
+
+        HashMap<Integer, Integer> eventToRegistration = new HashMap<>();
+        for (int i = 0; i < registrations.length(); i++) {
+            try {
+                JSONObject jsonRegistration = registrations.getJSONObject(i);
+                JSONObject jsonEvent = jsonRegistration.getJSONObject("event");
+                eventToRegistration.put(jsonEvent.getInt("id"), jsonRegistration.getInt("id"));
+            } catch (JSONException e){
+                throw new UserClientException(e);
+            }
+        }
+        Integer testRegistrationId = eventToRegistration.get(eventIdToRegister);
+        assertTrue("Registration was not successful.", testRegistrationId != null);
+
+        URL url;
+        HttpURLConnection conn;
+        int respCode;
+        try {
+            url = new URL("http://beecreative.ch/api/registrations/" + testRegistrationId.toString());
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("DELETE");
+            respCode = conn.getResponseCode();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
     @Test
     public void postUserTest() throws UserClientException {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
@@ -114,7 +158,6 @@ public class NetworkEndToEndTest {
         locationsOfInterest.add(new Location(8, "Bulle"));
 
         JSONObject jsonUser = new JSONObject();
-        JSONObject jsonRequest = new JSONObject();
         SafeJSONObject confirmationObject;
         JSONObject responseJSON;
         try {
@@ -126,10 +169,9 @@ public class NetworkEndToEndTest {
             jsonUser.put("birthDate", "18/02/1993");
             jsonUser.put("facebookId", "666");
             jsonUser.put("plainPassword", "dumbpassword");
-            jsonRequest.put("rest_user_registration", jsonUser);
-            responseJSON = userClient.postUser(jsonRequest);
+            responseJSON = userClient.postUser(jsonUser);
             confirmationObject = new SafeJSONObject(responseJSON);
-        } catch (JSONException e){
+        } catch (JSONException e) {
             throw new UserClientException(e);
         }
 
@@ -138,22 +180,22 @@ public class NetworkEndToEndTest {
         try {
             areas = confirmationObject.get(ServerTags.LOCATIONS_INTEREST.get(), new JSONArray());
             for (int i = 0; i < areas.length(); i++) {
-
                 JSONObject jsonArea = areas.getJSONObject(i);
                 Location location = new LocationParser().parse(new SafeJSONObject(jsonArea));
                 areasOfInterest.add(location);
             }
-        } catch (JSONException | ParserException e){
+        } catch (JSONException | ParserException e) {
             throw new UserClientException(e);
         }
         int fb_id;
-        try{
+        try {
             fb_id = confirmationObject.getInt(ServerTags.FACEBOOK_ID.get());
-        } catch (JSONException e){
+        } catch (JSONException e) {
             throw new UserClientException(e);
         }
 
-        assertTrue("Unexpected email", confirmationObject.get(ServerTags.EMAIL.get(), SafeJSONObject.DEFAULT_STRING).equals("dumbuser666@gmail.com"));
+        assertTrue("Unexpected email", confirmationObject.get(ServerTags.EMAIL.get(),
+                SafeJSONObject.DEFAULT_STRING).equals("dumbuser666@gmail.com"));
         assertTrue("Unexpected username", confirmationObject.get(ServerTags.USERNAME.get(),
                 SafeJSONObject.DEFAULT_STRING).equals("DumbUser666"));
         assertTrue("Unexpected firstName", confirmationObject.get(ServerTags.FIRST_NAME.get(),
@@ -165,10 +207,10 @@ public class NetworkEndToEndTest {
         assertTrue("Unexpected birthDate", confirmationObject.get(ServerTags.BIRTH_DATE.get(),
                 SafeJSONObject.DEFAULT_STRING).equals("1993-02-18T00:00:00+0100"));
         assertTrue("Unexpected facebookId", fb_id == 666);
-        assertTrue("Unexpected User should not be locked", confirmationObject.get(ServerTags.LOCKED.get(),
-                true) == false);
-        assertTrue("Unexpected User should be enable", confirmationObject.get(ServerTags.ENABLED.get(),
-                false) == false);
+        assertTrue("Unexpected User should not be locked",
+                !confirmationObject.get(ServerTags.LOCKED.get(), true));
+        assertTrue("Unexpected User should be enable",
+                !confirmationObject.get(ServerTags.ENABLED.get(), false));
         assertTrue("Unexpected locations of preference",
                 new CollectionComparator<Location>().compare(locationsOfInterest, areasOfInterest));
 
@@ -194,10 +236,10 @@ public class NetworkEndToEndTest {
         //Oktoberfest event at Zurich.
         Date beginDate;
         Date endDate;
-        try{
+        try {
             beginDate = DateParser.parseFromString("2016-10-15T21:00:00+0200");
             endDate = DateParser.parseFromString("2016-10-16T00:00:00+0200");
-        } catch (ParserException e){
+        } catch (ParserException e) {
             throw new EventClientException(e);
         }
 
@@ -219,8 +261,8 @@ public class NetworkEndToEndTest {
         assertTrue("Unexpected Location", event.getLocation().equals(
                 new Location(6, "Zürich")));
         assertTrue("Unexpected Establishment", event.getEstablishment().equals(
-                        new Establishment(2,"Forum", Establishment.Type.BAR,
-                                new Address("CH",8004,"Zürich","Zürich",120,"Badenerstrasse" ),
+                        new Establishment(2, "Forum", Establishment.Type.BAR,
+                                new Address("CH", 8004, "Zürich", "Zürich", 120, "Badenerstrasse"),
                                 "+41 43 243 88 88",
                                 "Located at the corner of Badenerstrasse, Forum is an airy lounge bar and restaurant, ideal for kicking back and unwinding.",
                                 SafeJSONObject.DEFAULT_STRING,
@@ -229,15 +271,14 @@ public class NetworkEndToEndTest {
         );
     }
 
-
-    private class CollectionComparator<E>{
-        boolean compare (List<E> coll1, List<E> coll2){
-            if (coll1.size()!=coll2.size()){
+    private class CollectionComparator<E> {
+        boolean compare(List<E> coll1, List<E> coll2) {
+            if (coll1.size() != coll2.size()) {
                 return false;
             }
 
-            for (int i = 0; i < coll1.size() ; i++) {
-                if(!coll1.get(i).equals(coll2.get(i))){
+            for (int i = 0; i < coll1.size(); i++) {
+                if (!coll1.get(i).equals(coll2.get(i))) {
                     return false;
                 }
             }

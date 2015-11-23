@@ -6,11 +6,11 @@
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
     <MultiSelectListPreference
         android:dialogTitle="Event Types"
-        android:key="example_list"
+        android:key="event_type_list"
         android:summary=""
         android:title="@string/event_type_preferences"
-        android:entries="@array/event_type_example_list"
-        android:entryValues="@array/location_example_list_values"
+        android:entries="@array/event_type_list"
+        android:entryValues="@array/event_type_list_values"
         android:defaultValue="@array/empty_array"
         />
 
@@ -20,11 +20,11 @@
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
     <MultiSelectListPreference
         android:dialogTitle="Event Places"
-        android:key="example_list2"
+        android:key="event_location_list"
         android:summary=""
         android:title="@string/event_place_preferences"
-        android:entries="@array/location_example_list"
-        android:entryValues="@array/location_example_list_values"
+        android:entries="@array/location_list"
+        android:entryValues="@array/location_list_values"
         android:defaultValue="@array/empty_array"
         />
 

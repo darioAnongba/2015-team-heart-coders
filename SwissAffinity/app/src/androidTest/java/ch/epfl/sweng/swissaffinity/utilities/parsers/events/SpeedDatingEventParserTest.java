@@ -50,6 +50,7 @@ public class SpeedDatingEventParserTest {
     }
 
     @Test(expected = ParserException.class)
+
     public void malformedJsonTest() throws ParserException {
         SafeJSONObject safeJson = null;
         try {
@@ -58,6 +59,7 @@ public class SpeedDatingEventParserTest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         event = new SpeedDatingEventParser().parse(safeJson);
     }
 }
