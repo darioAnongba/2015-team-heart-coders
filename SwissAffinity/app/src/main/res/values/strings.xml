@@ -27,35 +27,30 @@
     <string name="pref_header_general">General</string>
 
     <string name="event_type_preferences">Event Type Preferences</string>
-    <string-array name="event_type_example_list">
-        <item>Mask Party</item>
+    <string-array name="event_type_list">
         <item>Blind Date</item>
-        <item>Striptease Party</item>
-        <item>Gay Party</item>
-        <item>Group Sex</item>
     </string-array>
-    <string-array name="event_type_example_list_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
+    <string-array name="event_type_list_values">
+        <item>Blind Date</item>
     </string-array>
 
     <string name="event_place_preferences">Location Preferences</string>
-    <string-array name="location_example_list">
+    <string-array name="location_list">
+        <item>Geneve</item>
         <item>Lausanne</item>
-        <item>Lausanne - Flon</item>
-        <item>Ouchy</item>
-        <item>Furkan\'s House</item>
-        <item>Furkan\'s Bed</item>
+        <item>Fribourg</item>
+        <item>Zurich</item>
+        <item>Berne</item>
+        <item>Bulle</item>
+
     </string-array>
-    <string-array name="location_example_list_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
+    <string-array name="location_list_values">
+        <item>Geneve</item>
+        <item>Lausanne</item>
+        <item>Fribourg</item>
+        <item>Zurich</item>
+        <item>Berne</item>
+        <item>Bulle</item>
     </string-array>
     <string-array name="empty_array"/>
     <!-- Example settings for Notifications -->

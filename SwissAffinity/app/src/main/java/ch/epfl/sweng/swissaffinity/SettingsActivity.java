@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
 import java.util.List;
+import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREFS;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -101,7 +102,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
-            String stringValue = value.toString();
+            String stringValue = (value!=null) ? value.toString() : "";
 
             if (preference instanceof ListPreference) {
                 // For list preferences, look up the correct display value in
@@ -163,14 +164,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         // current value.
         if (preference instanceof MultiSelectListPreference) {
             sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                    PreferenceManager
-                            .getDefaultSharedPreferences(preference.getContext())
+                    SHARED_PREFS
                             .getStringSet(preference.getKey(), null));
         }
         else{
             sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                    PreferenceManager
-                            .getDefaultSharedPreferences(preference.getContext())
+                    SHARED_PREFS
                             .getString(preference.getKey(), ""));
         }
     }
@@ -201,8 +200,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-//            bindPreferenceSummaryToValue(findPreference("example_list"));
-//            bindPreferenceSummaryToValue(findPreference("example_list2"));
+            bindPreferenceSummaryToValue(findPreference("event_type_list"));
+            bindPreferenceSummaryToValue(findPreference("event_location_list"));
         }
 
         @Override
