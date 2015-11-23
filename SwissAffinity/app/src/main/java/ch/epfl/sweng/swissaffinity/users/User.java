@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
@@ -371,18 +370,7 @@ public final class User implements Serializable {
      * @return a collecction of locations
      */
     public Collection<Location> getAreasOfInterest() {
-        HashSet<Location> hashSet = new HashSet<>();
-
-        if (mAreasOfInterest.size() != 0) {                     // To avoid iterator next problems.
-            Iterator<Location> iter = mAreasOfInterest.iterator();
-            do{
-                Location temp = iter.next();
-                Location location = new Location(temp.getId(), temp.getName());
-                hashSet.add(location);
-            }while (iter.hasNext());
-        }
-
-        return hashSet;
+        return new HashSet<>(mAreasOfInterest);
     }
 
     /**
@@ -391,16 +379,7 @@ public final class User implements Serializable {
      * @param areasOfInterest a collection of locations
      */
     public void setAreasOfInterest(Collection<Location> areasOfInterest) {
-        mAreasOfInterest = new HashSet<>();
-
-        if (areasOfInterest.size() != 0){
-            Iterator<Location> iter = areasOfInterest.iterator();
-            do{
-                Location temp = iter.next();
-                Location location = new Location(temp.getId(), temp.getName());
-                mAreasOfInterest.add(location);
-            }while(iter.hasNext());
-        }
+        mAreasOfInterest = new HashSet<>(areasOfInterest);
     }
 
     /**
@@ -420,5 +399,4 @@ public final class User implements Serializable {
     public void setEventsAttended(List<Event> eventsAttended) {
         mEventsAttended = new ArrayList<>(eventsAttended);
     }
-
 }
