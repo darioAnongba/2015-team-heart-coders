@@ -39,8 +39,8 @@ public class NetworkEventClient implements EventClient {
     private final NetworkProvider mNetworkProvider;
 
     public NetworkEventClient(String serverUrl, NetworkProvider networkProvider) {
-        if (networkProvider == null) {
-            throw new IllegalArgumentException("Null networkProvider");
+        if (networkProvider == null || serverUrl == null) {
+            throw new IllegalArgumentException();
         }
         mServerUrl = serverUrl;
         mNetworkProvider = networkProvider;

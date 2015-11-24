@@ -73,7 +73,7 @@ public class UserTest {
 
     @Test
     public void testGetMobilePhone() {
-        assertEquals("testPhone", user.getMobilePhone());
+        assertEquals("testMobilePhone", user.getMobilePhone());
     }
 
     @Test
