@@ -44,7 +44,7 @@ public class DateParser {
             throw new IllegalArgumentException();
         }
         SimpleDateFormat dateFormat =
-                new SimpleDateFormat("dd MMMM yyyy - HH:mm", Locale.US);
+                new SimpleDateFormat("dd MMMM yyyy - HH:mm", Locale.getDefault());
         return dateFormat.format(date.getTime());
     }
 }
