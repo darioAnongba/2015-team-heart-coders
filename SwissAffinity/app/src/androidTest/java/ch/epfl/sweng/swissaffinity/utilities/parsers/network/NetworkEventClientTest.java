@@ -91,7 +91,7 @@ public class NetworkEventClientTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testIllegalURL() {
-        networkEventClient = new NetworkEventClient("", mockNetworkProvider);
+        networkEventClient = new NetworkEventClient(null, mockNetworkProvider);
     }
 
     @Test(expected = IllegalArgumentException.class)

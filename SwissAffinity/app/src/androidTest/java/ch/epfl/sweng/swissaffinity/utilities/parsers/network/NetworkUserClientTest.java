@@ -24,6 +24,7 @@ import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.user.UserParser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -58,7 +59,7 @@ public class NetworkUserClientTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testIllegalURL() {
-        networkUserClient = new NetworkUserClient("", mockNetworkProvider);
+        networkUserClient = new NetworkUserClient(null, mockNetworkProvider);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -89,14 +90,12 @@ public class NetworkUserClientTest {
         assertEquals(testUser.getGender(), returnedUser.getGender());
         assertEquals(testUser.getBirthDate(), returnedUser.getBirthDate());
 
-        for (int i = 0; i < returnedUser.getAreasOfInterest().size(); i++) {
-            Iterator<Location> iterator1 = testUser.getAreasOfInterest().iterator();
-            Iterator<Location> iterator2 = returnedUser.getAreasOfInterest().iterator();
 
-            if (iterator1.hasNext() && iterator2.hasNext()) {
-                assertEquals(iterator1.next().getId(), iterator2.next().getId());
-            }
-        }
+        Collection<Location> coll1 = testUser.getAreasOfInterest();
+        Collection<Location> coll2 = returnedUser.getAreasOfInterest();
+        coll1.removeAll(coll2);
+        assertTrue(coll1.isEmpty());
+
 
         for (int i = 0; i < returnedUser.getEventsAttended().size(); i++) {
             Iterator<Event> iterator3 = testUser.getEventsAttended().iterator();
@@ -131,14 +130,11 @@ public class NetworkUserClientTest {
         assertEquals(testUser.getGender(), returnedUser.getGender());
         assertEquals(testUser.getBirthDate(), returnedUser.getBirthDate());
 
-        for (int i = 0; i < returnedUser.getAreasOfInterest().size(); i++) {
-            Iterator<Location> iterator1 = testUser.getAreasOfInterest().iterator();
-            Iterator<Location> iterator2 = returnedUser.getAreasOfInterest().iterator();
+        Collection<Location> coll1 = testUser.getAreasOfInterest();
+        Collection<Location> coll2 = returnedUser.getAreasOfInterest();
 
-            if (iterator1.hasNext() && iterator2.hasNext()) {
-                assertEquals(iterator1.next().getId(), iterator2.next().getId());
-            }
-        }
+        coll1.removeAll(coll2);
+        assertTrue(coll1.isEmpty());
 
         for (int i = 0; i < returnedUser.getEventsAttended().size(); i++) {
             Iterator<Event> iterator3 = testUser.getEventsAttended().iterator();

@@ -60,4 +60,11 @@ public class Location implements Serializable {
     public String getName() {
         return mName;
     }
+
+    @Override
+    public int hashCode() {
+        int result = mId;
+        result = 31 * result + mName.hashCode();
+        return result;
+    }
 }
