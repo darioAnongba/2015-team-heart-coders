@@ -7,3 +7,4 @@ http://www.swiss-affinity.ch
 
 
 [![Build Status](https://jenkins.epfl.ch/buildStatus/icon?job=2015-team-heart-coders)](https://jenkins.epfl.ch/job/2015-team-heart-coders)
+
