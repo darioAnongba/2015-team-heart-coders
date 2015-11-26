@@ -21,14 +21,22 @@ public abstract class AbstractExpandableListAdapter<A, B> extends BaseExpandable
     private final List<A> mGroups;
     private final Map<A, List<B>> mData;
 
-    protected AbstractExpandableListAdapter(Context context, List<A> groups, Map<A, List<B>> data) {
+    protected AbstractExpandableListAdapter(Context context) {
         mContext = context;
-        mGroups = new ArrayList<>(groups);
-        mData = new HashMap<>(data);
+        mGroups = new ArrayList<>();
+        mData = new HashMap<>();
     }
 
-    protected AbstractExpandableListAdapter(Context context) {
-        this(context, Collections.<A>emptyList(), Collections.<A, List<B>>emptyMap());
+    protected void setData(List<A> groups, Map<A, List<B>> data) {
+        notifyDataSetInvalidated();
+        mGroups.clear();
+        mData.clear();
+        for (A group : groups) {
+            addGroup(group);
+            for (B child : data.get(group)) {
+                addChild(group, child);
+            }
+        }
     }
 
     /**
@@ -104,6 +112,6 @@ public abstract class AbstractExpandableListAdapter<A, B> extends BaseExpandable
 
     @Override
     public boolean hasStableIds() {
-        return true;
+        return false;
     }
 }

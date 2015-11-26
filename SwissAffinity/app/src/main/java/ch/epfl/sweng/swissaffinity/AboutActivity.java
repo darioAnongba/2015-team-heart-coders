@@ -27,16 +27,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
-import static ch.epfl.sweng.swissaffinity.MainActivity.SERVER_URL;
-import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREFS;
+import static ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider.SERVER_URL;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
@@ -81,7 +76,7 @@ public class AboutActivity extends AppCompatActivity {
                                         Log.v("AboutActivity", rep.toString());
                                         if (jsonObject != null) {
                                             fillUserData(jsonObject);
-                                                new ConnectionToServer().execute();
+                                            new ConnectionToServer().execute();
                                         } else {
                                             //TODO: no data...
                                             onError(null);
@@ -132,7 +127,7 @@ public class AboutActivity extends AppCompatActivity {
 
     private static String getFields() {
         return ID.get() + "," + NAME.get() + "," + FIRST_NAME.get() + "," + LAST_NAME.get() + "," +
-                EMAIL.get() + "," + GENDER.get() + "," + BIRTHDAY.get();
+               EMAIL.get() + "," + GENDER.get() + "," + BIRTHDAY.get();
     }
 
     private void fillUserData(SafeJSONObject jsonObject) {
@@ -143,33 +138,33 @@ public class AboutActivity extends AppCompatActivity {
         String gender = jsonObject.get(GENDER.get(), SafeJSONObject.DEFAULT_STRING);
         String birthday = jsonObject.get(BIRTHDAY.get(), SafeJSONObject.DEFAULT_STRING);
         String email = jsonObject.get(EMAIL.get(), SafeJSONObject.DEFAULT_STRING);
-        SHARED_PREFS.edit()
-                .putString(FACEBOOK_ID.get(), facebookID)
-                .putString(USERNAME.get(), userName)
-                .putString(LAST_NAME.get(), lastName)
-                .putString(FIRST_NAME.get(), firstName)
-                .putString(GENDER.get(), gender)
-                .putString(BIRTHDAY.get(), birthday)
-                .putString(EMAIL.get(), email)
-                .apply();
+        MainActivity.getSharedPrefs().edit()
+                    .putString(FACEBOOK_ID.get(), facebookID)
+                    .putString(USERNAME.get(), userName)
+                    .putString(LAST_NAME.get(), lastName)
+                    .putString(FIRST_NAME.get(), firstName)
+                    .putString(GENDER.get(), gender)
+                    .putString(BIRTHDAY.get(), birthday)
+                    .putString(EMAIL.get(), email)
+                    .apply();
     }
 
     private void deleteUserData() {
-        SHARED_PREFS.edit()
-                .putString(FACEBOOK_ID.get(), null)
-                .putString(USERNAME.get(), null)
-                .putString(LAST_NAME.get(), null)
-                .putString(FIRST_NAME.get(), null)
-                .putString(GENDER.get(), null)
-                .putString(BIRTHDAY.get(), null)
-                .putString(EMAIL.get(), null)
-                .apply();
+        MainActivity.getSharedPrefs().edit()
+                    .putString(FACEBOOK_ID.get(), null)
+                    .putString(USERNAME.get(), null)
+                    .putString(LAST_NAME.get(), null)
+                    .putString(FIRST_NAME.get(), null)
+                    .putString(GENDER.get(), null)
+                    .putString(BIRTHDAY.get(), null)
+                    .putString(EMAIL.get(), null)
+                    .apply();
     }
 
 
     private void setLoggedText() {
         TextView logged = ((TextView) findViewById(R.id.aboutLogedText));
-        String userName = SHARED_PREFS.getString(USERNAME.get(), null);
+        String userName = MainActivity.getSharedPrefs().getString(USERNAME.get(), null);
         if (userName == null) {
             logged.setText("To start, you have to login:");
             logged.setTextSize(20);
@@ -194,7 +189,9 @@ public class AboutActivity extends AppCompatActivity {
         protected Boolean doInBackground(String... params) {
 
             boolean code = false;
-            String facebookId = SHARED_PREFS.getString(FACEBOOK_ID.get(), SafeJSONObject.DEFAULT_STRING);
+            String facebookId = MainActivity.getSharedPrefs().getString(
+                    FACEBOOK_ID.get(),
+                    SafeJSONObject.DEFAULT_STRING);
             try {
                 code = DefaultNetworkProvider.checkConnection(
                         SERVER_URL + "/api/users/" + facebookId);
