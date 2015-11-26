@@ -6,6 +6,7 @@
     <string name="action_about">About</string>
     <string name="welcome_registered_text">Welcome %s</string>
     <string name="welcome_not_registered_text">To start, you need to register</string>
+    <string name="welcome_not_logged_text">To start, you have to login:</string>
 
     <string name="title_activity_about">About</string>
     <string name="about_leader">Leader de l\'organisation événementielle pour célibataires en Suisse romande</string>
