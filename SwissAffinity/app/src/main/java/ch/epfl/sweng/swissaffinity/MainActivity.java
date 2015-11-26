@@ -54,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String SHARED_PREFS_ID = "ch.epfl.sweng.swissaffinity.shared_prefs";
 
     private EventExpandableListAdapter mListAdapter;
-    private User mUser;
+    public static User mUser;
+    public static Context mContext;
 
     public static EventClient getEventClient() {
         if (EVENT_CLIENT == null) {
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
         USER_CLIENT = getUserClient();
         SHARED_PREFS = getSharedPreferences(SHARED_PREFS_ID, MODE_PRIVATE);
         mListAdapter = new EventExpandableListAdapter(this);
+        mContext = this;
 
         if (isNetworkConnected(this)) {
             fetchUser();
