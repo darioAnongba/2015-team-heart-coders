@@ -25,7 +25,7 @@ public class NetworkUserClient implements UserClient {
     private final NetworkProvider mNetworkProvider;
 
     public NetworkUserClient(String serverUrl, NetworkProvider networkProvider) {
-        if (networkProvider == null){
+        if (networkProvider == null || serverUrl == null){
             throw new IllegalArgumentException("Null networkProvider");
         }
         mServerUrl = serverUrl;

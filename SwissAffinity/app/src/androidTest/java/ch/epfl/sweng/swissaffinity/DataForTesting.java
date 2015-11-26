@@ -72,10 +72,12 @@ public class DataForTesting {
 
     public static List<Location> LOCATIONS = new ArrayList<>(
             Arrays.asList(
-                    new Location(0, "Genève"),
-                    new Location(1, "Lausanne"),
-                    new Location(2, "Fribourg"),
-                    new Location(3, "Zurich")
+                    new Location(2, "Genève"),
+                    new Location(3, "Lausanne"),
+                    new Location(4, "Fribourg"),
+                    new Location(6, "Zurich"),
+                    new Location(7, "Berne"),
+                    new Location(8, "Bulle")
             ));
 
     public static URL testURL() {
@@ -192,7 +194,7 @@ public class DataForTesting {
                 "testEmail",
                 "testLastName",
                 "testFirstName",
-                "testPhone",
+                "testMobilePhone",
                 "testHomePhone",
                 new Address("Switzerland", 1000, "Lausanne", "Vaud", 1, "Rue du Test"),
                 false,
@@ -201,9 +203,20 @@ public class DataForTesting {
                 birthday,
                 "testProfession",
                 "http://testUrl.com",
-                new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
+                new ArrayList<Location>(Arrays.asList(LOCATIONS.get(1),LOCATIONS.get(0))),
                 new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent())));
     }
+
+    public static String userJSONcontent =
+            "{\"id\":1,\"username\":\"testUsername\",\"email\":\"testEmail\"," +
+                    "\"enabled\":true,\"locked\":false,\"facebook_id\":2001," +
+                    "\"last_name\":\"testLastName\",\"first_name\":\"testFirstName\"," +
+                    "\"gender\":\"male\",\"birth_date\":\"1983-11-16T16:00:00+0100\"," +
+                    "\"locations_of_interest\":[{\"id\":2,\"name\":\"Gen\\u00e8ve\"}," +
+                    "{\"id\":3,\"name\":\"Lausanne\"}],\"profession\":\"testProfession\"," +
+                    "\"mobile_phone\":\"testMobilePhone\",\"home_phone\":\"testHomePhone\"," +
+                    "\"address\":{\"id\":16,\"street\":\"Rue du Test\",\"street_number\":1," +
+                    "\"province\":\"Vaud\",\"city\":\"Lausanne\",\"zip_code\":1000,\"country\":\"Switzerland\"}}";
 
     public static JSONObject createJSONEvent() {
         try {

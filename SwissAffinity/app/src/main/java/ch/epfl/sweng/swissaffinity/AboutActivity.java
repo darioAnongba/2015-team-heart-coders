@@ -1,5 +1,6 @@
 package ch.epfl.sweng.swissaffinity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -26,10 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.ExecutionException;
 
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
@@ -80,13 +77,7 @@ public class AboutActivity extends AppCompatActivity {
                                         Log.v("AboutActivity", rep.toString());
                                         if (jsonObject != null) {
                                             fillUserData(jsonObject);
-                                            try {
-                                                new ConnectionToServer().execute().get();
-                                            } catch (InterruptedException e) {
-                                                Log.e("Interuption", e.getMessage());
-                                            } catch (ExecutionException e) {
-                                                Log.e("Excution problem", e.getMessage());
-                                            }
+                                                new ConnectionToServer().execute();
                                         } else {
                                             //TODO: no data...
                                             onError(null);
@@ -135,11 +126,19 @@ public class AboutActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * Get the field needed to do a request to facebook
+     * @return a String with the needed field
+     */
     private static String getFields() {
         return ID.get() + "," + NAME.get() + "," + FIRST_NAME.get() + "," + LAST_NAME.get() + "," +
                 EMAIL.get() + "," + GENDER.get() + "," + BIRTHDAY.get();
     }
 
+    /**
+     * Take the value from the json and put them in sharedPreference , put default_string if not found
+     * @param jsonObject the json in which you take the field
+     */
     private void fillUserData(SafeJSONObject jsonObject) {
         String facebookID = jsonObject.get(ID.get(), SafeJSONObject.DEFAULT_STRING);
         String userName = jsonObject.get(NAME.get(), SafeJSONObject.DEFAULT_STRING);
@@ -171,12 +170,14 @@ public class AboutActivity extends AppCompatActivity {
                 .apply();
     }
 
-
+    /**
+     * Set the loggedText in function of the username in sharedPreference . null = please login , else welcome "username"
+     */
     private void setLoggedText() {
         TextView logged = ((TextView) findViewById(R.id.aboutLogedText));
         String userName = SHARED_PREFS.getString(USERNAME.get(), null);
         if (userName == null) {
-            logged.setText("To start, you have to login:");
+            logged.setText(getString(R.string.welcome_not_logged_text));
             logged.setTextSize(20);
             logged.setTextColor(Color.RED);
         } else {
@@ -187,6 +188,12 @@ public class AboutActivity extends AppCompatActivity {
 
 
     private class ConnectionToServer extends AsyncTask<String, Void, Boolean> {
+        private final ProgressDialog dialog = MainActivity.getLoadingDialog(AboutActivity.this);
+
+        @Override
+        protected void onPreExecute() {
+            dialog.show();
+        }
 
         @Override
         protected Boolean doInBackground(String... params) {
@@ -204,6 +211,7 @@ public class AboutActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean code) {
+            dialog.dismiss();
             if (code) {
                 finish();
             } else {

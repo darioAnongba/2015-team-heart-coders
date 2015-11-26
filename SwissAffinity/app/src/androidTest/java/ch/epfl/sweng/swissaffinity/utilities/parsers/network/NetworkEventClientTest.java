@@ -1,6 +1,5 @@
 package ch.epfl.sweng.swissaffinity.utilities.parsers.network;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.junit.Before;
@@ -29,6 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 
 public class NetworkEventClientTest {
 
@@ -87,6 +87,16 @@ public class NetworkEventClientTest {
         mockServerURL = "http://beecreative.ch";
         mockNetworkProvider = mock(DefaultNetworkProvider.class);
         networkEventClient = new NetworkEventClient(mockServerURL, mockNetworkProvider);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testIllegalURL() {
+        networkEventClient = new NetworkEventClient(null, mockNetworkProvider);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullNetworkProvider() {
+        networkEventClient = new NetworkEventClient(mockServerURL, null);
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -8,6 +8,7 @@ import org.junit.Test;
 import ch.epfl.sweng.swissaffinity.DataForTesting;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by sahinfurkan on 18/11/15.
@@ -17,6 +18,7 @@ public class SafeJSONObjectTest {
     JSONObject json;
     SafeJSONObject jsonFromString;
     SafeJSONObject jsonFromJson;
+
     @Before
     public void setUp() throws JSONException {
         json = DataForTesting.createJSONEvent();
@@ -26,8 +28,8 @@ public class SafeJSONObjectTest {
 
     @Test
     public void identityTest() throws JSONException {
-        assert(jsonFromString.equals(json));
-        assert(jsonFromJson.equals(json));
+        assertEquals(jsonFromString.toString(), json.toString());
+        assertEquals(jsonFromJson.toString(), json.toString());
     }
 
     @Test
