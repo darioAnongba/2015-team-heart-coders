@@ -30,9 +30,6 @@ public class EventExpandableListAdapter extends AbstractExpandableListAdapter<St
      */
     public EventExpandableListAdapter(Context context) {
         super(context);
-        for (String group : getGroups()) {
-            addGroup(group);
-        }
     }
 
     public List<String> getGroups() {
@@ -42,11 +39,11 @@ public class EventExpandableListAdapter extends AbstractExpandableListAdapter<St
     }
 
     public void setData(List<Event> myEvents, List<Event> upcomingEvents) {
-        assert getGroups() != null && getGroups().size() >= 2;
         Map<String, List<Event>> data = new HashMap<>();
-        data.put((String) getGroup(0), myEvents);
-        data.put((String) getGroup(1), upcomingEvents);
-        super.setData(getGroups(), data);
+        List<String> groups = getGroups();
+        data.put(groups.get(0), myEvents);
+        data.put(groups.get(1), upcomingEvents);
+        super.setData(groups, data);
     }
 
     @Override

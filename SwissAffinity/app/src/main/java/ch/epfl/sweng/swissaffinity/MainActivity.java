@@ -9,13 +9,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
 import ch.epfl.sweng.swissaffinity.utilities.DataManager;
-import ch.epfl.sweng.swissaffinity.utilities.network.ServerTags;
 
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
@@ -80,14 +78,17 @@ public class MainActivity extends AppCompatActivity {
         String userName = getSharedPrefs().getString(USERNAME.get(), "");
         TextView textView = (TextView) findViewById(R.id.mainWelcomeText);
         textView.setText(String.format(welcome, userName));
-        textView.setVisibility(View.VISIBLE);
 
         boolean withDialog = true;
         if (DataManager.hasData()) {
             DataManager.setData(mListView);
             withDialog = false;
         }
-        new DownloadEventsTask().execute(withDialog);
+        if (DataManager.isConnected(this)) {
+            new DownloadEventsTask().execute(withDialog);
+        } else {
+            DataManager.displayAlert(this);
+        }
     }
 
     private final class DownloadEventsTask extends AsyncTask<Boolean, Boolean, Void> {

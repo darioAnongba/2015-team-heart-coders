@@ -1,6 +1,8 @@
 package ch.epfl.sweng.swissaffinity.utilities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -11,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.MainActivity;
+import ch.epfl.sweng.swissaffinity.R;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
@@ -62,15 +65,37 @@ public class DataManager {
         USER_CLIENT = userClient;
     }
 
-    public static boolean isNetworkConnected(Context context) {
+    public static boolean hasData() {
+        return !MY_EVENTS.isEmpty() || !UPCOMING_EVENTS.isEmpty();
+    }
+
+    public static boolean isConnected(Context context) {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo network = connectivityManager.getActiveNetworkInfo();
         return network != null && network.isConnected();
     }
 
-    public static boolean hasData() {
-        return !MY_EVENTS.isEmpty() || !UPCOMING_EVENTS.isEmpty();
+    public static void displayAlert(final Context context) {
+        if (!isConnected(context)) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+            alert.setTitle(R.string.alert_no_internet)
+                 .setMessage(R.string.alert_message)
+                 .setPositiveButton(
+                         R.string.alert_positive, new DialogInterface.OnClickListener() {
+                             public void onClick(DialogInterface dialog, int which) {
+                                 displayAlert(context);
+                                 dialog.dismiss();
+                             }
+                         })
+                 .setNegativeButton(
+                         R.string.alert_negative, new DialogInterface.OnClickListener() {
+                             public void onClick(DialogInterface dialog, int which) {
+                                 dialog.dismiss();
+                             }
+                         });
+            alert.show();
+        }
     }
 
     public static void updateData() {
@@ -93,11 +118,13 @@ public class DataManager {
     }
 
     public static void setData(ExpandableListView listView) {
-        EventExpandableListAdapter adapter =
-                (EventExpandableListAdapter) listView.getExpandableListAdapter();
-        adapter.setData(MY_EVENTS, UPCOMING_EVENTS);
-        for (int i = 0; i < adapter.getGroupCount(); ++i) {
-            listView.expandGroup(i);
+        if (hasData()) {
+            EventExpandableListAdapter adapter =
+                    (EventExpandableListAdapter) listView.getExpandableListAdapter();
+            adapter.setData(MY_EVENTS, UPCOMING_EVENTS);
+            for (int i = 0; i < adapter.getGroupCount(); ++i) {
+                listView.expandGroup(i);
+            }
         }
     }
 }
