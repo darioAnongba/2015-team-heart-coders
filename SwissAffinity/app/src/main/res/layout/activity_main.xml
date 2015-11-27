@@ -13,17 +13,15 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:text="@string/welcome_registered_text"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:visibility="invisible"/>
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <ExpandableListView
         android:id="@+id/mainEventListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:choiceMode="singleChoice"
-        android:transitionGroup="false"
-        android:smoothScrollbar="true"
-        android:headerDividersEnabled="true"/>
+        android:headerDividersEnabled="true"
+        android:smoothScrollbar="true"/>
 
 </LinearLayout>
 
