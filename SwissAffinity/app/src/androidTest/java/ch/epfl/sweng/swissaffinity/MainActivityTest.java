@@ -1,13 +1,20 @@
 package ch.epfl.sweng.swissaffinity;
 
+import android.app.ActivityManager;
+import android.app.Instrumentation;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.rule.ActivityTestRule;
 import android.test.ActivityInstrumentationTestCase2;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.List;
@@ -29,8 +36,21 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
  * Created by sahinfurkan on 26/11/15.
  */
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
-    public MainActivityTest() {
-        super(MainActivity.class);
+
+    private IntentServiceIdlingResource idlingResource;
+    @Rule
+    public ActivityTestRule<AboutActivity> activityRule = new ActivityTestRule<>(AboutActivity.class);
+
+    @Before
+    public void registerIntentIdling() {
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        idlingResource = new IntentServiceIdlingResource(instrumentation.getTargetContext());
+        Espresso.registerIdlingResources(idlingResource);
+    }
+
+    @After
+    public void unregisterIntentIdling() {
+        Espresso.unregisterIdlingResources(idlingResource);
     }
 
     @Override
@@ -39,15 +59,19 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         injectInstrumentation(InstrumentationRegistry.getInstrumentation());
     }
 
+    public MainActivityTest() {
+        super(MainActivity.class);
+    }
+
     public void testCanGreetUsers() {
         getActivity();
 
-        if (MainActivity.SHARED_PREFS.getString(USERNAME.get(), "").equals(""))
+        if (MainActivity.mSharedPrefs.getString(USERNAME.get(), "").equals(""))
             onView(withId(R.id.mainWelcomeText)).check(matches(withText(R.string.welcome_not_registered_text)));
         else {
             String welcomeText = String.format(
                     MainActivity.mContext.getString(R.string.welcome_registered_text),
-                    MainActivity.SHARED_PREFS.getString(USERNAME.get(), ""));
+                    MainActivity.mSharedPrefs.getString(USERNAME.get(), ""));
             onView(withId(R.id.mainWelcomeText)).check(matches(withText(welcomeText)));
         }
     }
@@ -64,12 +88,12 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         onView(withId(R.id.action_settings)).perform(click());
         pressBack();
 
-        if (MainActivity.SHARED_PREFS.getString(USERNAME.get(), "").equals(""))
+        if (MainActivity.mSharedPrefs.getString(USERNAME.get(), "").equals(""))
             onView(withId(R.id.mainWelcomeText)).check(matches(withText(R.string.welcome_not_registered_text)));
         else {
             String welcomeText = String.format(
                     MainActivity.mContext.getString(R.string.welcome_registered_text),
-                    MainActivity.SHARED_PREFS.getString(USERNAME.get(), ""));
+                    MainActivity.mSharedPrefs.getString(USERNAME.get(), ""));
             onView(withId(R.id.mainWelcomeText)).check(matches(withText(welcomeText)));
 
         }
@@ -84,11 +108,13 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     public void testGroupNumOfEventList(){
         getActivity();
-        if (MainActivity.SHARED_PREFS.getString(USERNAME.get(), "").equals(""))
+        if (MainActivity.mSharedPrefs.getString(USERNAME.get(), "").equals(""))
             assert(MainActivity.mListAdapter.getGroupCount() == 0);
         else{
             assert(MainActivity.mListAdapter.getGroupCount() == 2);
         }
     }
+
+
 
 }

@@ -13,6 +13,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
+import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.DataManager;
 
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
@@ -54,26 +55,9 @@ public class MainActivity extends AppCompatActivity {
         mSharedPrefs = getSharedPreferences(SHARED_PREFS_ID, MODE_PRIVATE);
         mListView = (ExpandableListView) findViewById(R.id.mainEventListView);
         mListView.setAdapter(new EventExpandableListAdapter(this));
-
-<<<<<<< HEAD
-        EVENT_CLIENT = getEventClient();
-        USER_CLIENT = getUserClient();
-        SHARED_PREFS = getSharedPreferences(SHARED_PREFS_ID, MODE_PRIVATE);
-        mListAdapter = new EventExpandableListAdapter(this);
         mContext = this;
 
-        if (isNetworkConnected(this)) {
-            fetchUser();
-            fetchEvents();
-        } else if (savedInstanceState != null) {
-            Toast.makeText(this, "We get saved state!", Toast.LENGTH_LONG).show();
-            //TODO: get saved state of the app... (and save it also!)
-        } else {
-            Toast.makeText(this, "No Network", Toast.LENGTH_LONG).show();
-        }
-=======
         updateUI();
->>>>>>> origin/max-dev
     }
 
     @Override
