@@ -15,7 +15,7 @@ public class DateParserTest {
     @Before
     public void setUp() throws ParserException {
 
-        testDate = DateParser.parseFromString("2014-06-09T10:11:12+0100");//GMT + 1 time in Switzlerand.
+        testDate = DateParser.parseFromString("2014-06-09T10:11:12+0100", DateParser.SERVER_DATE_FORMAT);//GMT + 1 time in Switzlerand.
     }
 
     //TODO: Fix for correct behaviour... US vs Locale see Jenkins console output
@@ -28,7 +28,7 @@ public class DateParserTest {
 
     @Test (expected = ParserException.class)
     public void dateExceptionTest() throws ParserException {
-        testDate = DateParser.parseFromString("2014-06-09A10:11:12+0100");
+        testDate = DateParser.parseFromString("2014-06-09A10:11:12+0100", DateParser.SERVER_DATE_FORMAT);
     }
 
 

@@ -17,6 +17,7 @@ import ch.epfl.sweng.swissaffinity.MainActivity;
 import ch.epfl.sweng.swissaffinity.R;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
+import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClient;
@@ -128,7 +129,13 @@ public class DataManager {
         UPCOMING_EVENTS.addAll(upcomingEvents);
     }
 
-    public static void setData(ExpandableListView listView) {
+    private static List<String> getGroups(Context context) {
+        String myEvents = context.getString(R.string.my_events);
+        String upcomingEvents = context.getString(R.string.upcoming_events);
+        return Arrays.asList(myEvents, upcomingEvents);
+    }
+
+    public static void displayData(ExpandableListView listView) {
         if (hasData()) {
             EventExpandableListAdapter adapter =
                     (EventExpandableListAdapter) listView.getExpandableListAdapter();
@@ -139,7 +146,7 @@ public class DataManager {
         }
     }
 
-    public static void deleteUserData() {
+    public static void deleteUser() {
         MY_EVENTS.clear();
         UPCOMING_EVENTS.clear();
         MainActivity.getSharedPrefs().edit()
@@ -153,33 +160,15 @@ public class DataManager {
                     .apply();
     }
 
-    /**
-     * Take the value from the json and put them in sharedPreference , put default_string if not found
-     *
-     * @param userJson the json in which you take the field
-     */
-    public static void fillUserData(SafeJSONObject userJson) {
-        String facebookID = userJson.get(ID.get(), DEFAULT_STRING);
-        String userName = userJson.get(NAME.get(), DEFAULT_STRING);
-        String lastName = userJson.get(LAST_NAME.get(), DEFAULT_STRING);
-        String firstName = userJson.get(FIRST_NAME.get(), DEFAULT_STRING);
-        String gender = userJson.get(GENDER.get(), DEFAULT_STRING);
-        String birthday = userJson.get(BIRTHDAY.get(), DEFAULT_STRING);
-        String email = userJson.get(EMAIL.get(), DEFAULT_STRING);
+    public static void saveUser(User user) {
         MainActivity.getSharedPrefs().edit()
-                    .putString(FACEBOOK_ID.get(), facebookID)
-                    .putString(USERNAME.get(), userName)
-                    .putString(LAST_NAME.get(), lastName)
-                    .putString(FIRST_NAME.get(), firstName)
-                    .putString(GENDER.get(), gender)
-                    .putString(BIRTHDAY.get(), birthday)
-                    .putString(EMAIL.get(), email)
+                    .putString(FACEBOOK_ID.get(), user.getFacebookId())
+                    .putString(USERNAME.get(), user.getUsername())
+                    .putString(LAST_NAME.get(), user.getLastName())
+                    .putString(FIRST_NAME.get(), user.getFirstName())
+                    .putString(GENDER.get(), user.getGender().get())
+                    .putString(BIRTHDAY.get(), user.getBirthDate().toString())
+                    .putString(EMAIL.get(), user.getEmail())
                     .apply();
-    }
-
-    public static List<String> getGroups(Context context) {
-        String myEvents = context.getString(R.string.my_events);
-        String upcomingEvents = context.getString(R.string.upcoming_events);
-        return Arrays.asList(myEvents, upcomingEvents);
     }
 }

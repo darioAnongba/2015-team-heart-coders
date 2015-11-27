@@ -20,8 +20,8 @@ public class AddressParser extends Parser<Address> {
     public Address parse(SafeJSONObject jsonObject) throws ParserException {
 
         String street = jsonObject.get(STREET.get(), "");
-        int streetNum = jsonObject.get(STREET_NUMBER.get(), -1);
-        int zipCode = jsonObject.get(ZIP_CODE.get(), -1);
+        int streetNum = jsonObject.get(STREET_NUMBER.get(), 0);
+        int zipCode = jsonObject.get(ZIP_CODE.get(), 0);
         String city = jsonObject.get(CITY.get(), "");
         String province = jsonObject.get(PROVINCE.get(), "");
         String country = jsonObject.get(COUNTRY.get(), "");

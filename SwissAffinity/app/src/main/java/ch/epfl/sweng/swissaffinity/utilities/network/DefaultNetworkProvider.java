@@ -33,15 +33,19 @@ public class DefaultNetworkProvider implements NetworkProvider {
         }
         return fetchContent(conn);
     }
+
     /**
-     *The method to write a user into the server and get his response
+     * The method to write a user into the server and get his response
+     *
      * @param serverURL The server where you're posting the json
-     * @param json The json of that you want to send to the servers
+     * @param json      The json of that you want to send to the servers
+     *
      * @return The server response (error or the good content of a json that is written in the database
+     *
      * @throws IOException if one constructor is not valid ( OutputStreamWritter);
      */
     @Override
-    public  String postContent(String serverURL, JSONObject json) throws IOException {
+    public String postContent(String serverURL, JSONObject json) throws IOException {
         URL url = new URL(serverURL);
         String response = null;
         HttpURLConnection conn = getConnection(url);
@@ -57,9 +61,9 @@ public class DefaultNetworkProvider implements NetworkProvider {
         int responseCode = conn.getResponseCode();
         if ((responseCode >= HTTP_SUCCESS_START) && (responseCode <= HTTP_SUCCESS_END)) {
             response = fetchContent(conn);
-        } else if(responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR){
+        } else if (responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR) {
             throw new ConnectException();
-        } else if(responseCode == HttpURLConnection.HTTP_BAD_REQUEST) {
+        } else if (responseCode == HttpURLConnection.HTTP_BAD_REQUEST) {
             response = fetchErrorContent(conn);
         } else {
             throw new ConnectException();
@@ -68,9 +72,12 @@ public class DefaultNetworkProvider implements NetworkProvider {
     }
 
     /**
-     *The method to check if the connection is successful
+     * The method to check if the connection is successful
+     *
      * @param conn the urlConnection
+     *
      * @return true if the server return 200 as response code , false else
+     *
      * @throws IOException
      */
     private static boolean isConnectionSuccess(HttpURLConnection conn) throws IOException {
@@ -82,20 +89,6 @@ public class DefaultNetworkProvider implements NetworkProvider {
         int response = conn.getResponseCode();
         return (response >= HTTP_SUCCESS_START) && (response <= HTTP_SUCCESS_END);
     }
-
-    /**
-     * Checkthe connection using the IsConnectionSuccess
-     * @param serverURL the server Url
-     * @return The boolean to see if you get http response code == 200
-     * @throws IOException
-     */
-    public static Boolean checkConnection(String serverURL) throws IOException {
-        URL url = new URL(serverURL);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        return isConnectionSuccess(conn);
-    }
-
-
 
     /**
      * make a String out of the GET request to the server
@@ -118,9 +111,10 @@ public class DefaultNetworkProvider implements NetworkProvider {
     }
 
     /**
-     *
      * @param connection the HttpUrlConnection from where you're reading the errorStream
+     *
      * @return The errorStream that the server sent you
+     *
      * @throws IOException If the connection.getErrorStream cannot be open
      */
     private String fetchErrorContent(HttpURLConnection connection) throws IOException {

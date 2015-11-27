@@ -34,10 +34,12 @@ public class UserTest {
     @Before
     public void setUp() throws MalformedURLException, ParserException {
         user = createUser();
-        address = new Address("Switzerland",1000,"Lausanne","Vaud",1,"Rue du Test");
+        address = new Address("Switzerland", 1000, "Lausanne", "Vaud", 1, "Rue du Test");
         locations = new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1)));
         events = new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent()));
-        birthday = DateParser.parseFromString("1983-11-16T16:00:00+0100");
+        birthday = DateParser.parseFromString(
+                "1983-11-16T16:00:00+0100",
+                DateParser.SERVER_DATE_FORMAT);
         url = new URL("http://testUrl.com");
     }
 
@@ -48,7 +50,7 @@ public class UserTest {
 
     @Test
     public void testGetFacebookId() {
-        assertEquals(2001, user.getFacebookId());
+        assertEquals("2001", user.getFacebookId());
     }
 
     @Test
@@ -91,18 +93,6 @@ public class UserTest {
         assertEquals("testProfession", user.getProfession());
     }
 
-/*    @Test
-    public void testGetAreaOfInterest() {
-        for (int i = 0; i < locations.size(); i++) {
-            assertEquals(locations.get(i), user.getAreasOfInterest().get(i));
-        }
-    }
-
-    @Test
-         public void testGetAddress() {
-        assertEquals(address, user.getAddress());
-    }*/
-
     @Test
     public void testGetBirthDate() {
         assertEquals(birthday, user.getBirthDate());
@@ -128,8 +118,9 @@ public class UserTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testIDException() throws ParserException {
-        user = new User(-10,
-                2001,
+        user = new User(
+                -10,
+                "2001",
                 "testUsername",
                 "testEmail",
                 "testLastName",
@@ -149,8 +140,9 @@ public class UserTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testFacebookIDException() throws ParserException {
-        user = new User(1,
-                -10,
+        user = new User(
+                1,
+                null,
                 "testUsername",
                 "testEmail",
                 "testLastName",
@@ -170,8 +162,9 @@ public class UserTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testUsernameException() throws ParserException {
-        user = new User(1,
-                2001,
+        user = new User(
+                1,
+                "2001",
                 null,
                 "testEmail",
                 "testLastName",
@@ -191,8 +184,9 @@ public class UserTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testEmailException() throws ParserException {
-        user = new User(1,
-                2001,
+        user = new User(
+                1,
+                "2001",
                 "testUsername",
                 null,
                 "testLastName",
@@ -212,8 +206,9 @@ public class UserTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testLastNameException() throws ParserException {
-        user = new User(1,
-                2001,
+        user = new User(
+                1,
+                "2001",
                 "testUsername",
                 "testEmail",
                 null,
@@ -233,8 +228,9 @@ public class UserTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testFirstNameException() throws ParserException {
-        user = new User(1,
-                2001,
+        user = new User(
+                1,
+                "2001",
                 "testUsername",
                 "testEmail",
                 "testLastName",
@@ -254,8 +250,9 @@ public class UserTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testPhoneException() throws ParserException {
-        user = new User(1,
-                2001,
+        user = new User(
+                1,
+                "2001",
                 "testUsername",
                 "testEmail",
                 "testLastName",
@@ -275,8 +272,9 @@ public class UserTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testHomePhoneException() throws ParserException {
-        user = new User(1,
-                2001,
+        user = new User(
+                1,
+                "2001",
                 "testUsername",
                 "testEmail",
                 "testLastName",
@@ -297,8 +295,9 @@ public class UserTest {
     @Test(expected = IllegalArgumentException.class)
     public void testAddressException() throws ParserException {
 
-        new User(1,
-                2001,
+        new User(
+                1,
+                "2001",
                 "testUsername",
                 "testEmail",
                 "testLastName",
@@ -318,8 +317,9 @@ public class UserTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testGenderException() throws ParserException {
-        user = new User(1,
-                2001,
+        user = new User(
+                1,
+                "2001",
                 "testUsername",
                 "testEmail",
                 "testLastName",
@@ -339,8 +339,9 @@ public class UserTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testBirthdayException() throws ParserException {
-        user = new User(1,
-                2001,
+        user = new User(
+                1,
+                "2001",
                 "testUsername",
                 "testEmail",
                 "testLastName",
@@ -360,8 +361,9 @@ public class UserTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testProfessionException() throws ParserException {
-        user = new User(1,
-                2001,
+        user = new User(
+                1,
+                "2001",
                 "testUsername",
                 "testEmail",
                 "testLastName",
@@ -381,8 +383,9 @@ public class UserTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testURLException() throws ParserException {
-        user = new User(1,
-                2001,
+        user = new User(
+                1,
+                "2001",
                 "testUsername",
                 "testEmail",
                 "testLastName",
@@ -402,8 +405,9 @@ public class UserTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testAreasOfInterestException() throws ParserException {
-        user = new User(1,
-                2001,
+        user = new User(
+                1,
+                "2001",
                 "testUsername",
                 "testEmail",
                 "testLastName",
@@ -423,8 +427,9 @@ public class UserTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testEventAttendedException() throws ParserException {
-        user = new User(1,
-                2001,
+        user = new User(
+                1,
+                "2001",
                 "testUsername",
                 "testEmail",
                 "testLastName",
@@ -441,7 +446,6 @@ public class UserTest {
                 new ArrayList<>(Arrays.asList(LOCATIONS.get(0), LOCATIONS.get(1))),
                 null);
     }
-
 
 
 }

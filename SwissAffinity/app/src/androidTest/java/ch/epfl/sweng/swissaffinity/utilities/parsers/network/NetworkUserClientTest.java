@@ -71,6 +71,7 @@ public class NetworkUserClientTest {
     public void testFetchByUsername() throws UserClientException {
         returnedUser = networkUserClient.fetchByUsername("testUsername");
 
+
         assertEquals(testUser.getId(), returnedUser.getId());
         assertEquals(testUser.getFacebookId(), returnedUser.getFacebookId());
 
