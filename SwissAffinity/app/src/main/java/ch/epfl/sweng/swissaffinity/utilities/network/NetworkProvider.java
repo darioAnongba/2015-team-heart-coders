@@ -11,6 +11,8 @@ import java.net.URL;
  * retrieve data from a given {@link URL}.
  */
 public interface NetworkProvider {
+    String SERVER_URL = "http://beecreative.ch";
+
     /**
      * Returns a new {@link HttpURLConnection} object for the given {@link URL}.
      *
