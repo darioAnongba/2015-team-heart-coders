@@ -9,7 +9,7 @@ import ch.epfl.sweng.swissaffinity.utilities.Location;
 /**
  * Representation of a basic event.
  */
-public abstract class Event implements Serializable {
+public abstract class Event implements Serializable, Comparable<Event> {
     /**
      * The possible states of an event.
      */
@@ -328,5 +328,10 @@ public abstract class Event implements Serializable {
             return this;
         }
 
+    }
+
+    @Override
+    public int compareTo(Event other) {
+        return mDateBegin.compareTo(other.mDateBegin);
     }
 }
