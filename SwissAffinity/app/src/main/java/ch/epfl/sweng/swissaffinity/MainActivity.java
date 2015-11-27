@@ -13,7 +13,6 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
-import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.DataManager;
 
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
@@ -90,13 +89,13 @@ public class MainActivity extends AppCompatActivity {
             withDialog = false;
         }
         if (DataManager.isConnected(this)) {
-            new DownloadEventsTask().execute(withDialog);
+            new DownloadTask().execute(withDialog);
         } else {
             DataManager.displayAlert(this);
         }
     }
 
-    private final class DownloadEventsTask extends AsyncTask<Boolean, Boolean, Void> {
+    private final class DownloadTask extends AsyncTask<Boolean, Boolean, Void> {
         private final ProgressDialog dialog = getLoadingDialog(MainActivity.this);
 
         @Override

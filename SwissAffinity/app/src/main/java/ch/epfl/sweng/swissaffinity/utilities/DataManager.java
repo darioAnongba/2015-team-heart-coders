@@ -11,12 +11,15 @@ import android.widget.ExpandableListView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ch.epfl.sweng.swissaffinity.MainActivity;
 import ch.epfl.sweng.swissaffinity.R;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
+import ch.epfl.sweng.swissaffinity.users.Registration;
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
@@ -45,6 +48,7 @@ public class DataManager {
 
     private final static List<Event> MY_EVENTS = new ArrayList<>();
     private final static List<Event> UPCOMING_EVENTS = new ArrayList<>();
+    private final static Map<Integer, Integer> REGISTRATIONS = new HashMap<>();
 
     private static EventClient EVENT_CLIENT;
     private static UserClient USER_CLIENT;
@@ -113,16 +117,22 @@ public class DataManager {
     public static void updateData() {
         List<Event> myEvents = new ArrayList<>();
         List<Event> upcomingEvents = new ArrayList<>();
+        List<Registration> registrations = new ArrayList<>();
         String userName = MainActivity.getSharedPrefs().getString(USERNAME.get(), "");
         try {
             upcomingEvents.addAll(getEventClient().fetchAll());
             myEvents.addAll(getEventClient().fetchAllForUser(userName));
+            registrations.addAll(getEventClient().fetchRegistrationsForUser(userName));
         } catch (EventClientException e) {
             Log.e("FetchEvent", e.getMessage());
         }
         upcomingEvents.removeAll(myEvents);
         Collections.sort(myEvents);
         Collections.sort(upcomingEvents);
+        REGISTRATIONS.clear();
+        for (Registration registration : registrations) {
+            REGISTRATIONS.put(registration.getEventId(), registration.getId());
+        }
         MY_EVENTS.clear();
         MY_EVENTS.addAll(myEvents);
         UPCOMING_EVENTS.clear();
@@ -147,6 +157,7 @@ public class DataManager {
     }
 
     public static void deleteUser() {
+        REGISTRATIONS.clear();
         MY_EVENTS.clear();
         UPCOMING_EVENTS.clear();
         MainActivity.getSharedPrefs().edit()
@@ -170,5 +181,27 @@ public class DataManager {
                     .putString(BIRTHDAY.get(), user.getBirthDate().toString())
                     .putString(EMAIL.get(), user.getEmail())
                     .apply();
+    }
+
+    public static int getRegistrationId(int eventId) {
+        Integer registrationId = REGISTRATIONS.get(eventId);
+        if (registrationId == null) {
+            registrationId = -1;
+        }
+        return registrationId;
+    }
+
+    public static Event getEvent(int eventId) {
+        for (Event event : MY_EVENTS) {
+            if (event.getId() == eventId) {
+                return event;
+            }
+        }
+        for (Event event : UPCOMING_EVENTS) {
+            if (event.getId() == eventId) {
+                return event;
+            }
+        }
+        return null;
     }
 }

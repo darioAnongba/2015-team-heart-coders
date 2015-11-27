@@ -1,5 +1,6 @@
 package ch.epfl.sweng.swissaffinity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,7 +19,6 @@ import ch.epfl.sweng.swissaffinity.utilities.DataManager;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClientException;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 
-import static ch.epfl.sweng.swissaffinity.MainActivity.EXTRA_EVENT;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 import static ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser.dateToString;
 
@@ -25,20 +26,29 @@ public class EventActivity extends AppCompatActivity {
 
     private Event mEvent;
     private String mUserName;
+    private int mRegistrationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
-        Intent intent = getIntent();
-        mEvent = (Event) intent.getSerializableExtra(EXTRA_EVENT);
-        mUserName = MainActivity.getSharedPrefs().getString(USERNAME.get(), "");
-        new DownloadImageTask().execute();
-        fillEventData();
+        mEvent = DataManager.getEvent(getIntent().getIntExtra(MainActivity.EXTRA_EVENT, -1));
+        new DownloadImageTask().execute(mEvent.getImagePath());
     }
 
-    private void fillEventData() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mUserName = MainActivity.getSharedPrefs().getString(USERNAME.get(), "");
+        mEvent = DataManager.getEvent(getIntent().getIntExtra(MainActivity.EXTRA_EVENT, -1));
+        mRegistrationId = DataManager.getRegistrationId(mEvent.getId());
+        Button button = (Button) findViewById(R.id.eventRegistration);
+        if (mRegistrationId > 0) {
+            button.setText("Unregister");
+        } else {
+            button.setText("Register");
+        }
         ((TextView) findViewById(R.id.eventName)).setText(mEvent.getName());
         ((TextView) findViewById(R.id.eventDateBegin)).setText(dateToString(mEvent.getDateBegin()));
         ((TextView) findViewById(R.id.eventDateEnd)).setText(dateToString(mEvent.getDateEnd()));
@@ -59,23 +69,26 @@ public class EventActivity extends AppCompatActivity {
                     getString(R.string.event_registered_people), women, maxWomen, men, maxMen);
             ((TextView) findViewById(R.id.eventRegisteredPeople)).setText(menWomen);
         }
-        //TODO: reflect all event details.
     }
 
     public void register(View view) {
         if (mUserName.isEmpty()) {
             startActivity(new Intent(EventActivity.this, AboutActivity.class));
         } else {
-            new RegisterEventTask().execute(mUserName, mEvent.getId());
+            String operation = "r";
+            if (mRegistrationId > 0) {
+                operation = "u";
+            }
+            new RegisterEventTask().execute(mUserName, "" + mEvent.getId(), operation);
         }
     }
 
-    private class DownloadImageTask extends AsyncTask<Void, Void, Bitmap> {
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         @Override
-        protected Bitmap doInBackground(Void... params) {
+        protected Bitmap doInBackground(String... params) {
             Bitmap image = null;
             try {
-                image = DataManager.getEventClient().imageFor(mEvent);
+                image = DataManager.getEventClient().imageFor(params[0]);
             } catch (EventClientException e) {
                 // no image.
             }
@@ -92,16 +105,32 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private class RegisterEventTask extends AsyncTask<String, Void, String> {
+        private final ProgressDialog dialog = MainActivity.getLoadingDialog(EventActivity.this);
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.show();
+        }
+
         @Override
         protected String doInBackground(String... params) {
             String response = null;
             try {
-                response = DataManager.getUserClient().registerUser(
-                        params[0],
-                        Integer.parseInt(params[1]));
+                if (params[2].equals("r") && !mUserName.equals("")) {
+                    response = DataManager.getUserClient().registerUser(
+                            params[0],
+                            Integer.parseInt(params[1]));
+                } else if (params[2].equals("u")) {
+                    int ret = DataManager.getUserClient().unregisterUser(mRegistrationId);
+                    if (ret == 204) {
+                        response = "";
+                    }
+                }
             } catch (UserClientException e) {
                 Log.e("RegisterEventTask", e.getMessage());
             }
+            DataManager.updateData();
             return response;
         }
 
@@ -111,14 +140,10 @@ public class EventActivity extends AppCompatActivity {
                 Toast.makeText(EventActivity.this, "Problem with registration", Toast.LENGTH_SHORT)
                      .show();
             } else if (response.equals("")) {
-                Toast.makeText(EventActivity.this, "REGISTERED" + response, Toast.LENGTH_SHORT)
-                     .show();
-                finish();
-            } else {
-                Toast.makeText(
-                        EventActivity.this,
-                        "Not handled yet :)" + response,
-                        Toast.LENGTH_SHORT).show();
+                onResume();
+            }
+            if (dialog.isShowing()) {
+                dialog.dismiss();
             }
         }
     }

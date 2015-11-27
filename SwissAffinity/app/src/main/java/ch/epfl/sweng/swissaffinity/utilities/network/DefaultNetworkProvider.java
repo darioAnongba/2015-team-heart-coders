@@ -47,7 +47,7 @@ public class DefaultNetworkProvider implements NetworkProvider {
     @Override
     public String postContent(String serverURL, JSONObject json) throws IOException {
         URL url = new URL(serverURL);
-        String response = null;
+        String response;
         HttpURLConnection conn = getConnection(url);
         conn.setDoInput(true);
         conn.setDoOutput(true);
@@ -69,6 +69,16 @@ public class DefaultNetworkProvider implements NetworkProvider {
             throw new ConnectException();
         }
         return response;
+    }
+
+
+    public int deleteContent(String serverURL) throws IOException {
+        URL url = new URL(serverURL);
+        HttpURLConnection conn = getConnection(url);
+        conn.setDoOutput(true);
+        conn.setRequestMethod("DELETE");
+        conn.connect();
+        return conn.getResponseCode();
     }
 
     /**
