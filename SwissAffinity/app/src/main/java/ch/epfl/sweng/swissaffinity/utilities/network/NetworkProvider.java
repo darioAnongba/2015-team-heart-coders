@@ -39,4 +39,6 @@ public interface NetworkProvider {
 
 
     String postContent(String serverURL, JSONObject json) throws IOException;
+
+    public int deleteContent(String serverURL) throws IOException;
 }

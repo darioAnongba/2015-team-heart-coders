@@ -21,18 +21,38 @@ public interface UserClient {
     User fetchByUsername(String userName) throws UserClientException;
 
     /**
-     * Fetch a user reagrding his ID or Facebook ID
+     * Fetch a user regarding his ID or Facebook ID
      *
-     * @param id the user facebook ID
+     * @param facebookId the user facebook ID
      *
      * @return the user
      *
      * @throws UserClientException if a problem occurs
      */
-    User fetchByFacebookID(String id) throws UserClientException;
+    User fetchByFacebookID(String facebookId) throws UserClientException;
 
+    /**
+     * Post a new user to the server.
+     *
+     * @param jsonUserObject a json user
+     *
+     * @return the json object back from server.
+     *
+     * @throws UserClientException if a problem occurs.
+     */
     JSONObject postUser(JSONObject jsonUserObject) throws UserClientException;
 
-    //TODO: as code develops, calls to this method should be restrained to the User class. It will probably be relocated.
+    /**
+     * Register a user to an event.
+     *
+     * @param username the name of the user.
+     * @param eventId  the ID of the event.
+     *
+     * @return the response from server.
+     *
+     * @throws UserClientException if a problem occurs.
+     */
     String registerUser(String username, int eventId) throws UserClientException;
+
+    int unregisterUser(int registrationId) throws UserClientException;
 }

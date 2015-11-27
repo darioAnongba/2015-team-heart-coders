@@ -81,8 +81,8 @@ public abstract class Event implements Serializable, Comparable<Event> {
      *
      * @return the id
      */
-    public String getId() {
-        return String.valueOf(mId);
+    public int getId() {
+        return mId;
     }
 
     /**

@@ -25,7 +25,7 @@ public class NetworkUserClient implements UserClient {
     private final NetworkProvider mNetworkProvider;
 
     public NetworkUserClient(String serverUrl, NetworkProvider networkProvider) {
-        if (networkProvider == null || serverUrl == null){
+        if (networkProvider == null || serverUrl == null) {
             throw new IllegalArgumentException("Null networkProvider");
         }
         mServerUrl = serverUrl;
@@ -44,23 +44,24 @@ public class NetworkUserClient implements UserClient {
 
     @Override
     public JSONObject postUser(JSONObject jsonObject) throws UserClientException {
-        try{
+        try {
             jsonObject.get("rest_user_registration");
             throw new UserClientException("Malformed user jsonObject.");
 
-        } catch (JSONException e1){
-            try{
-                if( !(jsonObject.get("email") instanceof String) ||
-                        !(jsonObject.get("username") instanceof String) ||
-                        !(jsonObject.get("firstName") instanceof String) ||
-                        !(jsonObject.get("lastName") instanceof String) ||
-                        !(jsonObject.get("gender") instanceof String) ||
-                        !(jsonObject.get("birthDate") instanceof String) ||
-                        !(jsonObject.get("facebookId") instanceof String) ||
-                        !(jsonObject.get("plainPassword") instanceof String)){
+        } catch (JSONException e1) {
+            try {
+                if (!(jsonObject.get("email") instanceof String) ||
+                    !(jsonObject.get("username") instanceof String) ||
+                    !(jsonObject.get("firstName") instanceof String) ||
+                    !(jsonObject.get("lastName") instanceof String) ||
+                    !(jsonObject.get("gender") instanceof String) ||
+                    !(jsonObject.get("birthDate") instanceof String) ||
+                    !(jsonObject.get("facebookId") instanceof String) ||
+                    !(jsonObject.get("plainPassword") instanceof String))
+                {
                     throw new UserClientException("Malformed user jsonObject.");
                 }
-            }catch (JSONException e2){
+            } catch (JSONException e2) {
                 throw new UserClientException(e2);
             }
         }
@@ -77,7 +78,7 @@ public class NetworkUserClient implements UserClient {
 
     @Override
     public String registerUser(String username, int eventId) throws UserClientException {
-        if ((username == null) || eventId < 0){
+        if (username == null || eventId < 0) {
             throw new UserClientException(new IllegalArgumentException());
         }
         String response;
@@ -88,12 +89,25 @@ public class NetworkUserClient implements UserClient {
             registrationObject.put("username", username);
             registrationObject.put("eventId", Integer.toString(eventId));
             requestObject.put("rest_event_registration", registrationObject);
-            response = mNetworkProvider.postContent(mServerUrl + REGISTRATIONS, requestObject );
-            if (!response.equals("")){
+            response = mNetworkProvider.postContent(mServerUrl + REGISTRATIONS, requestObject);
+            if (!response.equals("")) {
                 throw new UserClientException(response);
             }
             return response;
-        } catch (IOException | JSONException e){
+        } catch (IOException | JSONException e) {
+            throw new UserClientException(e);
+        }
+    }
+
+    @Override
+    public int unregisterUser(int registrationId) throws UserClientException {
+        if (registrationId < 0) {
+            throw new UserClientException(new IllegalArgumentException());
+        }
+        try {
+            return mNetworkProvider.deleteContent(
+                    mServerUrl + REGISTRATIONS + "/" + registrationId);
+        } catch (IOException e) {
             throw new UserClientException(e);
         }
     }
@@ -101,7 +115,7 @@ public class NetworkUserClient implements UserClient {
     private User fetch(String nameOrId) throws UserClientException {
         try {
             String content =
-                    mNetworkProvider.getContent(mServerUrl + USERS +"/"+ nameOrId);
+                    mNetworkProvider.getContent(mServerUrl + USERS + "/" + nameOrId);
             SafeJSONObject jsonObject = new SafeJSONObject(content);
             return new UserParser().parse(jsonObject);
         } catch (ParserException | JSONException | IOException e) {
