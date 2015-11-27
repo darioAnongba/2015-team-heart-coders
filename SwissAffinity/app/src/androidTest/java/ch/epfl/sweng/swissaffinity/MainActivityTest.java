@@ -102,16 +102,16 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     public void testEventListAttended(){
         getActivity();
 
-        assert(MainActivity.mListAdapter.getChildrenCount(0)
-                == MainActivity.mUser.getEventsAttended().size());
+        assertEquals(MainActivity.mListAdapter.getChildrenCount(0)
+                , MainActivity.mUser.getEventsAttended().size());
     }
 
     public void testGroupNumOfEventList(){
         getActivity();
         if (MainActivity.mSharedPrefs.getString(USERNAME.get(), "").equals(""))
-            assert(MainActivity.mListAdapter.getGroupCount() == 0);
+            assertEquals(MainActivity.mListAdapter.getGroupCount(), 0);
         else{
-            assert(MainActivity.mListAdapter.getGroupCount() == 2);
+            assertEquals(MainActivity.mListAdapter.getGroupCount(), 2);
         }
     }
 
