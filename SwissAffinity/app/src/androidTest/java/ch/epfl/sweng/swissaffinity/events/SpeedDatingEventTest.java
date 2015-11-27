@@ -24,8 +24,12 @@ public class SpeedDatingEventTest {
         builder = new SpeedDatingEvent.Builder();
 
         try {
-            date1 = DateParser.parseFromString("2015-10-31T20:00:00+0100");
-            date2 = DateParser.parseFromString("2015-10-31T23:59:59+0100");
+            date1 = DateParser.parseFromString(
+                    "2015-10-31T20:00:00+0100",
+                    DateParser.SERVER_DATE_FORMAT);
+            date2 = DateParser.parseFromString(
+                    "2015-10-31T23:59:59+0100",
+                    DateParser.SERVER_DATE_FORMAT);
         } catch (ParserException e) {
             throw new ParserException("Problem with Date creation");
         }
@@ -63,7 +67,9 @@ public class SpeedDatingEventTest {
 
     @Test
     public void testGetLocation() {
-        assertEquals(DataForTesting.LOCATIONS.get(0).getName(), speedDatingEvent.getLocation().getName());
+        assertEquals(
+                DataForTesting.LOCATIONS.get(0).getName(),
+                speedDatingEvent.getLocation().getName());
     }
 
     @Test

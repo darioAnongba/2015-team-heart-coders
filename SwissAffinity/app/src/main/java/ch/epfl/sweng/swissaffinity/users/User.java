@@ -10,6 +10,7 @@ import java.util.List;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.utilities.Address;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
 /**
  * Representation of a user.
@@ -55,7 +56,7 @@ public final class User implements Serializable {
     }
 
     private int mId;
-    private long mFacebookId;
+    private String mFacebookId;
     private String mUsername;
     private String mEmail;
     private String mLastName;
@@ -95,7 +96,7 @@ public final class User implements Serializable {
      */
     public User(
             int id,
-            long facebookId,
+            String facebookId,
             String username,
             String email,
             String lastName,
@@ -112,7 +113,7 @@ public final class User implements Serializable {
             Collection<Location> areasOfInterest,
             List<Event> eventsAttended)
     {
-        if (id < 0 || facebookId < 0 || username == null || email == null || lastName == null ||
+        if (id < 0 || facebookId == null || username == null || email == null || lastName == null ||
             firstName == null || mobilePhone == null || homePhone == null || address == null ||
             gender == null || birthDate == null || profession == null || profilePicture == null ||
             areasOfInterest == null || eventsAttended == null)
@@ -153,7 +154,7 @@ public final class User implements Serializable {
      *
      * @return the Facebook ID
      */
-    public long getFacebookId() {
+    public String getFacebookId() {
         return mFacebookId;
     }
 

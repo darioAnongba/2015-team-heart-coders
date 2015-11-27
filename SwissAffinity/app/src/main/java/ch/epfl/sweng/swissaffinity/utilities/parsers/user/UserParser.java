@@ -48,12 +48,12 @@ public class UserParser extends Parser<User> {
     public User parse(SafeJSONObject jsonObject) throws ParserException {
 
         SafeJSONObject jsonAddress;
-        long facebookId;
+        String facebookId;
         int id;
         //Critical attributes
         try {
             jsonAddress = new SafeJSONObject(jsonObject.getJSONObject(ADDRESS.get()));
-            facebookId = jsonObject.getLong(FACEBOOK_ID.get());
+            facebookId = jsonObject.getString(FACEBOOK_ID.get());
             id = jsonObject.get(ID.get(), SafeJSONObject.DEFAULT_ID);
         } catch (JSONException e){
             throw new ParserException(e);
@@ -117,7 +117,7 @@ public class UserParser extends Parser<User> {
                 locked,
                 enabled,
                 gender,
-                DateParser.parseFromString(birthDate),
+                DateParser.parseFromString(birthDate, DateParser.SERVER_DATE_FORMAT),
                 profession,
                 profilePicture,
                 areasOfInterest,

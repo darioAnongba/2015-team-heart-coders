@@ -25,17 +25,17 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
+import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.DataManager;
-import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
+import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.user.FacebookUserParser;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.user.UserParser;
 
 import static android.widget.Toast.LENGTH_SHORT;
-import static ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider.SERVER_URL;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.GENDER;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ID;
@@ -94,41 +94,25 @@ public class AboutActivity extends AppCompatActivity {
         }
     }
 
+    private void displayToast(String message) {
+        Toast.makeText(AboutActivity.this, message, LENGTH_SHORT).show();
+    }
 
-    private class ConnectionToServer extends AsyncTask<String, Void, Boolean> {
-        private final ProgressDialog dialog = MainActivity.getLoadingDialog(AboutActivity.this);
-
-        @Override
-        protected void onPreExecute() {
-            dialog.show();
-        }
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-
-            boolean code = false;
-            String facebookId = MainActivity.getSharedPrefs().getString(
-                    FACEBOOK_ID.get(),
-                    SafeJSONObject.DEFAULT_STRING);
-            try {
-                code = DefaultNetworkProvider.checkConnection(
-                        SERVER_URL + "/api/users/" + facebookId);
-            } catch (IOException e) {
-                Log.e("CheckCode", e.getMessage());
+    private void setLoginButton() {
+        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton.setReadPermissions("public_profile", "email", "user_birthday");
+        loginButton.registerCallback(callbackManager, new SwissAffinityCallback());
+        new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(
+                    AccessToken oldAccessToken, AccessToken currentAccessToken)
+            {
+                if (currentAccessToken == null) {
+                    DataManager.deleteUser();
+                    updateUI();
+                }
             }
-            return code;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean code) {
-            dialog.dismiss();
-            if (code) {
-                finish();
-            } else {
-                Intent registerIntent = new Intent(AboutActivity.this, RegisterActivity.class);
-                startActivity(registerIntent);
-            }
-        }
+        };
     }
 
     private class SwissAffinityCallback implements FacebookCallback<LoginResult> {
@@ -142,12 +126,17 @@ public class AboutActivity extends AppCompatActivity {
                             try {
                                 userJson = new SafeJSONObject(rep.getRawResponse());
                             } catch (JSONException e) {
-                                Log.e("AboutActivity : ", e.toString());
+                                Log.e("AboutActivity", e.toString());
                             }
-                            Log.v("AboutActivity : ", rep.toString());
+                            Log.v("AboutActivity", rep.toString());
                             if (userJson != null) {
-                                DataManager.fillUserData(userJson);
-                                new ConnectionToServer().execute();
+                                User user = null;
+                                try {
+                                    user = new FacebookUserParser().parse(userJson);
+                                } catch (ParserException e) {
+                                    Log.e("UserParser", e.getMessage());
+                                }
+                                new ConnectionToServer().execute(user);
                             } else {
                                 onError(new FacebookException("No data from server"));
                             }
@@ -171,24 +160,36 @@ public class AboutActivity extends AppCompatActivity {
         }
     }
 
-    private void displayToast(String message) {
-        Toast.makeText(AboutActivity.this, message, LENGTH_SHORT).show();
-    }
+    private class ConnectionToServer extends AsyncTask<User, Void, User> {
+        private final ProgressDialog dialog = MainActivity.getLoadingDialog(AboutActivity.this);
 
-    private void setLoginButton() {
-        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions("public_profile", "email", "user_birthday");
-        loginButton.registerCallback(callbackManager, new SwissAffinityCallback());
-        new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(
-                    AccessToken oldAccessToken, AccessToken currentAccessToken)
-            {
-                if (currentAccessToken == null) {
-                    DataManager.deleteUserData();
-                    updateUI();
-                }
+        @Override
+        protected void onPreExecute() {
+            dialog.show();
+        }
+
+        @Override
+        protected User doInBackground(User... params) {
+            User user = params[0];
+            try {
+                user = DataManager.getUserClient().fetchByFacebookID(user.getFacebookId());
+            } catch (UserClientException e) {
+                Log.d("UserFetch : ", e.getMessage());
             }
-        };
+            return user;
+        }
+
+        @Override
+        protected void onPostExecute(User user) {
+            if (user != null) {
+                DataManager.saveUser(user);
+            } else {
+                Intent intent = new Intent(AboutActivity.this, RegisterActivity.class);
+                intent.putExtra(MainActivity.EXTRA_USER, user);
+                startActivity(intent);
+            }
+            dialog.dismiss();
+            finish();
+        }
     }
 }

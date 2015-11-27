@@ -5,6 +5,8 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.Address;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
@@ -20,6 +22,7 @@ public class SafeJSONObject extends JSONObject {
     public static final Address DEFAULT_ADDRESS = new Address("",0,"","",0,"");
     public static final Location DEFAULT_LOCATION = new Location(0, "");
     public static final User.Gender DEFAULT_GENDER = User.Gender.MALE;
+    public static final Date DEFAULT_DATE = new Date();
     /**
      * Default constructor
      */
