@@ -7,11 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import ch.epfl.sweng.swissaffinity.EventActivity;
 import ch.epfl.sweng.swissaffinity.MainActivity;
 import ch.epfl.sweng.swissaffinity.R;
@@ -30,20 +25,6 @@ public class EventExpandableListAdapter extends AbstractExpandableListAdapter<St
      */
     public EventExpandableListAdapter(Context context) {
         super(context);
-    }
-
-    public List<String> getGroups() {
-        String myEvents = mContext.getString(R.string.my_events);
-        String upcomingEvents = mContext.getString(R.string.upcoming_events);
-        return Arrays.asList(myEvents, upcomingEvents);
-    }
-
-    public void setData(List<Event> myEvents, List<Event> upcomingEvents) {
-        Map<String, List<Event>> data = new HashMap<>();
-        List<String> groups = getGroups();
-        data.put(groups.get(0), myEvents);
-        data.put(groups.get(1), upcomingEvents);
-        super.setData(groups, data);
     }
 
     @Override

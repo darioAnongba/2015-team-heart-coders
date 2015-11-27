@@ -67,5 +67,7 @@
     <string name="alert_message">Cross check your internet connectivity and try again.</string>
     <string name="alert_positive">OK</string>
     <string name="alert_negative">Cancel</string>
+    <string name="facebook_cancel">You canceled your login attempt</string>
+    <string name="facebook_error">Login attempt failed :\n%s</string>
 
 </resources>
