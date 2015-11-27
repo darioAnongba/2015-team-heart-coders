@@ -203,7 +203,7 @@ public class DataForTesting {
                 birthday,
                 "testProfession",
                 "http://testUrl.com",
-                new ArrayList<Location>(Arrays.asList(LOCATIONS.get(0),LOCATIONS.get(1))),
+                new ArrayList<Location>(Arrays.asList(LOCATIONS.get(1),LOCATIONS.get(0))),
                 new ArrayList<Event>(Arrays.asList(createSpeedDatingEvent())));
     }
 

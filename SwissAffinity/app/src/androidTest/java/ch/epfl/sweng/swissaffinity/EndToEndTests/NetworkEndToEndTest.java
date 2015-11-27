@@ -254,7 +254,7 @@ public class NetworkEndToEndTest {
         assertTrue("Unexpected men seats", event.getMenSeats() == 20);
         assertTrue("Unexpected women seats", event.getWomenSeats() == 20);
         assertTrue("Unexpected women registered", event.getWomenRegistered() == 0);
-        assertTrue("Unexpected men registered", event.getMenRegistered() == 0);
+
         assertTrue("Unexpected base price", event.getBasePrice() == 35.0);
         assertTrue("Unexpected begin date", event.getDateBegin().equals(beginDate));
         assertTrue("Unexpected end date", event.getDateEnd().equals(endDate));

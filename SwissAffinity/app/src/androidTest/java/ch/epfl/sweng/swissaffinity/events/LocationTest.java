@@ -19,7 +19,7 @@ public class LocationTest {
 
     @Test
     public void testGetID() throws Exception {
-        assertEquals(1, location.getId());
+        assertEquals(3, location.getId());
     }
 
     @Test
