@@ -4,7 +4,6 @@ import android.content.Context;
 import android.widget.BaseExpandableListAdapter;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,57 +18,42 @@ public abstract class AbstractExpandableListAdapter<A, B> extends BaseExpandable
 
     protected final Context mContext;
     private final List<A> mGroups;
-    private final Map<A, List<B>> mData;
-
-    protected AbstractExpandableListAdapter(Context context, List<A> groups, Map<A, List<B>> data) {
-        mContext = context;
-        mGroups = new ArrayList<>(groups);
-        mData = new HashMap<>(data);
-    }
+    private final Map<A, List<B>> mChildren;
 
     protected AbstractExpandableListAdapter(Context context) {
-        this(context, Collections.<A>emptyList(), Collections.<A, List<B>>emptyMap());
+        mContext = context;
+        mGroups = new ArrayList<>();
+        mChildren = new HashMap<>();
     }
 
     /**
-     * Add a group to the list adapter.
+     * Set the data for the expandable list adapter.
      *
-     * @param group the group
-     *
-     * @return true if the group was added. false otherwise.
+     * @param groups   the groups.
+     * @param children the children to add.
      */
-    public boolean addGroup(A group) {
-        boolean added = false;
-        if (!mData.containsKey(group)) {
-            mData.put(group, new ArrayList<B>());
-            added = mGroups.add(group);
-            if (added) {
-                notifyDataSetChanged();
+    @SafeVarargs
+    public final void setData(List<A> groups, List<B>... children) {
+        if (groups == null || children == null || groups.size() != children.length) {
+            throw new IllegalArgumentException();
+        }
+        notifyDataSetInvalidated();
+        mGroups.clear();
+        mChildren.clear();
+        for (int i = 0; i < children.length; ++i) {
+            A group = groups.get(i);
+            List<B> child = children[i];
+            if (child != null && !child.isEmpty()) {
+                mGroups.add(group);
+                mChildren.put(group, child);
             }
         }
-        return added;
-    }
-
-    /**
-     * Add a child in the desired group.
-     *
-     * @param group the group.
-     * @param child the child to add to that group.
-     *
-     * @return true if the child was added. false otherwise.
-     */
-    public boolean addChild(A group, B child) {
-        addGroup(group);
-        boolean added = mData.get(group).add(child);
-        if (added) {
-            notifyDataSetChanged();
-        }
-        return added;
+        notifyDataSetChanged();
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return mData.get(mGroups.get(groupPosition)).get(childPosition);
+        return mChildren.get(mGroups.get(groupPosition)).get(childPosition);
     }
 
     @Override
@@ -84,7 +68,7 @@ public abstract class AbstractExpandableListAdapter<A, B> extends BaseExpandable
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return mData.get(mGroups.get(groupPosition)).size();
+        return mChildren.get(mGroups.get(groupPosition)).size();
     }
 
     @Override
@@ -104,6 +88,6 @@ public abstract class AbstractExpandableListAdapter<A, B> extends BaseExpandable
 
     @Override
     public boolean hasStableIds() {
-        return true;
+        return false;
     }
 }

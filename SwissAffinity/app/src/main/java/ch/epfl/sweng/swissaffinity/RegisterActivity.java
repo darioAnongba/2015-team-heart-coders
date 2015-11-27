@@ -21,7 +21,6 @@ import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.NetworkUserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 
-import static ch.epfl.sweng.swissaffinity.MainActivity.SHARED_PREFS;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
@@ -47,36 +46,38 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        final RadioGroup.OnCheckedChangeListener radioChecker =
+                new RadioGroup.OnCheckedChangeListener() {
 
-        final RadioGroup.OnCheckedChangeListener radioChecker = new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.registerFemale) {
-                    gender = "female";
-                } else if (checkedId == R.id.registerMale) {
-                    gender = "male";
-                }
-            }
-        };
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                        if (checkedId == R.id.registerFemale) {
+                            gender = "female";
+                        } else if (checkedId == R.id.registerMale) {
+                            gender = "male";
+                        }
+                    }
+                };
 
         fillData();
 
         Button registerButton = (Button) findViewById(R.id.userRegistration);
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                JSONObject json = createJson();
-                if (json != null) {
-                    Log.v("UserJson", json.toString());
-                    new UploadUserTask().execute(json.toString());
-                } else {
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "Json is empty",
-                            Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
+        registerButton.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        JSONObject json = createJson();
+                        if (json != null) {
+                            Log.v("UserJson", json.toString());
+                            new UploadUserTask().execute(json.toString());
+                        } else {
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "There has been a problem",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 
     /**
@@ -84,13 +85,13 @@ public class RegisterActivity extends AppCompatActivity {
      */
     private void fillData() {
 
-        String userName = SHARED_PREFS.getString(USERNAME.get(), "");
-        String firstName = SHARED_PREFS.getString(FIRST_NAME.get(), "");
-        String lastName = SHARED_PREFS.getString(LAST_NAME.get(), "");
-        String email = SHARED_PREFS.getString(EMAIL.get(), "");
-        String birthday = SHARED_PREFS.getString(BIRTHDAY.get(), "");
-        gender = SHARED_PREFS.getString(GENDER.get(), "");
-        facebookId = SHARED_PREFS.getString(FACEBOOK_ID.get(), "");
+        String userName = MainActivity.getSharedPrefs().getString(USERNAME.get(), "");
+        String firstName = MainActivity.getSharedPrefs().getString(FIRST_NAME.get(), "");
+        String lastName = MainActivity.getSharedPrefs().getString(LAST_NAME.get(), "");
+        String email = MainActivity.getSharedPrefs().getString(EMAIL.get(), "");
+        String birthday = MainActivity.getSharedPrefs().getString(BIRTHDAY.get(), "");
+        gender = MainActivity.getSharedPrefs().getString(GENDER.get(), "");
+        facebookId = MainActivity.getSharedPrefs().getString(FACEBOOK_ID.get(), "");
 
         userNameText = (EditText) findViewById(R.id.registerUserName);
         userNameText.setText(userName);
@@ -113,6 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     /**
      * Create a Json with the editText , got a lot of condition to avoid some field
+     *
      * @return a json with the info of a user
      */
     private JSONObject createJson() {
@@ -120,24 +122,28 @@ public class RegisterActivity extends AppCompatActivity {
         JSONObject jsonObject = null;
 
         if (emailText.getText().toString().isEmpty() ||
-                emailText.getText().toString().length() > 100 ||
-                !isValidEmail(emailText.getText().toString())) {
+            emailText.getText().toString().length() > 100 ||
+            !isValidEmail(emailText.getText().toString()))
+        {
             Toast.makeText(
                     RegisterActivity.this,
                     "Mail is not in a valid format , empty or over 100 characters",
                     Toast.LENGTH_SHORT).show();
         } else if ((userNameText.getText().toString().isEmpty() ||
-                userNameText.getText().toString().length() > 50)) {
+                    userNameText.getText().toString().length() > 50))
+        {
             Toast.makeText(
                     RegisterActivity.this, "Username is empty , or over 50 characters",
                     Toast.LENGTH_SHORT).show();
         } else if ((firstNameText.getText().toString().isEmpty() ||
-                firstNameText.getText().toString().length() > 50)) {
+                    firstNameText.getText().toString().length() > 50))
+        {
             Toast.makeText(
                     RegisterActivity.this, "First Name is empty , or over 50 characters",
                     Toast.LENGTH_SHORT).show();
         } else if ((lastNameText.getText().toString().isEmpty() ||
-                lastNameText.getText().toString().length() > 50)) {
+                    lastNameText.getText().toString().length() > 50))
+        {
             Toast.makeText(
                     RegisterActivity.this, "Last Name is empty , or over 50 characters",
                     Toast.LENGTH_SHORT).show();
@@ -147,7 +153,8 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         } else if (!passwordText.getText().toString().equals(
                 passwordConfirmation.getText()
-                        .toString())) {
+                                    .toString()))
+        {
             Toast.makeText(
                     RegisterActivity.this, "Password do not match ",
                     Toast.LENGTH_SHORT).show();
@@ -156,7 +163,8 @@ public class RegisterActivity extends AppCompatActivity {
                     RegisterActivity.this, "No value found for Gender ",
                     Toast.LENGTH_SHORT).show();
         } else if (birthdayText.getText().toString().length() == 0 ||
-                birthdayText.getText().toString().length() > 20) {
+                   birthdayText.getText().toString().length() > 20)
+        {
             Toast.makeText(
                     RegisterActivity.this, "Birth Date is empty or too long ",
                     Toast.LENGTH_SHORT).show();
@@ -180,7 +188,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     /**
      * Check is the mail is a valid format
+     *
      * @param target the sequence of character
+     *
      * @return true if it has the form of an email
      */
     public static boolean isValidEmail(CharSequence target) {
@@ -202,14 +212,15 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            NetworkUserClient networkUserClient = new NetworkUserClient(SERVER_URL, new DefaultNetworkProvider());
+            NetworkUserClient networkUserClient =
+                    new NetworkUserClient(SERVER_URL, new DefaultNetworkProvider());
             JSONObject response = new JSONObject();
             try {
                 JSONObject jsonObject = new JSONObject(params[0]);
                 response = networkUserClient.postUser(jsonObject);
             } catch (UserClientException e) {
-                Log.e("Error with the server",e.getMessage());
-            }catch (JSONException e) {
+                Log.e("Error with the server", e.getMessage());
+            } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
             return response.toString();
@@ -221,17 +232,21 @@ public class RegisterActivity extends AppCompatActivity {
             JSONObject responseJson;
             try {
                 responseJson = new JSONObject(response);
-                if(response.contains(emailText.getText().toString())) {
-                if (responseJson.getString("email").equals(emailText.getText().toString()) && responseJson.getString("username").equals(userNameText.getText().toString())) {
+                if (responseJson != null &&
+                    responseJson.getString("email").equals(emailText.getText().toString()) &&
+                    responseJson.getString("username").equals(userNameText.getText().toString()))
+                {
                     Toast.makeText(
                             RegisterActivity.this, "you have been registered",
                             Toast.LENGTH_LONG).show();
                     finish();
-                }
                 } else {
                     String error = "";
                     try {
-                        JSONArray jsonUsernameError = responseJson.getJSONObject("errors").getJSONObject("children").getJSONObject("username").getJSONArray("errors");
+                        JSONArray jsonUsernameError = responseJson.getJSONObject("errors")
+                                                                  .getJSONObject("children")
+                                                                  .getJSONObject("username")
+                                                                  .getJSONArray("errors");
 
                         for (int i = 0; i < jsonUsernameError.length(); i++) {
                             error = error + jsonUsernameError.getString(i);
@@ -240,10 +255,13 @@ public class RegisterActivity extends AppCompatActivity {
                         Log.e("No Username Error", e.getMessage());
                     }
                     try {
-                        JSONArray jsonEmailError = responseJson.getJSONObject("errors").getJSONObject("children").getJSONObject("email").getJSONArray("errors");
+                        JSONArray jsonEmailError = responseJson.getJSONObject("errors")
+                                                               .getJSONObject("children")
+                                                               .getJSONObject("email")
+                                                               .getJSONArray("errors");
 
                         for (int i = 0; i < jsonEmailError.length(); i++) {
-                            error = error +jsonEmailError.getString(i);
+                            error = error + jsonEmailError.getString(i);
                         }
                     } catch (JSONException e) {
                         Log.e("No Email Error", e.getMessage());
