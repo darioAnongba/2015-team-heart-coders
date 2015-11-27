@@ -13,6 +13,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
+import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.DataManager;
 
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
@@ -27,7 +28,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String SHARED_PREFS_ID = "ch.epfl.sweng.swissaffinity.shared_prefs";
 
-    private static SharedPreferences mSharedPrefs;
+    public static EventExpandableListAdapter mListAdapter;
+    public static User mUser;               // made public and static for testing purposes!
+    public static Context mContext;         // made public and static for testing purposes!
+    public static SharedPreferences mSharedPrefs;
+
 
     private ExpandableListView mListView;
 
@@ -50,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         mSharedPrefs = getSharedPreferences(SHARED_PREFS_ID, MODE_PRIVATE);
         mListView = (ExpandableListView) findViewById(R.id.mainEventListView);
         mListView.setAdapter(new EventExpandableListAdapter(this));
+        mContext = this;
 
         updateUI();
     }
