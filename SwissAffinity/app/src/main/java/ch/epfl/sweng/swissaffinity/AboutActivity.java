@@ -125,11 +125,19 @@ public class AboutActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * Get the field needed to do a request to facebook
+     * @return a String with the needed field
+     */
     private static String getFields() {
         return ID.get() + "," + NAME.get() + "," + FIRST_NAME.get() + "," + LAST_NAME.get() + "," +
                EMAIL.get() + "," + GENDER.get() + "," + BIRTHDAY.get();
     }
 
+    /**
+     * Take the value from the json and put them in sharedPreference , put default_string if not found
+     * @param jsonObject the json in which you take the field
+     */
     private void fillUserData(SafeJSONObject jsonObject) {
         String facebookID = jsonObject.get(ID.get(), SafeJSONObject.DEFAULT_STRING);
         String userName = jsonObject.get(NAME.get(), SafeJSONObject.DEFAULT_STRING);
@@ -161,12 +169,14 @@ public class AboutActivity extends AppCompatActivity {
                     .apply();
     }
 
-
+    /**
+     * Set the loggedText in function of the username in sharedPreference . null = please login , else welcome "username"
+     */
     private void setLoggedText() {
         TextView logged = ((TextView) findViewById(R.id.aboutLogedText));
         String userName = MainActivity.getSharedPrefs().getString(USERNAME.get(), null);
         if (userName == null) {
-            logged.setText("To start, you have to login:");
+            logged.setText(getString(R.string.welcome_not_logged_text));
             logged.setTextSize(20);
             logged.setTextColor(Color.RED);
         } else {
@@ -177,12 +187,11 @@ public class AboutActivity extends AppCompatActivity {
 
 
     private class ConnectionToServer extends AsyncTask<String, Void, Boolean> {
-        private ProgressDialog dialog = MainActivity.getLoadingDialog(AboutActivity.this);
+        private final ProgressDialog dialog = MainActivity.getLoadingDialog(AboutActivity.this);
 
         @Override
         protected void onPreExecute() {
             dialog.show();
-            super.onPreExecute();
         }
 
         @Override

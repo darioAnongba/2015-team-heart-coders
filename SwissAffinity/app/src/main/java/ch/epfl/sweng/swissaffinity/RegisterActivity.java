@@ -12,6 +12,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,17 +36,16 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText firstNameText;
     private EditText lastNameText;
     private EditText birthdayText;
+    private EditText passwordText;
+    private EditText passwordConfirmation;
     private String facebookId;
     private String gender = "";
     private final String SERVER_URL = "http://beecreative.ch";
-    private EditText passwordText;
-    private EditText passwordConfirmation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
         final RadioGroup.OnCheckedChangeListener radioChecker =
                 new RadioGroup.OnCheckedChangeListener() {
 
@@ -78,10 +78,12 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     }
                 });
-
     }
 
-    public void fillData() {
+    /**
+     * Fill the EditText with the info sended by facebook
+     */
+    private void fillData() {
 
         String userName = MainActivity.getSharedPrefs().getString(USERNAME.get(), "");
         String firstName = MainActivity.getSharedPrefs().getString(FIRST_NAME.get(), "");
@@ -110,6 +112,11 @@ public class RegisterActivity extends AppCompatActivity {
         passwordConfirmation = (EditText) findViewById(R.id.registerPasswordConfirmation);
     }
 
+    /**
+     * Create a Json with the editText , got a lot of condition to avoid some field
+     *
+     * @return a json with the info of a user
+     */
     private JSONObject createJson() {
 
         JSONObject jsonObject = null;
@@ -179,19 +186,27 @@ public class RegisterActivity extends AppCompatActivity {
         return jsonObject;
     }
 
-
+    /**
+     * Check is the mail is a valid format
+     *
+     * @param target the sequence of character
+     *
+     * @return true if it has the form of an email
+     */
     public static boolean isValidEmail(CharSequence target) {
         return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
+    /**
+     * Task to send User Registration to the server
+     */
     private class UploadUserTask extends AsyncTask<String, Void, String> {
 
-        private ProgressDialog dialog = MainActivity.getLoadingDialog(RegisterActivity.this);
+        private final ProgressDialog dialog = MainActivity.getLoadingDialog(RegisterActivity.this);
 
         @Override
         protected void onPreExecute() {
             dialog.show();
-            super.onPreExecute();
         }
 
         @Override
@@ -203,7 +218,10 @@ public class RegisterActivity extends AppCompatActivity {
             try {
                 JSONObject jsonObject = new JSONObject(params[0]);
                 response = networkUserClient.postUser(jsonObject);
-            } catch (UserClientException | JSONException e) {
+            } catch (UserClientException e) {
+                Log.e("Error with the server", e.getMessage());
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
             }
             return response.toString();
         }
@@ -223,17 +241,45 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.LENGTH_LONG).show();
                     finish();
                 } else {
-                    Toast.makeText(
-                            RegisterActivity.this, response,
-                            Toast.LENGTH_LONG).show();
+                    String error = "";
+                    try {
+                        JSONArray jsonUsernameError = responseJson.getJSONObject("errors")
+                                                                  .getJSONObject("children")
+                                                                  .getJSONObject("username")
+                                                                  .getJSONArray("errors");
+
+                        for (int i = 0; i < jsonUsernameError.length(); i++) {
+                            error = error + jsonUsernameError.getString(i);
+                        }
+                    } catch (JSONException e) {
+                        Log.e("No Username Error", e.getMessage());
+                    }
+                    try {
+                        JSONArray jsonEmailError = responseJson.getJSONObject("errors")
+                                                               .getJSONObject("children")
+                                                               .getJSONObject("email")
+                                                               .getJSONArray("errors");
+
+                        for (int i = 0; i < jsonEmailError.length(); i++) {
+                            error = error + jsonEmailError.getString(i);
+                        }
+                    } catch (JSONException e) {
+                        Log.e("No Email Error", e.getMessage());
+                    }
+                    if (!error.equals("")) {
+                        Toast.makeText(
+                                RegisterActivity.this, error,
+                                Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(
+                                RegisterActivity.this, "unhandled error " + response,
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
             } catch (JSONException e) {
                 Log.e("No response", response);
             }
 
         }
-
-        ;
-
     }
 }

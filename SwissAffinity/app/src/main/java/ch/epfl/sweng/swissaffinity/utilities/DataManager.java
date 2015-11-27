@@ -102,11 +102,10 @@ public class DataManager {
         bundle.putSerializable(UPCOMING_EVENTS, mUpcomingEvents);
     }
 
-    public void restoreInstance(PersistableBundle bundle) {
+    public void restoreInstance(Bundle bundle) {
         if (bundle == null) {
             throw new IllegalArgumentException();
         }
-        bundle.put
         Map<String, Event> myEvents = (Map<String, Event>) bundle.getSerializable(MY_EVENTS);
         Map<String, Event> upcomingEvents =
                 (Map<String, Event>) bundle.getSerializable(UPCOMING_EVENTS);
