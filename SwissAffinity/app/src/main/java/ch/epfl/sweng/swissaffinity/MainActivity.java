@@ -53,9 +53,9 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String SHARED_PREFS_ID = "ch.epfl.sweng.swissaffinity.shared_prefs";
 
-    private EventExpandableListAdapter mListAdapter;
-    public static User mUser;
-    public static Context mContext;
+    public static EventExpandableListAdapter mListAdapter;
+    public static User mUser;               // made public and static for testing purposes!
+    public static Context mContext;         // made public and static for testing purposes!
 
     public static EventClient getEventClient() {
         if (EVENT_CLIENT == null) {
