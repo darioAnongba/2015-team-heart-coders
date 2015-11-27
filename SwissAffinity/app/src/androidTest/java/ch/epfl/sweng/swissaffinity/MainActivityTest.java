@@ -10,6 +10,8 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import org.junit.Test;
 
+import ch.epfl.sweng.swissaffinity.utilities.network.ServerTags;
+
 import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
@@ -37,37 +39,35 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     public void testCanGreetUsers() {
         getActivity();
 
-        if (MainActivity.mUser == null)
-            onView(withId(R.id.mainWelcomeText)).check(matches(withText(R.string.welcome_not_registered_text)));
-        else {
-            String welcomeText = String.format(
-                    MainActivity.mContext.getString(R.string.welcome_registered_text),
-                    MainActivity.mUser.getUsername());
-            onView(withId(R.id.mainWelcomeText)).check(matches(withText(welcomeText)));
-        }
+        String userName = MainActivity.getSharedPrefs().getString(ServerTags.USERNAME.get(), "");
+
+        String welcomeText =
+                String.format(getActivity().getString(R.string.welcome_registered_text), userName);
+        onView(withId(R.id.mainWelcomeText)).check(matches(withText(welcomeText)));
+
     }
 
-    public void testAbout(){
+    public void testAbout() {
         getActivity();
 
         onView(withId(R.id.action_about)).perform(click());
         onView(withId(R.id.aboutSwissAffinityText)).check(matches(isDisplayed()));
     }
 
-    public void testSettings(){
+    public void testSettings() {
         getActivity();
 
 
         onView(withId(R.id.action_settings)).perform(click());
         pressBack();
-        if(MainActivity.mUser == null)
-            onView(withId(R.id.mainWelcomeText)).check(matches(withText(R.string.welcome_not_registered_text)));
-        else {
-            String welcomeText = String.format(
-                    MainActivity.mContext.getString(R.string.welcome_registered_text),
-                    MainActivity.mUser.getUsername());
-            onView(withId(R.id.mainWelcomeText)).check(matches(withText(welcomeText)));
 
-        }
+        String userName = MainActivity.getSharedPrefs().getString(ServerTags.USERNAME.get(), "");
+
+        String welcomeText = String.format(
+                getActivity().getString(R.string.welcome_registered_text),
+                userName);
+        onView(withId(R.id.mainWelcomeText)).check(matches(withText(welcomeText)));
+
+
     }
 }
