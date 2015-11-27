@@ -16,8 +16,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.users.User.Gender;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
+import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.NetworkUserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 
@@ -39,8 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText passwordText;
     private EditText passwordConfirmation;
     private String facebookId;
-    private String gender = "";
-    private final String SERVER_URL = "http://beecreative.ch";
+    private String gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,6 @@ public class RegisterActivity extends AppCompatActivity {
 
                     @Override
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
-
                         if (checkedId == R.id.registerFemale) {
                             gender = "female";
                         } else if (checkedId == R.id.registerMale) {
@@ -85,24 +85,18 @@ public class RegisterActivity extends AppCompatActivity {
      */
     private void fillData() {
 
-        String userName = MainActivity.getSharedPrefs().getString(USERNAME.get(), "");
-        String firstName = MainActivity.getSharedPrefs().getString(FIRST_NAME.get(), "");
-        String lastName = MainActivity.getSharedPrefs().getString(LAST_NAME.get(), "");
-        String email = MainActivity.getSharedPrefs().getString(EMAIL.get(), "");
-        String birthday = MainActivity.getSharedPrefs().getString(BIRTHDAY.get(), "");
-        gender = MainActivity.getSharedPrefs().getString(GENDER.get(), "");
-        facebookId = MainActivity.getSharedPrefs().getString(FACEBOOK_ID.get(), "");
+        User user = (User) getIntent().getSerializableExtra(MainActivity.EXTRA_USER);
 
         userNameText = (EditText) findViewById(R.id.registerUserName);
-        userNameText.setText(userName);
+        userNameText.setText(user.getUsername());
         firstNameText = (EditText) findViewById(R.id.registerFirstName);
-        firstNameText.setText(firstName);
+        firstNameText.setText(user.getFirstName());
         lastNameText = (EditText) findViewById(R.id.registerLastName);
-        lastNameText.setText(lastName);
+        lastNameText.setText(user.getLastName());
         emailText = (EditText) findViewById(R.id.registerEmail);
-        emailText.setText(email);
+        emailText.setText(user.getEmail());
         birthdayText = (EditText) findViewById(R.id.registerBirthDay);
-        birthdayText.setText(birthday);
+        birthdayText.setText(user.getBirthDate().toString());
         if (gender.equalsIgnoreCase(Gender.FEMALE.get())) {
             ((RadioButton) findViewById(R.id.registerFemale)).setChecked(true);
         } else if (gender.equalsIgnoreCase(Gender.MALE.get())) {
@@ -213,7 +207,7 @@ public class RegisterActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             NetworkUserClient networkUserClient =
-                    new NetworkUserClient(SERVER_URL, new DefaultNetworkProvider());
+                    new NetworkUserClient(NetworkProvider.SERVER_URL, new DefaultNetworkProvider());
             JSONObject response = new JSONObject();
             try {
                 JSONObject jsonObject = new JSONObject(params[0]);

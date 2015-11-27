@@ -50,7 +50,11 @@ public class MainActivity extends AppCompatActivity {
         mSharedPrefs = getSharedPreferences(SHARED_PREFS_ID, MODE_PRIVATE);
         mListView = (ExpandableListView) findViewById(R.id.mainEventListView);
         mListView.setAdapter(new EventExpandableListAdapter(this));
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         updateUI();
     }
 
@@ -81,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
         boolean withDialog = true;
         if (DataManager.hasData()) {
-            DataManager.setData(mListView);
+            DataManager.displayData(mListView);
             withDialog = false;
         }
         if (DataManager.isConnected(this)) {
@@ -111,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            DataManager.setData(mListView);
+            DataManager.displayData(mListView);
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }
