@@ -51,12 +51,17 @@ public class AboutActivityTest extends ActivityInstrumentationTestCase2<MainActi
         Espresso.registerIdlingResources(idlingResource);
     }
 
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
+    }
+
     @After
     public void unregisterIntentIdling() {
         Espresso.unregisterIdlingResources(idlingResource);
     }
-
-
+    
     public void testLoginButton() {
 
         getActivity();
