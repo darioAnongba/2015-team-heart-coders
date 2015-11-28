@@ -69,7 +69,9 @@ public class NetworkEndToEndTest {
         locationsOfInterest.add(new Location(3, "Lausanne"));
         Date birthDay;
         try {
-            birthDay = DateParser.parseFromString("1993-02-02T00:00:00+0100");
+            birthDay = DateParser.parseFromString(
+                    "1993-02-02T00:00:00+0100",
+                    DateParser.SERVER_DATE_FORMAT);
         } catch (ParserException e) {
             throw new UserClientException(e);
         }
@@ -78,25 +80,35 @@ public class NetworkEndToEndTest {
         assertTrue("Unexpected first name", user.getFirstName().equals("Dario"));
         assertTrue("Unexpected last name", user.getLastName().equals("Anongba"));
         assertTrue("Unexpected profession", user.getProfession().equals("Student"));
-        assertTrue("Unexpected home phone", user.getHomePhone().equals(SafeJSONObject.DEFAULT_STRING));
+        assertTrue(
+                "Unexpected home phone",
+                user.getHomePhone().equals(SafeJSONObject.DEFAULT_STRING));
         assertTrue("Unexpected mobile phone", user.getMobilePhone().equals("+41799585615"));
-        assertTrue("Unexpected profile picture", user.getProfilePicture().equals(SafeJSONObject.DEFAULT_STRING));
+        assertTrue(
+                "Unexpected profile picture",
+                user.getProfilePicture().equals(SafeJSONObject.DEFAULT_STRING));
         assertTrue("Unexpected email", user.getEmail().equals("dario.anongba@epfl.ch"));
         assertTrue("Unexpected id", user.getId() == 1);
-        assertTrue("Unexpected fb id", user.getFacebookId() == 1271175799);
+        assertTrue("Unexpected fb id", user.getFacebookId().equals("1271175799"));
         assertTrue("Unexpected, user should be enabled", user.getEnabled());
         assertTrue("Unexpected, user should not be locked", !user.getLocked());
-        assertTrue("Unexpected Adress", new Address("CH", 1007, "Lausanne", "Vaud", 15, "Avenue de Cour")
-                .equals(user.getAddress()));
+        assertTrue(
+                "Unexpected Adress",
+                new Address("CH", 1007, "Lausanne", "Vaud", 15, "Avenue de Cour")
+                        .equals(user.getAddress()));
         assertTrue("Unexpected birthday", birthDay.compareTo(user.getBirthDate()) == 0);
         assertTrue("Unexpected gender", User.Gender.MALE.equals(user.getGender()));
-        assertTrue("Unexpected areas of interest",
-                new CollectionComparator<Location>().compare(new ArrayList<Location>(user.getAreasOfInterest()), locationsOfInterest));
+        assertTrue(
+                "Unexpected areas of interest",
+                new CollectionComparator<Location>().compare(
+                        new ArrayList<Location>(user.getAreasOfInterest()),
+                        locationsOfInterest));
         assertTrue("Unexpected events attended", user.getEventsAttended().size() == 0);
 
     }
+
     @Test
-    public void postRegistrationToEvent() throws UserClientException{
+    public void postRegistrationToEvent() throws UserClientException {
         final int eventIdToRegister = 7;
         final String userToRegister = "lio";
         NetworkProvider networkProvider = new DefaultNetworkProvider();
@@ -111,10 +123,11 @@ public class NetworkEndToEndTest {
         }
         String registrationsString;
         JSONArray registrations;
-        try{
-            registrationsString  = networkProvider.getContent("http://beecreative.ch/api/users/"+ userToRegister +"/registrations");
+        try {
+            registrationsString = networkProvider.getContent(
+                    "http://beecreative.ch/api/users/" + userToRegister + "/registrations");
             registrations = new JSONArray(registrationsString);
-        } catch (JSONException | IOException e){
+        } catch (JSONException | IOException e) {
             throw new UserClientException(e);
         }
 
@@ -125,7 +138,7 @@ public class NetworkEndToEndTest {
                 JSONObject jsonRegistration = registrations.getJSONObject(i);
                 JSONObject jsonEvent = jsonRegistration.getJSONObject("event");
                 eventToRegistration.put(jsonEvent.getInt("id"), jsonRegistration.getInt("id"));
-            } catch (JSONException e){
+            } catch (JSONException e) {
                 throw new UserClientException(e);
             }
         }
@@ -136,7 +149,8 @@ public class NetworkEndToEndTest {
         HttpURLConnection conn;
         int respCode;
         try {
-            url = new URL("http://beecreative.ch/api/registrations/" + testRegistrationId.toString());
+            url = new URL(
+                    "http://beecreative.ch/api/registrations/" + testRegistrationId.toString());
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("DELETE");
             respCode = conn.getResponseCode();
@@ -145,6 +159,7 @@ public class NetworkEndToEndTest {
         }
 
     }
+
     @Test
     public void postUserTest() throws UserClientException {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
@@ -194,24 +209,39 @@ public class NetworkEndToEndTest {
             throw new UserClientException(e);
         }
 
-        assertTrue("Unexpected email", confirmationObject.get(ServerTags.EMAIL.get(),
-                SafeJSONObject.DEFAULT_STRING).equals("dumbuser666@gmail.com"));
-        assertTrue("Unexpected username", confirmationObject.get(ServerTags.USERNAME.get(),
-                SafeJSONObject.DEFAULT_STRING).equals("DumbUser666"));
-        assertTrue("Unexpected firstName", confirmationObject.get(ServerTags.FIRST_NAME.get(),
-                SafeJSONObject.DEFAULT_STRING).equals("Dumb"));
-        assertTrue("Unexpected lastName", confirmationObject.get(ServerTags.LAST_NAME.get(),
-                SafeJSONObject.DEFAULT_STRING).equals("User"));
-        assertTrue("Unexpected gender", confirmationObject.get(ServerTags.GENDER.get(),
-                SafeJSONObject.DEFAULT_STRING).equals("male"));
-        assertTrue("Unexpected birthDate", confirmationObject.get(ServerTags.BIRTH_DATE.get(),
-                SafeJSONObject.DEFAULT_STRING).equals("1993-02-18T00:00:00+0100"));
+        assertTrue(
+                "Unexpected email", confirmationObject.get(
+                        ServerTags.EMAIL.get(),
+                        SafeJSONObject.DEFAULT_STRING).equals("dumbuser666@gmail.com"));
+        assertTrue(
+                "Unexpected username", confirmationObject.get(
+                        ServerTags.USERNAME.get(),
+                        SafeJSONObject.DEFAULT_STRING).equals("DumbUser666"));
+        assertTrue(
+                "Unexpected firstName", confirmationObject.get(
+                        ServerTags.FIRST_NAME.get(),
+                        SafeJSONObject.DEFAULT_STRING).equals("Dumb"));
+        assertTrue(
+                "Unexpected lastName", confirmationObject.get(
+                        ServerTags.LAST_NAME.get(),
+                        SafeJSONObject.DEFAULT_STRING).equals("User"));
+        assertTrue(
+                "Unexpected gender", confirmationObject.get(
+                        ServerTags.GENDER.get(),
+                        SafeJSONObject.DEFAULT_STRING).equals("male"));
+        assertTrue(
+                "Unexpected birthDate", confirmationObject.get(
+                        ServerTags.BIRTH_DATE.get(),
+                        SafeJSONObject.DEFAULT_STRING).equals("1993-02-18T00:00:00+0100"));
         assertTrue("Unexpected facebookId", fb_id == 666);
-        assertTrue("Unexpected User should not be locked",
+        assertTrue(
+                "Unexpected User should not be locked",
                 !confirmationObject.get(ServerTags.LOCKED.get(), true));
-        assertTrue("Unexpected User should be enable",
+        assertTrue(
+                "Unexpected User should be enable",
                 !confirmationObject.get(ServerTags.ENABLED.get(), false));
-        assertTrue("Unexpected locations of preference",
+        assertTrue(
+                "Unexpected locations of preference",
                 new CollectionComparator<Location>().compare(locationsOfInterest, areasOfInterest));
 
         URL url;
@@ -237,17 +267,25 @@ public class NetworkEndToEndTest {
         Date beginDate;
         Date endDate;
         try {
-            beginDate = DateParser.parseFromString("2016-10-15T21:00:00+0200");
-            endDate = DateParser.parseFromString("2016-10-16T00:00:00+0200");
+            beginDate = DateParser.parseFromString(
+                    "2016-10-15T21:00:00+0200",
+                    DateParser.SERVER_DATE_FORMAT);
+            endDate = DateParser.parseFromString(
+                    "2016-10-16T00:00:00+0200",
+                    DateParser.SERVER_DATE_FORMAT);
         } catch (ParserException e) {
             throw new EventClientException(e);
         }
 
         assertTrue("Unexpected event name", event.getName().equals("Let's celebrate Oktoberfest"));
-        assertTrue("Unexpected event description", event.getDescription().equals("Come and join us" +
-                " to celebrate the Oktoberfest , and use this occasion to meet new People . The event" +
-                " will take place to Forum , a bar in the center of Zürich."));
-        assertTrue("Unexcpected event image path", event.getImagePath().equals("5647627162808.jpg"));
+        assertTrue(
+                "Unexpected event description", event.getDescription().equals(
+                        "Come and join us" +
+                        " to celebrate the Oktoberfest , and use this occasion to meet new People . The event" +
+                        " will take place to Forum , a bar in the center of Zürich."));
+        assertTrue(
+                "Unexcpected event image path",
+                event.getImagePath().equals("5647627162808.jpg"));
         assertTrue("Unexcpected min age", event.getMinAge() == 21);
         assertTrue("Unexpected max age", event.getMaxAge() == 32);
         assertTrue("Unexcpected max people", event.getMaxPeople() == 40);
@@ -258,10 +296,15 @@ public class NetworkEndToEndTest {
         assertTrue("Unexpected base price", event.getBasePrice() == 35.0);
         assertTrue("Unexpected begin date", event.getDateBegin().equals(beginDate));
         assertTrue("Unexpected end date", event.getDateEnd().equals(endDate));
-        assertTrue("Unexpected Location", event.getLocation().equals(
-                new Location(6, "Zürich")));
-        assertTrue("Unexpected Establishment", event.getEstablishment().equals(
-                        new Establishment(2, "Forum", Establishment.Type.BAR,
+        assertTrue(
+                "Unexpected Location", event.getLocation().equals(
+                        new Location(6, "Zürich")));
+        assertTrue(
+                "Unexpected Establishment", event.getEstablishment().equals(
+                        new Establishment(
+                                2,
+                                "Forum",
+                                Establishment.Type.BAR,
                                 new Address("CH", 8004, "Zürich", "Zürich", 120, "Badenerstrasse"),
                                 "+41 43 243 88 88",
                                 "Located at the corner of Badenerstrasse, Forum is an airy lounge bar and restaurant, ideal for kicking back and unwinding.",

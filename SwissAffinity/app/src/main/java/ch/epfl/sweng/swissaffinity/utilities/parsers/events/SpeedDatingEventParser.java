@@ -45,14 +45,14 @@ public class SpeedDatingEventParser extends Parser<SpeedDatingEvent> {
         SafeJSONObject jsonEstablishment;
 
         //Should only throw exceptions when main attributes are not present.
-        try{
+        try {
             id = jsonObject.getInt(ID.get());
             name = jsonObject.get(NAME.get(), SafeJSONObject.DEFAULT_STRING);
             jsonLocation = new SafeJSONObject(jsonObject.getJSONObject(LOCATION.get()));
             jsonEstablishment = new SafeJSONObject(
                     jsonObject.getJSONObject(ESTABLISHMENT.get()));
             basePrice = jsonObject.getDouble(BASE_PRICE.get());
-        } catch (JSONException e){
+        } catch (JSONException e) {
             throw new ParserException(e);
         }
 
@@ -75,25 +75,27 @@ public class SpeedDatingEventParser extends Parser<SpeedDatingEvent> {
         int maxAge = jsonObject.get(MAX_AGE.get(), SafeJSONObject.DEFAULT_COUNT);
 
 
-
         builder.setId(id)
-            .setName(name)
-            .setLocation(location)
-            .setMaxPeople(maxPeople)
-            .setDateBegin(DateParser.parseFromString(dateBegin))
-            .setDateEnd(DateParser.parseFromString(dateEnd))
-            .setBasePrice(basePrice)
-            .setState(state)
-            .setDescription(description)
-            .setImagePath(imageUrl)
-                .setLastUpdate(DateParser.parseFromString(lastUpdate));
+               .setName(name)
+               .setLocation(location)
+               .setMaxPeople(maxPeople)
+               .setDateBegin(DateParser.parseFromString(dateBegin, DateParser.SERVER_DATE_FORMAT))
+               .setDateEnd(DateParser.parseFromString(dateEnd, DateParser.SERVER_DATE_FORMAT))
+               .setBasePrice(basePrice)
+               .setState(state)
+               .setDescription(description)
+               .setImagePath(imageUrl)
+               .setLastUpdate(
+                       DateParser.parseFromString(
+                               lastUpdate,
+                               DateParser.SERVER_DATE_FORMAT));
         return builder.setMenSeats(menSeats)
-                .setWomenSeats(womenSeats)
-                .setMenRegistered(menRegistered)
-                .setWomenRegistered(womenRegistered)
-                .setMinAge(minAge)
-                .setMaxAge(maxAge)
-                .setEstablishment(establishment)
-                .build();
+                      .setWomenSeats(womenSeats)
+                      .setMenRegistered(menRegistered)
+                      .setWomenRegistered(womenRegistered)
+                      .setMinAge(minAge)
+                      .setMaxAge(maxAge)
+                      .setEstablishment(establishment)
+                      .build();
     }
 }

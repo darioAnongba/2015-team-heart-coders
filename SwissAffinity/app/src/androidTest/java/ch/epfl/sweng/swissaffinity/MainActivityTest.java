@@ -17,7 +17,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.List;
+import ch.epfl.sweng.swissaffinity.utilities.network.ServerTags;
+
 
 import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.espresso.Espresso.onView;
@@ -66,55 +67,30 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     public void testCanGreetUsers() {
         getActivity();
 
-        if (MainActivity.mSharedPrefs.getString(USERNAME.get(), "").equals(""))
-            onView(withId(R.id.mainWelcomeText)).check(matches(withText(R.string.welcome_not_registered_text)));
-        else {
-            String welcomeText = String.format(
-                    MainActivity.mContext.getString(R.string.welcome_registered_text),
-                    MainActivity.mSharedPrefs.getString(USERNAME.get(), ""));
-            onView(withId(R.id.mainWelcomeText)).check(matches(withText(welcomeText)));
-        }
+        String userName = MainActivity.getSharedPrefs().getString(ServerTags.USERNAME.get(), "");
+
+        String welcomeText =
+                String.format(getActivity().getString(R.string.welcome_registered_text), userName);
+        onView(withId(R.id.mainWelcomeText)).check(matches(withText(welcomeText)));
     }
 
-    public void testAbout(){
+    public void testAbout() {
         getActivity();
 
         onView(withId(R.id.action_about)).perform(click());
         onView(withId(R.id.aboutSwissAffinityText)).check(matches(isDisplayed()));
     }
 
-    public void testSettings(){
+    public void testSettings() {
         getActivity();
         onView(withId(R.id.action_settings)).perform(click());
         pressBack();
 
-        if (MainActivity.mSharedPrefs.getString(USERNAME.get(), "").equals(""))
-            onView(withId(R.id.mainWelcomeText)).check(matches(withText(R.string.welcome_not_registered_text)));
-        else {
-            String welcomeText = String.format(
-                    MainActivity.mContext.getString(R.string.welcome_registered_text),
-                    MainActivity.mSharedPrefs.getString(USERNAME.get(), ""));
-            onView(withId(R.id.mainWelcomeText)).check(matches(withText(welcomeText)));
+        String userName = MainActivity.getSharedPrefs().getString(ServerTags.USERNAME.get(), "");
 
-        }
+        String welcomeText = String.format(
+                getActivity().getString(R.string.welcome_registered_text),
+                userName);
+        onView(withId(R.id.mainWelcomeText)).check(matches(withText(welcomeText)));
     }
-
-    public void testEventListAttended(){
-        getActivity();
-
-        assert(MainActivity.mListAdapter.getChildrenCount(0)
-                == MainActivity.mUser.getEventsAttended().size());
-    }
-
-    public void testGroupNumOfEventList(){
-        getActivity();
-        if (MainActivity.mSharedPrefs.getString(USERNAME.get(), "").equals(""))
-            assert(MainActivity.mListAdapter.getGroupCount() == 0);
-        else{
-            assert(MainActivity.mListAdapter.getGroupCount() == 2);
-        }
-    }
-
-
-
 }

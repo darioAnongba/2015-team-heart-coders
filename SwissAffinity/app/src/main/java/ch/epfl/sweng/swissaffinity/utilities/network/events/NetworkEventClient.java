@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -13,15 +14,16 @@ import java.util.Collection;
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
+import ch.epfl.sweng.swissaffinity.users.Registration;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
-import ch.epfl.sweng.swissaffinity.utilities.network.ServerTags;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.Parser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserFactory;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.*;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EVENT;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ID;
 
 /**
  * Representation of an event client with network.
@@ -55,14 +57,39 @@ public class NetworkEventClient implements EventClient {
     }
 
     @Override
+    public List<Registration> fetchRegistrationsForUser(String userName)
+            throws EventClientException
+    {
+        List<Registration> registrations = new ArrayList<>();
+        try {
+            String content = mNetworkProvider.getContent(
+                    mServerUrl + API + USERS + userName + REGISTRATIONS);
+            JSONArray jsonRegistrations = new JSONArray(content);
+            for (int i = 0; i < jsonRegistrations.length(); ++i) {
+                JSONObject jsonObject = jsonRegistrations.getJSONObject(i);
+                int id = jsonObject.getInt(ID.get());
+                JSONObject event = jsonObject.getJSONObject(EVENT.get());
+                int eventId = event.getInt(ID.get());
+                registrations.add(new Registration(id, eventId));
+            }
+        } catch (JSONException | IOException e) {
+            throw new EventClientException(e);
+        }
+        return registrations;
+    }
+
+    @Override
     public List<Event> fetchAllForUser(String userName) throws EventClientException {
         List<Event> events = new ArrayList<>();
         try {
-            String content = mNetworkProvider.getContent(mServerUrl + API + USERS + userName + REGISTRATIONS);
+            String content = mNetworkProvider.getContent(
+                    mServerUrl + API + USERS + userName + REGISTRATIONS);
             JSONArray jsonRegistrations = new JSONArray(content);
             for (int i = 0; i < jsonRegistrations.length(); ++i) {
                 SafeJSONObject jsonObject =
-                        new SafeJSONObject(jsonRegistrations.getJSONObject(i).getJSONObject(EVENT.get()));
+                        new SafeJSONObject(
+                                jsonRegistrations.getJSONObject(i)
+                                                 .getJSONObject(EVENT.get()));
                 Parser<? extends Event> parser = ParserFactory.parserFor(jsonObject);
                 Event event = parser.parse(jsonObject);
                 events.add(event);
@@ -102,17 +129,17 @@ public class NetworkEventClient implements EventClient {
     }
 
     @Override
-    public Bitmap imageFor(Event event) throws EventClientException {
-        if (event == null) {
+    public Bitmap imageFor(String imagePath) throws EventClientException {
+        if (imagePath == null) {
             throw new IllegalArgumentException();
         }
         Bitmap image;
         try {
-            String imagePath = mServerUrl + IMAGES + event.getImagePath();
-            URL url = new URL(imagePath);
+            String path = mServerUrl + IMAGES + imagePath;
+            URL url = new URL(path);
             image = BitmapFactory.decodeStream(
                     mNetworkProvider.getConnection(url)
-                            .getInputStream());
+                                    .getInputStream());
         } catch (IOException e) {
             throw new EventClientException(e);
         }

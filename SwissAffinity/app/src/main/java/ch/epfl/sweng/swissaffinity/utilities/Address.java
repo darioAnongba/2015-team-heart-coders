@@ -130,4 +130,15 @@ public class Address implements Serializable {
     public String getCountry() {
         return mCountry;
     }
+
+    @Override
+    public int hashCode() {
+        int result = mStreet.hashCode();
+        result = 31 * result + mStreetNumber;
+        result = 31 * result + mZipCode;
+        result = 31 * result + mCity.hashCode();
+        result = 31 * result + mProvince.hashCode();
+        result = 31 * result + mCountry.hashCode();
+        return result;
+    }
 }

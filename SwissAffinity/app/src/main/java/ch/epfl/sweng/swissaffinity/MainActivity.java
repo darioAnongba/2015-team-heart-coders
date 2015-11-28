@@ -13,7 +13,6 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
-import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.DataManager;
 
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
@@ -28,11 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String SHARED_PREFS_ID = "ch.epfl.sweng.swissaffinity.shared_prefs";
 
-    public static EventExpandableListAdapter mListAdapter;
-    public static User mUser;               // made public and static for testing purposes!
-    public static Context mContext;         // made public and static for testing purposes!
-    public static SharedPreferences mSharedPrefs;
-
+    private static SharedPreferences mSharedPrefs;
 
     private ExpandableListView mListView;
 
@@ -55,8 +50,11 @@ public class MainActivity extends AppCompatActivity {
         mSharedPrefs = getSharedPreferences(SHARED_PREFS_ID, MODE_PRIVATE);
         mListView = (ExpandableListView) findViewById(R.id.mainEventListView);
         mListView.setAdapter(new EventExpandableListAdapter(this));
-        mContext = this;
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         updateUI();
     }
 
@@ -87,17 +85,17 @@ public class MainActivity extends AppCompatActivity {
 
         boolean withDialog = true;
         if (DataManager.hasData()) {
-            DataManager.setData(mListView);
+            DataManager.displayData(mListView);
             withDialog = false;
         }
         if (DataManager.isConnected(this)) {
-            new DownloadEventsTask().execute(withDialog);
+            new DownloadTask().execute(withDialog);
         } else {
             DataManager.displayAlert(this);
         }
     }
 
-    private final class DownloadEventsTask extends AsyncTask<Boolean, Boolean, Void> {
+    private final class DownloadTask extends AsyncTask<Boolean, Boolean, Void> {
         private final ProgressDialog dialog = getLoadingDialog(MainActivity.this);
 
         @Override
@@ -117,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            DataManager.setData(mListView);
+            DataManager.displayData(mListView);
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }

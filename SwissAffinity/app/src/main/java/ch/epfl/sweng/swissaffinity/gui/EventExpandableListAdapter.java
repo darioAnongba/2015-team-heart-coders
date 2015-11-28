@@ -69,7 +69,7 @@ public class EventExpandableListAdapter extends AbstractExpandableListAdapter<St
                         public void onClick(View v) {
                             Intent intent =
                                     new Intent(v.getContext(), EventActivity.class);
-                            intent.putExtra(MainActivity.EXTRA_EVENT, event);
+                            intent.putExtra(MainActivity.EXTRA_EVENT, event.getId());
                             v.getContext().startActivity(intent);
                         }
                     });
