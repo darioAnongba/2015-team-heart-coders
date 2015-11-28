@@ -1,4 +1,4 @@
-package ch.epfl.sweng.swissaffinity.utilities.parsers.network;
+package ch.epfl.sweng.swissaffinity.utilities.network;
 
 import android.test.suitebuilder.annotation.LargeTest;
 
@@ -16,8 +16,6 @@ import ch.epfl.sweng.swissaffinity.DataForTesting;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
-import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
-import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.NetworkUserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
@@ -82,7 +80,7 @@ public class NetworkUserClientTest {
         assertEquals(testUser.getHomePhone(), returnedUser.getHomePhone());
         assertEquals(testUser.getMobilePhone(), returnedUser.getMobilePhone());
         assertEquals(testUser.getEmail(), returnedUser.getEmail());
-        assertEquals(testUser.getAddress().getCity(), returnedUser.getAddress().getCity());
+        assertEquals(testUser.getAddress(), returnedUser.getAddress());
         assertEquals(testUser.getProfession(), returnedUser.getProfession());
 
         assertEquals(testUser.getLocked(), returnedUser.getLocked());
@@ -122,7 +120,7 @@ public class NetworkUserClientTest {
         assertEquals(testUser.getHomePhone(), returnedUser.getHomePhone());
         assertEquals(testUser.getMobilePhone(), returnedUser.getMobilePhone());
         assertEquals(testUser.getEmail(), returnedUser.getEmail());
-        assertEquals(testUser.getAddress().getCity(), returnedUser.getAddress().getCity());
+        assertEquals(testUser.getAddress(), returnedUser.getAddress());
         assertEquals(testUser.getProfession(), returnedUser.getProfession());
 
         assertEquals(testUser.getLocked(), returnedUser.getLocked());

@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
@@ -15,6 +16,7 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EVENT_ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.REST_EVENT_REGISTRATION;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.REST_USER_REGISTRATION;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
+import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
 
 
 /**
@@ -80,7 +82,7 @@ public class NetworkUserClient implements UserClient {
     }
 
     @Override
-    public String registerUser(String username, int eventId) throws UserClientException {
+    public int registerUser(String username, int eventId) throws UserClientException {
         if (username == null || eventId < 0) {
             throw new IllegalArgumentException();
         }
@@ -90,7 +92,8 @@ public class NetworkUserClient implements UserClient {
             jsonObject.put(USERNAME.get(), username);
             jsonObject.put(EVENT_ID.get(), Integer.toString(eventId));
             jsonRequest.put(REST_EVENT_REGISTRATION.get(), jsonObject);
-            return mNetworkProvider.postContent(mServerUrl + REGISTRATIONS, jsonRequest);
+            String response = mNetworkProvider.postContent(mServerUrl + REGISTRATIONS, jsonRequest);
+            return response.equals("") ? HTTP_NO_CONTENT : -1;
         } catch (IOException | JSONException e) {
             throw new UserClientException(e);
         }

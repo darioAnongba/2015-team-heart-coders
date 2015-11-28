@@ -21,8 +21,12 @@ import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 import static ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser.dateToString;
+import static ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject.DEFAULT_STRING;
+import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
 
 public class EventActivity extends AppCompatActivity {
+    private static final String REGISTER_OP = "register";
+    private static final String UNREGISTER_OP = "unregister";
 
     private Event mEvent;
     private String mUserName;
@@ -32,16 +36,30 @@ public class EventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-
         mEvent = DataManager.getEvent(getIntent().getIntExtra(MainActivity.EXTRA_EVENT, -1));
+        mUserName = MainActivity.getSharedPrefs().getString(USERNAME.get(), "");
         new DownloadImageTask().execute(mEvent.getImagePath());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mUserName = MainActivity.getSharedPrefs().getString(USERNAME.get(), "");
-        mEvent = DataManager.getEvent(getIntent().getIntExtra(MainActivity.EXTRA_EVENT, -1));
+        updateUI();
+    }
+
+    public void register(View view) {
+        if (mUserName.isEmpty()) {
+            startActivity(new Intent(EventActivity.this, AboutActivity.class));
+        } else {
+            String operation = REGISTER_OP;
+            if (mRegistrationId > 0) {
+                operation = UNREGISTER_OP;
+            }
+            new RegisterEventTask().execute(mUserName, "" + mEvent.getId(), operation);
+        }
+    }
+
+    private void updateUI() {
         mRegistrationId = DataManager.getRegistrationId(mEvent.getId());
         Button button = (Button) findViewById(R.id.eventRegistration);
         if (mRegistrationId > 0) {
@@ -71,24 +89,13 @@ public class EventActivity extends AppCompatActivity {
         }
     }
 
-    public void register(View view) {
-        if (mUserName.isEmpty()) {
-            startActivity(new Intent(EventActivity.this, AboutActivity.class));
-        } else {
-            String operation = "r";
-            if (mRegistrationId > 0) {
-                operation = "u";
-            }
-            new RegisterEventTask().execute(mUserName, "" + mEvent.getId(), operation);
-        }
-    }
-
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+    private final class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(String... params) {
             Bitmap image = null;
+            String imagePath = params[0];
             try {
-                image = DataManager.getEventClient().imageFor(params[0]);
+                image = DataManager.getEventClient().imageFor(imagePath);
             } catch (EventClientException e) {
                 // no image.
             }
@@ -104,7 +111,7 @@ public class EventActivity extends AppCompatActivity {
         }
     }
 
-    private class RegisterEventTask extends AsyncTask<String, Void, String> {
+    private final class RegisterEventTask extends AsyncTask<String, Void, Integer> {
         private final ProgressDialog dialog = MainActivity.getLoadingDialog(EventActivity.this);
 
         @Override
@@ -114,18 +121,17 @@ public class EventActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(String... params) {
-            String response = null;
+        protected Integer doInBackground(String... params) {
+            int response = -1;
+            String userName = params[0];
+            String eventId = params[1];
+            String operation = params[2];
             try {
-                if (params[2].equals("r") && !mUserName.equals("")) {
-                    response = DataManager.getUserClient().registerUser(
-                            params[0],
-                            Integer.parseInt(params[1]));
-                } else if (params[2].equals("u")) {
-                    int ret = DataManager.getUserClient().unregisterUser(mRegistrationId);
-                    if (ret == 204) {
-                        response = "";
-                    }
+                if (!mUserName.equals(DEFAULT_STRING) && operation.equals(REGISTER_OP)) {
+                    int id = Integer.parseInt(eventId);
+                    response = DataManager.getUserClient().registerUser(userName, id);
+                } else if (operation.equals(UNREGISTER_OP)) {
+                    response = DataManager.getUserClient().unregisterUser(mRegistrationId);
                 }
             } catch (UserClientException e) {
                 Log.e("RegisterEventTask", e.getMessage());
@@ -135,16 +141,17 @@ public class EventActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String response) {
-            if (response == null) {
-                Toast.makeText(EventActivity.this, "Problem with registration", Toast.LENGTH_SHORT)
-                     .show();
-            } else if (response.equals("")) {
-                onResume();
+        protected void onPostExecute(Integer response) {
+            switch (response) {
+                case HTTP_NO_CONTENT:
+                    updateUI();
+                    break;
+                default:
+                    String message = getString(R.string.event_registration_problem);
+                    Toast.makeText(EventActivity.this, message, Toast.LENGTH_SHORT).show();
             }
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
+            dialog.dismiss();
+            super.onPostExecute(response);
         }
     }
 }

@@ -12,8 +12,8 @@ import android.view.MenuItem;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
 import ch.epfl.sweng.swissaffinity.gui.DataManager;
+import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
 
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
@@ -32,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     private ExpandableListView mListView;
 
     public static SharedPreferences getSharedPrefs() {
+        if (mSharedPrefs == null) {
+            throw new UnsupportedOperationException();
+        }
         return mSharedPrefs;
     }
 
@@ -89,13 +92,13 @@ public class MainActivity extends AppCompatActivity {
             withDialog = false;
         }
         if (DataManager.isNetworkConnected(this)) {
-            new DownloadTask().execute(withDialog);
+            new DataManagerTask().execute(withDialog);
         } else {
             DataManager.showNetworkAlert(this);
         }
     }
 
-    private final class DownloadTask extends AsyncTask<Boolean, Boolean, Void> {
+    private final class DataManagerTask extends AsyncTask<Boolean, Boolean, Void> {
         private final ProgressDialog dialog = getLoadingDialog(MainActivity.this);
 
         @Override
@@ -116,9 +119,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             DataManager.displayData(mListView);
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
+            dialog.dismiss();
             super.onPostExecute(aVoid);
         }
     }

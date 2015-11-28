@@ -1,4 +1,4 @@
-package ch.epfl.sweng.swissaffinity.utilities.parsers.network;
+package ch.epfl.sweng.swissaffinity.utilities.network;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,7 +15,6 @@ import ch.epfl.sweng.swissaffinity.DataForTesting;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
-import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClientException;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.NetworkEventClient;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.Parser;

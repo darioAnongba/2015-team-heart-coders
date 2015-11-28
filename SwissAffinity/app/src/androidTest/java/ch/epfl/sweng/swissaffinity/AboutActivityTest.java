@@ -19,7 +19,6 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 
 import ch.epfl.sweng.swissaffinity.utilities.network.ServerTags;
 
@@ -36,6 +35,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
  */
 public class AboutActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
+    private IntentServiceIdlingResource idlingResource;
+
     public AboutActivityTest() {
         super(MainActivity.class);
     }
@@ -43,7 +44,27 @@ public class AboutActivityTest extends ActivityInstrumentationTestCase2<MainActi
     @Rule
     public ActivityTestRule<AboutActivity> activityRule = new ActivityTestRule<>(AboutActivity.class);
 
+    @Before
+    public void registerIntentIdling() {
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        idlingResource = new IntentServiceIdlingResource(instrumentation.getTargetContext());
+        Espresso.registerIdlingResources(idlingResource);
+    }
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
+    }
+
+    @After
+    public void unregisterIntentIdling() {
+        Espresso.unregisterIdlingResources(idlingResource);
+    }
+
+
     public void testLoginButton() {
+
         getActivity();
         onView(withId(R.id.action_about)).perform(click());
         if (!MainActivity.getSharedPrefs().getString(ServerTags.USERNAME.get(), "").equals("")) {

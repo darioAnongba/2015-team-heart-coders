@@ -182,10 +182,11 @@ public class AboutActivity extends AppCompatActivity {
         protected void onPostExecute(User user) {
             if (user != null) {
                 DataManager.saveUser(user);
-            } else {
-                Intent intent = new Intent(AboutActivity.this, RegisterActivity.class);
-                intent.putExtra(MainActivity.EXTRA_USER, user);
-                startActivity(intent);
+                if (user.getId() == 0) {
+                    Intent intent = new Intent(AboutActivity.this, RegisterActivity.class);
+                    intent.putExtra(MainActivity.EXTRA_USER, user);
+                    startActivity(intent);
+                }
             }
             dialog.dismiss();
             finish();

@@ -53,7 +53,7 @@ public interface UserClient {
      * @return the response from server.
      * @throws UserClientException
      */
-    String registerUser(String username, int eventId) throws UserClientException;
+    int registerUser(String username, int eventId) throws UserClientException;
 
     /**
      * Unregister a user from an event

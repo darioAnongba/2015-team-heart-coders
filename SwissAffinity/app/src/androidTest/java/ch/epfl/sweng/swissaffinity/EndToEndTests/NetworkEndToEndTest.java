@@ -1,10 +1,12 @@
 package ch.epfl.sweng.swissaffinity.EndToEndTests;
 
+import android.os.SystemClock;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -70,50 +72,49 @@ public class NetworkEndToEndTest {
     }
 
     @Test
-    public void testGetUser() throws UserClientException {
-        NetworkProvider networkProvider = new DefaultNetworkProvider();
-        UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
-        User user = userClient.fetchByFacebookID(Integer.toString(1271175799)); //Dario's fb id
-        List<Location> locationsOfInterest = new ArrayList<>();
-        locationsOfInterest.add(new Location(3, "Lausanne"));
-        Date birthDay;
+    public void testGetUser() {
         try {
-            birthDay = DateParser.parseFromString(
-                "1993-02-02T00:00:00+0100",
-                DateParser.SERVER_DATE_FORMAT);
-        } catch (ParserException e) {
-            throw new UserClientException(e);
+            NetworkProvider networkProvider = new DefaultNetworkProvider();
+            UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
+            User user = userClient.fetchByFacebookID(Integer.toString(1271175799)); //Dario's fb id
+            SystemClock.sleep(10000L);
+            List<Location> locationsOfInterest = new ArrayList<>();
+            locationsOfInterest.add(new Location(3, "Lausanne"));
+            Date birthDay = DateParser.parseFromString(
+                    "1993-02-02T00:00:00+0100",
+                    DateParser.SERVER_DATE_FORMAT);
+
+            assertTrue("Unexpected username", user.getUsername().equals("Admin"));
+            assertTrue("Unexpected first name", user.getFirstName().equals("Dario"));
+            assertTrue("Unexpected last name", user.getLastName().equals("Anongba"));
+            assertTrue("Unexpected profession", user.getProfession().equals("Student"));
+            assertTrue(
+                    "Unexpected home phone",
+                    user.getHomePhone().equals(SafeJSONObject.DEFAULT_STRING));
+            assertTrue("Unexpected mobile phone", user.getMobilePhone().equals("+41799585615"));
+            assertTrue(
+                    "Unexpected profile picture",
+                    user.getProfilePicture().equals(SafeJSONObject.DEFAULT_STRING));
+            assertTrue("Unexpected email", user.getEmail().equals("dario.anongba@epfl.ch"));
+            assertTrue("Unexpected id", user.getId() == 1);
+            assertTrue("Unexpected fb id", user.getFacebookId().equals("1271175799"));
+            assertTrue("Unexpected, user should be enabled", user.getEnabled());
+            assertTrue("Unexpected, user should not be locked", !user.getLocked());
+            assertTrue(
+                    "Unexpected Adress",
+                    new Address("CH", 1007, "Lausanne", "Vaud", 15, "Avenue de Cour")
+                            .equals(user.getAddress()));
+            assertTrue("Unexpected birthday", birthDay.compareTo(user.getBirthDate()) == 0);
+            assertTrue("Unexpected gender", User.Gender.MALE.equals(user.getGender()));
+            assertTrue(
+                    "Unexpected areas of interest",
+                    new CollectionComparator<Location>().compare(
+                            new ArrayList<Location>(user.getAreasOfInterest()),
+                            locationsOfInterest));
+            assertTrue("Unexpected events attended", user.getEventsAttended().size() == 0);
+        } catch (ParserException | UserClientException e) {
+            fail(e.getMessage());
         }
-
-        assertTrue("Unexpected username", user.getUsername().equals("Admin"));
-        assertTrue("Unexpected first name", user.getFirstName().equals("Dario"));
-        assertTrue("Unexpected last name", user.getLastName().equals("Anongba"));
-        assertTrue("Unexpected profession", user.getProfession().equals("Student"));
-        assertTrue(
-            "Unexpected home phone",
-            user.getHomePhone().equals(SafeJSONObject.DEFAULT_STRING));
-        assertTrue("Unexpected mobile phone", user.getMobilePhone().equals("+41799585615"));
-        assertTrue(
-            "Unexpected profile picture",
-            user.getProfilePicture().equals(SafeJSONObject.DEFAULT_STRING));
-        assertTrue("Unexpected email", user.getEmail().equals("dario.anongba@epfl.ch"));
-        assertTrue("Unexpected id", user.getId() == 1);
-        assertTrue("Unexpected fb id", user.getFacebookId().equals("1271175799"));
-        assertTrue("Unexpected, user should be enabled", user.getEnabled());
-        assertTrue("Unexpected, user should not be locked", !user.getLocked());
-        assertTrue(
-            "Unexpected Adress",
-            new Address("CH", 1007, "Lausanne", "Vaud", 15, "Avenue de Cour")
-                .equals(user.getAddress()));
-        assertTrue("Unexpected birthday", birthDay.compareTo(user.getBirthDate()) == 0);
-        assertTrue("Unexpected gender", User.Gender.MALE.equals(user.getGender()));
-        assertTrue(
-            "Unexpected areas of interest",
-            new CollectionComparator<Location>().compare(
-                new ArrayList<Location>(user.getAreasOfInterest()),
-                locationsOfInterest));
-        assertTrue("Unexpected events attended", user.getEventsAttended().size() == 0);
-
     }
 
     @Test
@@ -192,7 +193,8 @@ public class NetworkEndToEndTest {
         locationsOfInterest.add(new Location(8, "Bulle"));
         try {
             JSONObject jsonUser = new JSONObject();
-
+            userClient.deleteUser("DumbUser666");
+            SystemClock.sleep(10000L);
             jsonUser.put(EMAIL.get(), "dumbuser666@gmail.com");
             jsonUser.put(USERNAME.get(), "DumbUser666");
             jsonUser.put("firstName", "Dumb");
@@ -202,7 +204,7 @@ public class NetworkEndToEndTest {
             jsonUser.put("facebookId", "666");
             jsonUser.put("plainPassword", "dumbpassword");
             JSONObject responseJSON = userClient.postUser(jsonUser);
-            Thread.sleep(1000L);
+            SystemClock.sleep(10000L);
             List<Location> areasOfInterest = new ArrayList<>();
             JSONArray areas = responseJSON.getJSONArray("locations_of_interest");
             for (int i = 0; i < areas.length(); i++) {
@@ -226,7 +228,7 @@ public class NetworkEndToEndTest {
                 "Unexpected locations of preference",
                 new CollectionComparator<Location>().compare(locationsOfInterest, areasOfInterest));
 
-        } catch (UserClientException | ParserException | JSONException | InterruptedException e) {
+        } catch (UserClientException | ParserException | JSONException e) {
             fail(e.getMessage());
         }
     }

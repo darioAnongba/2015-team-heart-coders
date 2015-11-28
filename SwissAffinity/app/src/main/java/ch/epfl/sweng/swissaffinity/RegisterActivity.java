@@ -16,12 +16,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
+import ch.epfl.sweng.swissaffinity.gui.DataManager;
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.users.User.Gender;
-import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
-import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
-import ch.epfl.sweng.swissaffinity.utilities.network.users.NetworkUserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.user.UserParser;
+
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
+import static ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject.DEFAULT_STRING;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -40,36 +48,36 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         final RadioGroup.OnCheckedChangeListener radioChecker =
-            new RadioGroup.OnCheckedChangeListener() {
+                new RadioGroup.OnCheckedChangeListener() {
 
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    if (checkedId == R.id.registerFemale) {
-                        gender = "female";
-                    } else if (checkedId == R.id.registerMale) {
-                        gender = "male";
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        if (checkedId == R.id.registerFemale) {
+                            gender = "female";
+                        } else if (checkedId == R.id.registerMale) {
+                            gender = "male";
+                        }
                     }
-                }
-            };
+                };
 
         fillData();
 
         Button registerButton = (Button) findViewById(R.id.userRegistration);
         registerButton.setOnClickListener(
-            new View.OnClickListener() {
-                public void onClick(View v) {
-                    JSONObject json = createJson();
-                    if (json != null) {
-                        Log.v("UserJson", json.toString());
-                        new UploadUserTask().execute(json.toString());
-                    } else {
-                        Toast.makeText(
-                            getApplicationContext(),
-                            "There has been a problem",
-                            Toast.LENGTH_LONG).show();
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        JSONObject json = createJson();
+                        if (json != null) {
+                            Log.v("UserJson", json.toString());
+                            new UploadUserTask().execute(json.toString());
+                        } else {
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "There has been a problem",
+                                    Toast.LENGTH_LONG).show();
+                        }
                     }
-                }
-            });
+                });
     }
 
     /**
@@ -88,7 +96,11 @@ public class RegisterActivity extends AppCompatActivity {
         emailText = (EditText) findViewById(R.id.registerEmail);
         emailText.setText(user.getEmail());
         birthdayText = (EditText) findViewById(R.id.registerBirthDay);
-        birthdayText.setText(user.getBirthDate().toString());
+        SimpleDateFormat dateFormat =
+                new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        birthdayText.setText(dateFormat.format(user.getBirthDate()));
+        gender = user.getGender().get();
+        facebookId = user.getFacebookId();
         if (gender.equalsIgnoreCase(Gender.FEMALE.get())) {
             ((RadioButton) findViewById(R.id.registerFemale)).setChecked(true);
         } else if (gender.equalsIgnoreCase(Gender.MALE.get())) {
@@ -112,48 +124,48 @@ public class RegisterActivity extends AppCompatActivity {
             !isValidEmail(emailText.getText().toString()))
         {
             Toast.makeText(
-                RegisterActivity.this,
-                "Mail is not in a valid format , empty or over 100 characters",
-                Toast.LENGTH_SHORT).show();
+                    RegisterActivity.this,
+                    "Mail is not in a valid format , empty or over 100 characters",
+                    Toast.LENGTH_SHORT).show();
         } else if ((userNameText.getText().toString().isEmpty() ||
                     userNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
-                RegisterActivity.this, "Username is empty , or over 50 characters",
-                Toast.LENGTH_SHORT).show();
+                    RegisterActivity.this, "Username is empty , or over 50 characters",
+                    Toast.LENGTH_SHORT).show();
         } else if ((firstNameText.getText().toString().isEmpty() ||
                     firstNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
-                RegisterActivity.this, "First Name is empty , or over 50 characters",
-                Toast.LENGTH_SHORT).show();
+                    RegisterActivity.this, "First Name is empty , or over 50 characters",
+                    Toast.LENGTH_SHORT).show();
         } else if ((lastNameText.getText().toString().isEmpty() ||
                     lastNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
-                RegisterActivity.this, "Last Name is empty , or over 50 characters",
-                Toast.LENGTH_SHORT).show();
+                    RegisterActivity.this, "Last Name is empty , or over 50 characters",
+                    Toast.LENGTH_SHORT).show();
         } else if (passwordText.getText().toString().isEmpty()) {
             Toast.makeText(
-                RegisterActivity.this, "Password is empty ",
-                Toast.LENGTH_SHORT).show();
+                    RegisterActivity.this, "Password is empty ",
+                    Toast.LENGTH_SHORT).show();
         } else if (!passwordText.getText().toString().equals(
-            passwordConfirmation.getText()
-                                .toString()))
+                passwordConfirmation.getText()
+                                    .toString()))
         {
             Toast.makeText(
-                RegisterActivity.this, "Password do not match ",
-                Toast.LENGTH_SHORT).show();
+                    RegisterActivity.this, "Password do not match ",
+                    Toast.LENGTH_SHORT).show();
         } else if (gender == null) {
             Toast.makeText(
-                RegisterActivity.this, "No value found for Gender ",
-                Toast.LENGTH_SHORT).show();
+                    RegisterActivity.this, "No value found for Gender ",
+                    Toast.LENGTH_SHORT).show();
         } else if (birthdayText.getText().toString().length() == 0 ||
                    birthdayText.getText().toString().length() > 20)
         {
             Toast.makeText(
-                RegisterActivity.this, "Birth Date is empty or too long ",
-                Toast.LENGTH_SHORT).show();
+                    RegisterActivity.this, "Birth Date is empty or too long ",
+                    Toast.LENGTH_SHORT).show();
         } else {
             try {
                 jsonObject = new JSONObject();
@@ -196,17 +208,12 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-
-            NetworkUserClient networkUserClient =
-                new NetworkUserClient(NetworkProvider.SERVER_URL, new DefaultNetworkProvider());
             JSONObject response = new JSONObject();
             try {
                 JSONObject jsonObject = new JSONObject(params[0]);
-                response = networkUserClient.postUser(jsonObject);
-            } catch (UserClientException e) {
-                Log.e("Error with the server", e.getMessage());
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
+                response = DataManager.getUserClient().postUser(jsonObject);
+            } catch (UserClientException | JSONException e) {
+                Log.e("UploadUserTask", e.getMessage());
             }
             return response.toString();
         }
@@ -214,16 +221,17 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String response) {
             dialog.dismiss();
-            JSONObject responseJson;
             try {
-                responseJson = new JSONObject(response);
-                if (responseJson != null &&
-                    responseJson.getString("email").equals(emailText.getText().toString()) &&
-                    responseJson.getString("username").equals(userNameText.getText().toString()))
+                SafeJSONObject responseJson = new SafeJSONObject(response);
+                if (responseJson.get(EMAIL.get(), DEFAULT_STRING)
+                                .equals(emailText.getText().toString()) &&
+                    responseJson.get(FIRST_NAME.get(), DEFAULT_STRING)
+                                .equals(firstNameText.getText().toString()))
                 {
+                    DataManager.saveUser(new UserParser().parse(responseJson));
                     Toast.makeText(
-                        RegisterActivity.this, "you have been registered",
-                        Toast.LENGTH_LONG).show();
+                            RegisterActivity.this, R.string.register_positive,
+                            Toast.LENGTH_LONG).show();
                     finish();
                 } else {
                     String error = "";
@@ -253,18 +261,17 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     if (!error.equals("")) {
                         Toast.makeText(
-                            RegisterActivity.this, error,
-                            Toast.LENGTH_LONG).show();
+                                RegisterActivity.this, error,
+                                Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(
-                            RegisterActivity.this, "unhandled error " + response,
-                            Toast.LENGTH_LONG).show();
+                                RegisterActivity.this, "unhandled error " + response,
+                                Toast.LENGTH_LONG).show();
                     }
                 }
-            } catch (JSONException e) {
-                Log.e("No response", response);
+            } catch (JSONException | ParserException e) {
+                Log.e("UploadUserTask", e.getMessage());
             }
-
         }
     }
 }
