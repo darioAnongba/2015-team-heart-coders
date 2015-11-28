@@ -13,7 +13,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
-import ch.epfl.sweng.swissaffinity.utilities.DataManager;
+import ch.epfl.sweng.swissaffinity.gui.DataManager;
 
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
@@ -88,10 +88,10 @@ public class MainActivity extends AppCompatActivity {
             DataManager.displayData(mListView);
             withDialog = false;
         }
-        if (DataManager.isConnected(this)) {
+        if (DataManager.isNetworkConnected(this)) {
             new DownloadTask().execute(withDialog);
         } else {
-            DataManager.displayAlert(this);
+            DataManager.showNetworkAlert(this);
         }
     }
 

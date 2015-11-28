@@ -1,6 +1,7 @@
 package ch.epfl.sweng.swissaffinity.utilities;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Representation of a location.
@@ -23,24 +24,23 @@ public class Location implements Serializable {
         mId = id;
         mName = name;
     }
-   
+
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null){
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        if (getClass() != obj.getClass()){
-            return false;
-        }
-        final Location other = (Location) obj;
-        if (this.mId != other.getId()){
-            return false;
-        }
-        if ((this.mName == null) ? (other.getName() != null) :
-                (! this.mName.equals(other.getName()))){
-            return false;
-        }
-        return true;
+        Location location = (Location) o;
+        return Objects.equals(mId, location.mId) &&
+               Objects.equals(mName, location.mName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mId, mName);
     }
 
     /**
@@ -59,12 +59,5 @@ public class Location implements Serializable {
      */
     public String getName() {
         return mName;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = mId;
-        result = 31 * result + mName.hashCode();
-        return result;
     }
 }

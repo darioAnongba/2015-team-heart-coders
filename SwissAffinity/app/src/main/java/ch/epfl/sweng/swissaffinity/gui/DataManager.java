@@ -1,4 +1,4 @@
-package ch.epfl.sweng.swissaffinity.utilities;
+package ch.epfl.sweng.swissaffinity.gui;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -16,7 +16,6 @@ import java.util.List;
 import ch.epfl.sweng.swissaffinity.MainActivity;
 import ch.epfl.sweng.swissaffinity.R;
 import ch.epfl.sweng.swissaffinity.events.Event;
-import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
 import ch.epfl.sweng.swissaffinity.users.Registration;
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
@@ -36,7 +35,7 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_NAME
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
 /**
- * Manager for the data fetched from the server.
+ * Manager for the data fetched from the server. (static class)
  */
 public class DataManager {
 
@@ -50,64 +49,100 @@ public class DataManager {
     private DataManager() {
     }
 
+    /**
+     * Getter for the event client
+     *
+     * @return the event client
+     */
     public static EventClient getEventClient() {
         if (EVENT_CLIENT == null) {
             EVENT_CLIENT = new NetworkEventClient(
-                    NetworkProvider.SERVER_URL,
-                    new DefaultNetworkProvider());
+                NetworkProvider.SERVER_URL,
+                new DefaultNetworkProvider());
         }
         return EVENT_CLIENT;
     }
 
+    /**
+     * Setter for the event client (FOR TESTING PURPOSE ONLY)
+     *
+     * @param eventClient the manually prepared event client
+     */
     public static void setEventClient(EventClient eventClient) {
         EVENT_CLIENT = eventClient;
     }
 
+    /**
+     * Getter for the user client
+     *
+     * @return the user client
+     */
     public static UserClient getUserClient() {
         if (USER_CLIENT == null) {
             USER_CLIENT =
-                    new NetworkUserClient(NetworkProvider.SERVER_URL, new DefaultNetworkProvider());
+                new NetworkUserClient(NetworkProvider.SERVER_URL, new DefaultNetworkProvider());
         }
         return USER_CLIENT;
     }
 
+    /**
+     * Setter for the user client (FOR TESTING PURPOSE ONLY)
+     *
+     * @param userClient the manually prepared user client
+     */
     public static void setUserClient(UserClient userClient) {
         USER_CLIENT = userClient;
     }
 
+    /**
+     * @return if there are events in the manager
+     */
     public static boolean hasData() {
         return !MY_EVENTS.isEmpty() || !UPCOMING_EVENTS.isEmpty();
     }
 
-    public static boolean isConnected(Context context) {
+    /**
+     * @param context the activity context
+     * @return if there is connection to the internet
+     */
+    public static boolean isNetworkConnected(Context context) {
         ConnectivityManager connectivityManager =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo network = connectivityManager.getActiveNetworkInfo();
         return network != null && network.isConnected();
     }
 
-    public static void displayAlert(final Context context) {
-        if (!isConnected(context)) {
+    /**
+     * Diplay an alert if there is no network
+     *
+     * @param context the activity context
+     */
+    public static void showNetworkAlert(final Context context) {
+        if (!isNetworkConnected(context)) {
             AlertDialog.Builder alert = new AlertDialog.Builder(context);
             alert.setTitle(R.string.alert_no_internet)
                  .setMessage(R.string.alert_message)
                  .setPositiveButton(
-                         R.string.alert_positive, new DialogInterface.OnClickListener() {
-                             public void onClick(DialogInterface dialog, int which) {
-                                 displayAlert(context);
-                                 dialog.dismiss();
-                             }
-                         })
+                     R.string.alert_positive, new DialogInterface.OnClickListener() {
+                         public void onClick(DialogInterface dialog, int which) {
+                             showNetworkAlert(context);
+                             dialog.dismiss();
+                         }
+                     })
                  .setNegativeButton(
-                         R.string.alert_negative, new DialogInterface.OnClickListener() {
-                             public void onClick(DialogInterface dialog, int which) {
-                                 dialog.dismiss();
-                             }
-                         });
+                     R.string.alert_negative, new DialogInterface.OnClickListener() {
+                         public void onClick(DialogInterface dialog, int which) {
+                             dialog.dismiss();
+                         }
+                     });
             alert.show();
         }
     }
 
+    /**
+     * Update the internal data of the manager<br>
+     * Has to be used async.
+     */
     public static void updateData() {
         List<Event> myEvents = new ArrayList<>();
         List<Event> upcomingEvents = new ArrayList<>();
@@ -133,16 +168,15 @@ public class DataManager {
         UPCOMING_EVENTS.addAll(upcomingEvents);
     }
 
-    private static List<String> getGroups(Context context) {
-        String myEvents = context.getString(R.string.my_events);
-        String upcomingEvents = context.getString(R.string.upcoming_events);
-        return Arrays.asList(myEvents, upcomingEvents);
-    }
-
+    /**
+     * Fill the data in the given expandable list view.
+     *
+     * @param listView the expandable list view
+     */
     public static void displayData(ExpandableListView listView) {
         if (hasData()) {
             EventExpandableListAdapter adapter =
-                    (EventExpandableListAdapter) listView.getExpandableListAdapter();
+                (EventExpandableListAdapter) listView.getExpandableListAdapter();
             adapter.setData(getGroups(listView.getContext()), MY_EVENTS, UPCOMING_EVENTS);
             for (int i = 0; i < adapter.getGroupCount(); ++i) {
                 listView.expandGroup(i);
@@ -150,6 +184,9 @@ public class DataManager {
         }
     }
 
+    /**
+     * Delete the user data (f.ex. after a log out)
+     */
     public static void deleteUser() {
         REGISTRATIONS.clear();
         MY_EVENTS.clear();
@@ -165,6 +202,11 @@ public class DataManager {
                     .apply();
     }
 
+    /**
+     * Save the user data
+     *
+     * @param user the user
+     */
     public static void saveUser(User user) {
         MainActivity.getSharedPrefs().edit()
                     .putString(FACEBOOK_ID.get(), user.getFacebookId())
@@ -177,6 +219,12 @@ public class DataManager {
                     .apply();
     }
 
+    /**
+     * Find a registration given an event ID
+     *
+     * @param eventId the event ID
+     * @return the registration ID
+     */
     public static int getRegistrationId(int eventId) {
         for (Registration registration : REGISTRATIONS) {
             if (registration.getEvent().getId() == eventId) {
@@ -186,6 +234,12 @@ public class DataManager {
         return -1;
     }
 
+    /**
+     * Return an event given its ID
+     *
+     * @param eventId the event ID
+     * @return the event
+     */
     public static Event getEvent(int eventId) {
         for (Event event : MY_EVENTS) {
             if (event.getId() == eventId) {
@@ -198,5 +252,11 @@ public class DataManager {
             }
         }
         return null;
+    }
+
+    private static List<String> getGroups(Context context) {
+        String myEvents = context.getString(R.string.my_events);
+        String upcomingEvents = context.getString(R.string.upcoming_events);
+        return Arrays.asList(myEvents, upcomingEvents);
     }
 }
