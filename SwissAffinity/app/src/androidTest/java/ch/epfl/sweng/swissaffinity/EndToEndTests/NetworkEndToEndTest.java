@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.NetworkInterface;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -163,7 +164,7 @@ public class NetworkEndToEndTest {
     @Test
     public void postUserTest() throws UserClientException {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
-        UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
+        UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
         List<Location> locationsOfInterest = new ArrayList<>();
         locationsOfInterest.add(new Location(2, "Genève"));
         locationsOfInterest.add(new Location(3, "Lausanne"));

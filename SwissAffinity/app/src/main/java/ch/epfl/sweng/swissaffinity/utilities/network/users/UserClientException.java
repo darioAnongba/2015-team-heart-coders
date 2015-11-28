@@ -5,10 +5,6 @@ package ch.epfl.sweng.swissaffinity.utilities.network.users;
  */
 public class UserClientException extends Exception {
 
-    public UserClientException() {
-        super();
-    }
-
     public UserClientException(String message) {
         super(message);
     }

@@ -23,14 +23,6 @@ import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.NetworkUserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.GENDER;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_NAME;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
-
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText emailText;
@@ -48,36 +40,36 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         final RadioGroup.OnCheckedChangeListener radioChecker =
-                new RadioGroup.OnCheckedChangeListener() {
+            new RadioGroup.OnCheckedChangeListener() {
 
-                    @Override
-                    public void onCheckedChanged(RadioGroup group, int checkedId) {
-                        if (checkedId == R.id.registerFemale) {
-                            gender = "female";
-                        } else if (checkedId == R.id.registerMale) {
-                            gender = "male";
-                        }
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    if (checkedId == R.id.registerFemale) {
+                        gender = "female";
+                    } else if (checkedId == R.id.registerMale) {
+                        gender = "male";
                     }
-                };
+                }
+            };
 
         fillData();
 
         Button registerButton = (Button) findViewById(R.id.userRegistration);
         registerButton.setOnClickListener(
-                new View.OnClickListener() {
-                    public void onClick(View v) {
-                        JSONObject json = createJson();
-                        if (json != null) {
-                            Log.v("UserJson", json.toString());
-                            new UploadUserTask().execute(json.toString());
-                        } else {
-                            Toast.makeText(
-                                    getApplicationContext(),
-                                    "There has been a problem",
-                                    Toast.LENGTH_LONG).show();
-                        }
+            new View.OnClickListener() {
+                public void onClick(View v) {
+                    JSONObject json = createJson();
+                    if (json != null) {
+                        Log.v("UserJson", json.toString());
+                        new UploadUserTask().execute(json.toString());
+                    } else {
+                        Toast.makeText(
+                            getApplicationContext(),
+                            "There has been a problem",
+                            Toast.LENGTH_LONG).show();
                     }
-                });
+                }
+            });
     }
 
     /**
@@ -120,48 +112,48 @@ public class RegisterActivity extends AppCompatActivity {
             !isValidEmail(emailText.getText().toString()))
         {
             Toast.makeText(
-                    RegisterActivity.this,
-                    "Mail is not in a valid format , empty or over 100 characters",
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this,
+                "Mail is not in a valid format , empty or over 100 characters",
+                Toast.LENGTH_SHORT).show();
         } else if ((userNameText.getText().toString().isEmpty() ||
                     userNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
-                    RegisterActivity.this, "Username is empty , or over 50 characters",
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this, "Username is empty , or over 50 characters",
+                Toast.LENGTH_SHORT).show();
         } else if ((firstNameText.getText().toString().isEmpty() ||
                     firstNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
-                    RegisterActivity.this, "First Name is empty , or over 50 characters",
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this, "First Name is empty , or over 50 characters",
+                Toast.LENGTH_SHORT).show();
         } else if ((lastNameText.getText().toString().isEmpty() ||
                     lastNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
-                    RegisterActivity.this, "Last Name is empty , or over 50 characters",
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this, "Last Name is empty , or over 50 characters",
+                Toast.LENGTH_SHORT).show();
         } else if (passwordText.getText().toString().isEmpty()) {
             Toast.makeText(
-                    RegisterActivity.this, "Password is empty ",
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this, "Password is empty ",
+                Toast.LENGTH_SHORT).show();
         } else if (!passwordText.getText().toString().equals(
-                passwordConfirmation.getText()
-                                    .toString()))
+            passwordConfirmation.getText()
+                                .toString()))
         {
             Toast.makeText(
-                    RegisterActivity.this, "Password do not match ",
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this, "Password do not match ",
+                Toast.LENGTH_SHORT).show();
         } else if (gender == null) {
             Toast.makeText(
-                    RegisterActivity.this, "No value found for Gender ",
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this, "No value found for Gender ",
+                Toast.LENGTH_SHORT).show();
         } else if (birthdayText.getText().toString().length() == 0 ||
                    birthdayText.getText().toString().length() > 20)
         {
             Toast.makeText(
-                    RegisterActivity.this, "Birth Date is empty or too long ",
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this, "Birth Date is empty or too long ",
+                Toast.LENGTH_SHORT).show();
         } else {
             try {
                 jsonObject = new JSONObject();
@@ -184,7 +176,6 @@ public class RegisterActivity extends AppCompatActivity {
      * Check is the mail is a valid format
      *
      * @param target the sequence of character
-     *
      * @return true if it has the form of an email
      */
     public static boolean isValidEmail(CharSequence target) {
@@ -207,7 +198,7 @@ public class RegisterActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             NetworkUserClient networkUserClient =
-                    new NetworkUserClient(NetworkProvider.SERVER_URL, new DefaultNetworkProvider());
+                new NetworkUserClient(NetworkProvider.SERVER_URL, new DefaultNetworkProvider());
             JSONObject response = new JSONObject();
             try {
                 JSONObject jsonObject = new JSONObject(params[0]);
@@ -231,8 +222,8 @@ public class RegisterActivity extends AppCompatActivity {
                     responseJson.getString("username").equals(userNameText.getText().toString()))
                 {
                     Toast.makeText(
-                            RegisterActivity.this, "you have been registered",
-                            Toast.LENGTH_LONG).show();
+                        RegisterActivity.this, "you have been registered",
+                        Toast.LENGTH_LONG).show();
                     finish();
                 } else {
                     String error = "";
@@ -262,12 +253,12 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     if (!error.equals("")) {
                         Toast.makeText(
-                                RegisterActivity.this, error,
-                                Toast.LENGTH_LONG).show();
+                            RegisterActivity.this, error,
+                            Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(
-                                RegisterActivity.this, "unhandled error " + response,
-                                Toast.LENGTH_LONG).show();
+                            RegisterActivity.this, "unhandled error " + response,
+                            Toast.LENGTH_LONG).show();
                     }
                 }
             } catch (JSONException e) {

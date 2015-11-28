@@ -13,10 +13,8 @@ public interface UserClient {
      * Fetch a user regarding his user name
      *
      * @param userName the user name
-     *
      * @return the user
-     *
-     * @throws UserClientException if a problem occurs
+     * @throws UserClientException
      */
     User fetchByUsername(String userName) throws UserClientException;
 
@@ -24,10 +22,8 @@ public interface UserClient {
      * Fetch a user regarding his ID or Facebook ID
      *
      * @param facebookId the user facebook ID
-     *
      * @return the user
-     *
-     * @throws UserClientException if a problem occurs
+     * @throws UserClientException
      */
     User fetchByFacebookID(String facebookId) throws UserClientException;
 
@@ -35,13 +31,18 @@ public interface UserClient {
      * Post a new user to the server.
      *
      * @param jsonUserObject a json user
-     *
      * @return the json object back from server.
-     *
-     * @throws UserClientException if a problem occurs.
+     * @throws UserClientException
      */
     JSONObject postUser(JSONObject jsonUserObject) throws UserClientException;
 
+    /**
+     * Delete a user from the server
+     *
+     * @param userName the user name
+     * @return the response code returned by the server
+     * @throws UserClientException
+     */
     int deleteUser(String userName) throws UserClientException;
 
     /**
@@ -49,12 +50,17 @@ public interface UserClient {
      *
      * @param username the name of the user.
      * @param eventId  the ID of the event.
-     *
      * @return the response from server.
-     *
-     * @throws UserClientException if a problem occurs.
+     * @throws UserClientException
      */
     String registerUser(String username, int eventId) throws UserClientException;
 
+    /**
+     * Unregister a user from an event
+     *
+     * @param registrationId the registration ID {@link ch.epfl.sweng.swissaffinity.users.Registration}
+     * @return the response code from the server
+     * @throws UserClientException
+     */
     int unregisterUser(int registrationId) throws UserClientException;
 }
