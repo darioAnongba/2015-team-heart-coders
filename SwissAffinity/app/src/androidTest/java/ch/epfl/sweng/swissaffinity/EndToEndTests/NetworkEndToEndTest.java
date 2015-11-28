@@ -71,7 +71,7 @@ public class NetworkEndToEndTest {
         new NetworkUserClient("http://beecreative.ch", networkProvider);
     }
 
-    @Test
+    @Ignore
     public void testGetUser() {
         try {
             NetworkProvider networkProvider = new DefaultNetworkProvider();
@@ -117,7 +117,7 @@ public class NetworkEndToEndTest {
         }
     }
 
-    @Test
+    @Ignore
     public void postRegistrationToEvent() throws UserClientException {
         final int eventIdToRegister = 7;
         final String userToRegister = "lio";
@@ -180,7 +180,7 @@ public class NetworkEndToEndTest {
         }
     }
 
-    @Test
+    @Ignore
     public void postUserTest() {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
         UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
@@ -233,7 +233,7 @@ public class NetworkEndToEndTest {
         }
     }
 
-    @Test
+    @Ignore
     public void testGetSpeedDatingEvent() throws EventClientException {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
         EventClient eventClient = new NetworkEventClient("http://beecreative.ch", networkProvider);
