@@ -80,7 +80,7 @@ public class NetworkUserClientTest {
         assertEquals(testUser.getHomePhone(), returnedUser.getHomePhone());
         assertEquals(testUser.getMobilePhone(), returnedUser.getMobilePhone());
         assertEquals(testUser.getEmail(), returnedUser.getEmail());
-        assertEquals(testUser.getAddress().getCity(), returnedUser.getAddress().getCity());
+        assertEquals(testUser.getAddress(), returnedUser.getAddress());
         assertEquals(testUser.getProfession(), returnedUser.getProfession());
 
         assertEquals(testUser.getLocked(), returnedUser.getLocked());
@@ -120,7 +120,7 @@ public class NetworkUserClientTest {
         assertEquals(testUser.getHomePhone(), returnedUser.getHomePhone());
         assertEquals(testUser.getMobilePhone(), returnedUser.getMobilePhone());
         assertEquals(testUser.getEmail(), returnedUser.getEmail());
-        assertEquals(testUser.getAddress().getCity(), returnedUser.getAddress().getCity());
+        assertEquals(testUser.getAddress(), returnedUser.getAddress());
         assertEquals(testUser.getProfession(), returnedUser.getProfession());
 
         assertEquals(testUser.getLocked(), returnedUser.getLocked());

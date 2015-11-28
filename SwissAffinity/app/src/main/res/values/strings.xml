@@ -70,5 +70,6 @@
     <string name="facebook_cancel">You canceled your login attempt</string>
     <string name="facebook_error">Login attempt failed :\n%s</string>
     <string name="event_registration_problem">Problem with registration</string>
+    <string name="register_positive">You have been registered</string>
 
 </resources>

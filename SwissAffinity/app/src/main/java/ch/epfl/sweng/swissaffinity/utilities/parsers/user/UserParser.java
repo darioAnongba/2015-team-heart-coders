@@ -37,7 +37,7 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.MOBILE_PH
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.PROFESSION;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.PROFILE_PICTURE;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
-import static ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject.*;
+import static ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject.DEFAULT_STRING;
 
 /**
  * A parser for the User class.
@@ -47,17 +47,17 @@ public class UserParser extends Parser<User> {
     @Override
     public User parse(SafeJSONObject jsonObject) throws ParserException {
 
-        SafeJSONObject jsonAddress;
         String facebookId;
         int id;
         String userName;
+        SafeJSONObject jsonAddress;
         //Critical attributes
         try {
-            jsonAddress = new SafeJSONObject(jsonObject.getJSONObject(ADDRESS.get()));
             facebookId = jsonObject.getString(FACEBOOK_ID.get());
             id = jsonObject.getInt(ID.get());
             userName = jsonObject.getString(USERNAME.get());
-        } catch (JSONException e){
+            jsonAddress = new SafeJSONObject(jsonObject.get(ADDRESS.get(), new JSONObject()));
+        } catch (JSONException e) {
             throw new ParserException(e);
         }
 
