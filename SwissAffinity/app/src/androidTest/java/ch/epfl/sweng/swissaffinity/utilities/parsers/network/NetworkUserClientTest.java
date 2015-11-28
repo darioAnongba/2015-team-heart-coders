@@ -1,5 +1,7 @@
 package ch.epfl.sweng.swissaffinity.utilities.parsers.network;
 
+import android.test.suitebuilder.annotation.LargeTest;
+
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +14,6 @@ import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.DataForTesting;
 import ch.epfl.sweng.swissaffinity.events.Event;
-import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
@@ -20,7 +21,6 @@ import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.NetworkUserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
-import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.user.UserParser;
 
 import static org.junit.Assert.assertEquals;
@@ -29,7 +29,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-
+@LargeTest
 public class NetworkUserClientTest {
 
     private String mockServerURL;
