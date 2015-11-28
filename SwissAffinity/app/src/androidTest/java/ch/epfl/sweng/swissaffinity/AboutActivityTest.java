@@ -61,7 +61,8 @@ public class AboutActivityTest extends ActivityInstrumentationTestCase2<MainActi
     public void unregisterIntentIdling() {
         Espresso.unregisterIdlingResources(idlingResource);
     }
-    
+
+
     public void testLoginButton() {
 
         getActivity();

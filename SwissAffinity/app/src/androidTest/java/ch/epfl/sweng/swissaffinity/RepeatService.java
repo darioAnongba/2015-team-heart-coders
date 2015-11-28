@@ -20,7 +20,7 @@ public class RepeatService extends IntentService {
 
         @Override
         protected void onHandleIntent(Intent intent) {
-            SystemClock.sleep(15000);  // Pretend it runs for a long time.
+            SystemClock.sleep(5000);  // Pretend it runs for a long time.
 
             String query = intent.getStringExtra(KEY_INPUT);
 
