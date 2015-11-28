@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
-import ch.epfl.sweng.swissaffinity.utilities.DataManager;
+import ch.epfl.sweng.swissaffinity.gui.DataManager;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClientException;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 
