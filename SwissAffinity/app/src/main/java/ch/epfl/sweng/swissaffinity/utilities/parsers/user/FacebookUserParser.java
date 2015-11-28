@@ -21,9 +21,10 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_NAME
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
 /**
- * Created by Lionel on 27/11/15.
+ * Allows to build a user from facebook data.
  */
 public class FacebookUserParser extends Parser<User> {
+
     @Override
     public User parse(SafeJSONObject jsonObject) throws ParserException {
         int id = 0;
@@ -38,22 +39,22 @@ public class FacebookUserParser extends Parser<User> {
         Date birthDate = DateParser.parseFromString(dateString, DateParser.FACEBOOK_DATE_FORMAT);
 
         return new User(
-                id,
-                facebookId,
-                userName,
-                email,
-                lastName,
-                firstName,
-                "",
-                "",
-                SafeJSONObject.DEFAULT_ADDRESS,
-                false,
-                true,
-                gender,
-                birthDate,
-                "",
-                "",
-                new HashSet<Location>(),
-                new ArrayList<Event>());
+            id,
+            facebookId,
+            userName,
+            email,
+            lastName,
+            firstName,
+            "",
+            "",
+            SafeJSONObject.DEFAULT_ADDRESS,
+            false,
+            false,
+            gender,
+            birthDate,
+            "",
+            "",
+            new HashSet<Location>(),
+            new ArrayList<Event>());
     }
 }
