@@ -12,7 +12,7 @@ import java.util.Map;
  * Representation of an Expandable List Adapter.
  *
  * @param <A> Type for the groups (usually String)
- * @param <B> Type for the data (could be any type)
+ * @param <B> Type for the children
  */
 public abstract class AbstractExpandableListAdapter<A, B> extends BaseExpandableListAdapter {
 

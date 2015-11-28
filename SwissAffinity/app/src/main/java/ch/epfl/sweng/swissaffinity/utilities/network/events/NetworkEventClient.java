@@ -58,46 +58,27 @@ public class NetworkEventClient implements EventClient {
 
     @Override
     public List<Registration> fetchRegistrationsForUser(String userName)
-            throws EventClientException
+        throws EventClientException
     {
         List<Registration> registrations = new ArrayList<>();
         try {
             String content = mNetworkProvider.getContent(
-                    mServerUrl + API + USERS + userName + REGISTRATIONS);
+                mServerUrl + API + USERS + userName + REGISTRATIONS);
             JSONArray jsonRegistrations = new JSONArray(content);
             for (int i = 0; i < jsonRegistrations.length(); ++i) {
                 JSONObject jsonObject = jsonRegistrations.getJSONObject(i);
                 int id = jsonObject.getInt(ID.get());
-                JSONObject event = jsonObject.getJSONObject(EVENT.get());
-                int eventId = event.getInt(ID.get());
-                registrations.add(new Registration(id, eventId));
+                SafeJSONObject
+                    jsonEvent =
+                    new SafeJSONObject(jsonObject.getJSONObject(EVENT.get()));
+                Parser<? extends Event> parser = ParserFactory.parserFor(jsonEvent);
+                Event event = parser.parse(jsonEvent);
+                registrations.add(new Registration(id, event));
             }
-        } catch (JSONException | IOException e) {
+        } catch (JSONException | IOException | ParserException e) {
             throw new EventClientException(e);
         }
         return registrations;
-    }
-
-    @Override
-    public List<Event> fetchAllForUser(String userName) throws EventClientException {
-        List<Event> events = new ArrayList<>();
-        try {
-            String content = mNetworkProvider.getContent(
-                    mServerUrl + API + USERS + userName + REGISTRATIONS);
-            JSONArray jsonRegistrations = new JSONArray(content);
-            for (int i = 0; i < jsonRegistrations.length(); ++i) {
-                SafeJSONObject jsonObject =
-                        new SafeJSONObject(
-                                jsonRegistrations.getJSONObject(i)
-                                                 .getJSONObject(EVENT.get()));
-                Parser<? extends Event> parser = ParserFactory.parserFor(jsonObject);
-                Event event = parser.parse(jsonObject);
-                events.add(event);
-            }
-        } catch (ParserException | JSONException | IOException e) {
-            throw new EventClientException(e);
-        }
-        return events;
     }
 
     @Override
@@ -138,8 +119,8 @@ public class NetworkEventClient implements EventClient {
             String path = mServerUrl + IMAGES + imagePath;
             URL url = new URL(path);
             image = BitmapFactory.decodeStream(
-                    mNetworkProvider.getConnection(url)
-                                    .getInputStream());
+                mNetworkProvider.getConnection(url)
+                                .getInputStream());
         } catch (IOException e) {
             throw new EventClientException(e);
         }

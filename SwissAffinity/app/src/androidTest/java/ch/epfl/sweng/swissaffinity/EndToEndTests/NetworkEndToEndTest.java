@@ -176,6 +176,7 @@ public class NetworkEndToEndTest {
         SafeJSONObject confirmationObject;
         JSONObject responseJSON;
         try {
+            userClient.deleteUser("DumbUser666");
             jsonUser.put("email", "dumbuser666@gmail.com");
             jsonUser.put("username", "DumbUser666");
             jsonUser.put("firstName", "Dumb");
@@ -202,9 +203,9 @@ public class NetworkEndToEndTest {
         } catch (JSONException | ParserException e) {
             throw new UserClientException(e);
         }
-        int fb_id;
+        String fb_id;
         try {
-            fb_id = confirmationObject.getInt(ServerTags.FACEBOOK_ID.get());
+            fb_id = confirmationObject.getString(ServerTags.FACEBOOK_ID.get());
         } catch (JSONException e) {
             throw new UserClientException(e);
         }
@@ -233,7 +234,7 @@ public class NetworkEndToEndTest {
                 "Unexpected birthDate", confirmationObject.get(
                         ServerTags.BIRTH_DATE.get(),
                         SafeJSONObject.DEFAULT_STRING).equals("1993-02-18T00:00:00+0100"));
-        assertTrue("Unexpected facebookId", fb_id == 666);
+        assertTrue("Unexpected facebookId", fb_id.equals("666"));
         assertTrue(
                 "Unexpected User should not be locked",
                 !confirmationObject.get(ServerTags.LOCKED.get(), true));

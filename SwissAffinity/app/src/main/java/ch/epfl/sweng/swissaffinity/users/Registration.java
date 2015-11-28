@@ -1,22 +1,24 @@
 package ch.epfl.sweng.swissaffinity.users;
 
+import ch.epfl.sweng.swissaffinity.events.Event;
+
 /**
  * Created by Lionel on 27/11/15.
  */
 public class Registration {
     private final int mId;
-    private final int mEventId;
+    private final Event mEvent;
 
-    public Registration(int id, int eventId) {
-        if (id < 0 || eventId < 0) {
+    public Registration(int id, Event event) {
+        if (id < 0 || event == null) {
             throw new IllegalArgumentException();
         }
         mId = id;
-        mEventId = eventId;
+        mEvent = event;
     }
 
-    public int getEventId() {
-        return mEventId;
+    public Event getEvent() {
+        return mEvent;
     }
 
     public int getId() {

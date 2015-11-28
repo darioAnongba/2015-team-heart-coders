@@ -77,6 +77,19 @@ public class NetworkUserClient implements UserClient {
     }
 
     @Override
+    public int deleteUser(String userName) throws UserClientException {
+        if (userName == null) {
+            throw new UserClientException(new IllegalArgumentException());
+        }
+        try {
+            return mNetworkProvider.deleteContent(
+                mServerUrl + USERS + "/" + userName);
+        } catch (IOException e) {
+            throw new UserClientException(e);
+        }
+    }
+
+    @Override
     public String registerUser(String username, int eventId) throws UserClientException {
         if (username == null || eventId < 0) {
             throw new UserClientException(new IllegalArgumentException());
