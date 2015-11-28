@@ -11,9 +11,7 @@ import android.widget.ExpandableListView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ch.epfl.sweng.swissaffinity.MainActivity;
 import ch.epfl.sweng.swissaffinity.R;
@@ -117,7 +115,7 @@ public class DataManager {
         String userName = MainActivity.getSharedPrefs().getString(USERNAME.get(), "");
         try {
             upcomingEvents.addAll(getEventClient().fetchAll());
-            registrations.addAll(getEventClient().fetchRegistrationsForUser(userName));
+            registrations.addAll(getEventClient().fetchForUser(userName));
         } catch (EventClientException e) {
             Log.e("FetchEvent", e.getMessage());
         }

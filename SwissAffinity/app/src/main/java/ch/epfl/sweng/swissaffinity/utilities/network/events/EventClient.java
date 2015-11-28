@@ -29,7 +29,7 @@ public interface EventClient {
      * @return all the registrations for a user
      * @throws EventClientException
      */
-    List<Registration> fetchRegistrationsForUser(String userName) throws EventClientException;
+    List<Registration> fetchForUser(String userName) throws EventClientException;
 
     /**
      * Fetch the events for a given collection of locations
