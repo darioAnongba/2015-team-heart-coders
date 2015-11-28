@@ -29,52 +29,47 @@ public class EventExpandableListAdapter extends AbstractExpandableListAdapter<St
 
     @Override
     public View getGroupView(
-            int groupPosition,
-            boolean isExpanded,
-            View convertView,
-            ViewGroup parent)
+        int groupPosition,
+        boolean isExpanded,
+        View convertView,
+        ViewGroup parent)
     {
-        String headerTitle = (String) getGroup(groupPosition);
-
+        String title = (String) getGroup(groupPosition);
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.list_group, null);
         }
-
         TextView textView = (TextView) convertView.findViewById(R.id.groupEvents);
-        textView.setText(headerTitle);
+        textView.setText(title);
 
         return convertView;
     }
 
     @Override
     public View getChildView(
-            int groupPosition,
-            final int childPosition,
-            boolean isLastChild,
-            View convertView,
-            ViewGroup parent)
+        int groupPosition,
+        final int childPosition,
+        boolean isLastChild,
+        View convertView,
+        ViewGroup parent)
     {
         final Event event = (Event) getChild(groupPosition, childPosition);
-        String name = event.getName();
-        String location = event.getLocation().getName();
-        String dateBegin = DateParser.dateToString(event.getDateBegin());
-
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.list_item, null);
             convertView.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent =
-                                    new Intent(v.getContext(), EventActivity.class);
-                            intent.putExtra(MainActivity.EXTRA_EVENT, event.getId());
-                            v.getContext().startActivity(intent);
-                        }
-                    });
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(v.getContext(), EventActivity.class);
+                        intent.putExtra(MainActivity.EXTRA_EVENT, event.getId());
+                        v.getContext().startActivity(intent);
+                    }
+                });
         }
-
+        String name = event.getName();
+        String location = event.getLocation().getName();
+        String dateBegin = DateParser.dateToString(event.getDateBegin());
         ((TextView) convertView.findViewById(R.id.rowEventName)).setText(name);
         ((TextView) convertView.findViewById(R.id.rowEventLocation)).setText(location);
         ((TextView) convertView.findViewById(R.id.rowEventDateBegin)).setText(dateBegin);

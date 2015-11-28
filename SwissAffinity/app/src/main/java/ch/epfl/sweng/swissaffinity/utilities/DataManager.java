@@ -28,18 +28,14 @@ import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClientException
 import ch.epfl.sweng.swissaffinity.utilities.network.events.NetworkEventClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.NetworkUserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClient;
-import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.GENDER;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_NAME;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
-import static ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject.DEFAULT_STRING;
 
 /**
  * Manager for the data fetched from the server.
@@ -48,7 +44,7 @@ public class DataManager {
 
     private final static List<Event> MY_EVENTS = new ArrayList<>();
     private final static List<Event> UPCOMING_EVENTS = new ArrayList<>();
-    private final static Map<Integer, Integer> REGISTRATIONS = new HashMap<>();
+    private final static List<Registration> REGISTRATIONS = new ArrayList<>();
 
     private static EventClient EVENT_CLIENT;
     private static UserClient USER_CLIENT;
@@ -121,18 +117,18 @@ public class DataManager {
         String userName = MainActivity.getSharedPrefs().getString(USERNAME.get(), "");
         try {
             upcomingEvents.addAll(getEventClient().fetchAll());
-            myEvents.addAll(getEventClient().fetchAllForUser(userName));
             registrations.addAll(getEventClient().fetchRegistrationsForUser(userName));
         } catch (EventClientException e) {
             Log.e("FetchEvent", e.getMessage());
+        }
+        for (Registration registration : registrations) {
+            myEvents.add(registration.getEvent());
         }
         upcomingEvents.removeAll(myEvents);
         Collections.sort(myEvents);
         Collections.sort(upcomingEvents);
         REGISTRATIONS.clear();
-        for (Registration registration : registrations) {
-            REGISTRATIONS.put(registration.getEventId(), registration.getId());
-        }
+        REGISTRATIONS.addAll(registrations);
         MY_EVENTS.clear();
         MY_EVENTS.addAll(myEvents);
         UPCOMING_EVENTS.clear();
@@ -184,11 +180,12 @@ public class DataManager {
     }
 
     public static int getRegistrationId(int eventId) {
-        Integer registrationId = REGISTRATIONS.get(eventId);
-        if (registrationId == null) {
-            registrationId = -1;
+        for (Registration registration : REGISTRATIONS) {
+            if (registration.getEvent().getId() == eventId) {
+                return registration.getId();
+            }
         }
-        return registrationId;
+        return -1;
     }
 
     public static Event getEvent(int eventId) {

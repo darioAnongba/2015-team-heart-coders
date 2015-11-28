@@ -42,6 +42,8 @@ public interface UserClient {
      */
     JSONObject postUser(JSONObject jsonUserObject) throws UserClientException;
 
+    int deleteUser(String userName) throws UserClientException;
+
     /**
      * Register a user to an event.
      *
