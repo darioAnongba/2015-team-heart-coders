@@ -48,7 +48,7 @@ public class AboutActivityTest {
     @LargeTest
     public void testLoginButton() throws Exception {
         onView(withId(R.id.action_about)).perform(click());
-        if (!MainActivity.getSharedPrefs().getString(ServerTags.USERNAME.get(), "").equals("")) {
+        if (!MainActivity.getPreferences().getString(ServerTags.USERNAME.get(), "").equals("")) {
             onView(withId(R.id.login_button)).perform(click());
             pressBack();
             pressBack();

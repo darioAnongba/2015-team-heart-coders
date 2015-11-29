@@ -62,7 +62,7 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        mUserName = MainActivity.getSharedPrefs().getString(USERNAME.get(), "");
+        mUserName = MainActivity.getPreferences().getString(USERNAME.get(), "");
         mRegistrationId = DataManager.getRegistrationId(mEventId);
         Button button = (Button) findViewById(R.id.eventRegistration);
         if (mRegistrationId > 0) {
@@ -146,7 +146,7 @@ public class EventActivity extends AppCompatActivity {
             } catch (UserClientException e) {
                 Log.e("RegisterEventTask", e.getMessage());
             }
-            DataManager.updateData();
+            DataManager.updateData(EventActivity.this);
             return response;
         }
 

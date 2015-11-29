@@ -27,15 +27,15 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String SHARED_PREFS_ID = "ch.epfl.sweng.swissaffinity.shared_prefs";
 
-    private static SharedPreferences mSharedPrefs;
+    private static SharedPreferences SHARED_PREFERENCES;
 
     private ExpandableListView mListView;
 
-    public static SharedPreferences getSharedPrefs() {
-        if (mSharedPrefs == null) {
+    public static SharedPreferences getPreferences() {
+        if (SHARED_PREFERENCES == null) {
             throw new UnsupportedOperationException();
         }
-        return mSharedPrefs;
+        return SHARED_PREFERENCES;
     }
 
     public static ProgressDialog getLoadingDialog(Context context) {
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mSharedPrefs = getSharedPreferences(SHARED_PREFS_ID, MODE_PRIVATE);
+        SHARED_PREFERENCES = getSharedPreferences(SHARED_PREFS_ID, MODE_PRIVATE);
         mListView = (ExpandableListView) findViewById(R.id.mainEventListView);
         mListView.setAdapter(new EventExpandableListAdapter(this));
     }
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUI() {
         String welcome = getString(R.string.welcome_registered_text);
-        String userName = getSharedPrefs().getString(USERNAME.get(), "");
+        String userName = SHARED_PREFERENCES.getString(USERNAME.get(), "");
         TextView textView = (TextView) findViewById(R.id.mainWelcomeText);
         textView.setText(String.format(welcome, userName));
 
@@ -112,14 +112,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Boolean... params) {
             publishProgress(params[0]);
-            DataManager.updateData();
+            DataManager.updateData(MainActivity.this);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             DataManager.displayData(mListView);
-            dialog.dismiss();
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
             super.onPostExecute(aVoid);
         }
     }

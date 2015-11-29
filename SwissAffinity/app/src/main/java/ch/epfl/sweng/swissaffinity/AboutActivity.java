@@ -82,7 +82,7 @@ public class AboutActivity extends AppCompatActivity {
      */
     private void updateUI() {
         TextView logged = ((TextView) findViewById(R.id.aboutLogedText));
-        String userName = MainActivity.getSharedPrefs().getString(USERNAME.get(), null);
+        String userName = MainActivity.getPreferences().getString(USERNAME.get(), null);
         if (userName == null) {
             logged.setText(getString(R.string.welcome_not_logged_text));
             logged.setTextSize(20);

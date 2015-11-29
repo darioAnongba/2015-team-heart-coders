@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -46,7 +45,7 @@ public class PreferenceActivity extends AppCompatActivity {
     }
 
     private Set<String> getSavedLocations() {
-        return MainActivity.getSharedPrefs().getStringSet(
+        return MainActivity.getPreferences().getStringSet(
                 LOCATIONS_INTEREST.get(),
                 null);
     }
@@ -80,7 +79,7 @@ public class PreferenceActivity extends AppCompatActivity {
     }
 
     private void saveLocations() {
-        MainActivity.getSharedPrefs()
+        MainActivity.getPreferences()
                     .edit()
                     .putStringSet(LOCATIONS_INTEREST.get(), mMyLocations)
                     .apply();

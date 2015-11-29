@@ -44,8 +44,7 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
  */
 public class DataManager {
 
-    private final static List<Event> MY_EVENTS = new ArrayList<>();
-    private final static List<Event> UPCOMING_EVENTS = new ArrayList<>();
+    private final static List<Event> ALL_EVENTS = new ArrayList<>();
     private final static List<Registration> REGISTRATIONS = new ArrayList<>();
 
     private static EventClient EVENT_CLIENT;
@@ -103,7 +102,7 @@ public class DataManager {
      * @return if there are events in the manager
      */
     public static boolean hasData() {
-        return !MY_EVENTS.isEmpty() || !UPCOMING_EVENTS.isEmpty();
+        return !REGISTRATIONS.isEmpty() || !ALL_EVENTS.isEmpty();
     }
 
     /**
@@ -148,27 +147,23 @@ public class DataManager {
      * Update the internal data of the manager<br>
      * Has to be used async.
      */
-    public static void updateData() {
-        List<Event> allEvents = new ArrayList<>();
-        List<Registration> registrations = new ArrayList<>();
-        String userName = MainActivity.getSharedPrefs().getString(USERNAME.get(), "");
-        try {
-            allEvents.addAll(getEventClient().fetchAll());
-            registrations.addAll(getEventClient().fetchForUser(userName));
-        } catch (EventClientException e) {
-            Log.e("FetchEvent", e.getMessage());
+    public static void updateData(Context context) {
+        if (isNetworkConnected(context)) {
+            List<Event> allEvents = new ArrayList<>();
+            List<Registration> registrations = new ArrayList<>();
+            String userName = MainActivity.getPreferences().getString(USERNAME.get(), "");
+            try {
+                allEvents.addAll(getEventClient().fetchAll());
+                registrations.addAll(getEventClient().fetchForUser(userName));
+            } catch (EventClientException e) {
+                Log.e("FetchEvent", e.getMessage());
+            }
+            Collections.sort(allEvents);
+            REGISTRATIONS.clear();
+            REGISTRATIONS.addAll(registrations);
+            ALL_EVENTS.clear();
+            ALL_EVENTS.addAll(allEvents);
         }
-        List<Event> upcomingEvents = filterEvents(allEvents);
-        List<Event> myEvents = getMyEvents(registrations);
-        upcomingEvents.removeAll(myEvents);
-        Collections.sort(myEvents);
-        Collections.sort(upcomingEvents);
-        REGISTRATIONS.clear();
-        REGISTRATIONS.addAll(registrations);
-        MY_EVENTS.clear();
-        MY_EVENTS.addAll(myEvents);
-        UPCOMING_EVENTS.clear();
-        UPCOMING_EVENTS.addAll(upcomingEvents);
     }
 
     /**
@@ -178,12 +173,12 @@ public class DataManager {
      */
     public static void displayData(ExpandableListView listView) {
         if (hasData()) {
+            List<Event> myEvents = getMyEvents(REGISTRATIONS);
+            List<Event> upcomingEvents = filterEvents(ALL_EVENTS);
+            upcomingEvents.removeAll(myEvents);
             EventExpandableListAdapter adapter =
                     (EventExpandableListAdapter) listView.getExpandableListAdapter();
-            adapter.setData(
-                    getGroups(listView.getContext()),
-                    MY_EVENTS,
-                    filterEvents(UPCOMING_EVENTS));
+            adapter.setData(Arrays.asList(myEvents, upcomingEvents));
             for (int i = 0; i < adapter.getGroupCount(); ++i) {
                 listView.expandGroup(i);
             }
@@ -195,9 +190,8 @@ public class DataManager {
      */
     public static void deleteUser() {
         REGISTRATIONS.clear();
-        MY_EVENTS.clear();
-        UPCOMING_EVENTS.clear();
-        MainActivity.getSharedPrefs().edit()
+        ALL_EVENTS.clear();
+        MainActivity.getPreferences().edit()
                     .putString(FACEBOOK_ID.get(), null)
                     .putString(USERNAME.get(), null)
                     .putString(LAST_NAME.get(), null)
@@ -215,7 +209,7 @@ public class DataManager {
      * @param user the user
      */
     public static void saveUser(User user) {
-        SharedPreferences preferences = MainActivity.getSharedPrefs();
+        SharedPreferences preferences = MainActivity.getPreferences();
         Set<String> locations = preferences.getStringSet(
                 LOCATIONS_INTEREST.get(),
                 new HashSet<String>());
@@ -258,12 +252,7 @@ public class DataManager {
      * @return the event
      */
     public static Event getEvent(int eventId) {
-        for (Event event : MY_EVENTS) {
-            if (event.getId() == eventId) {
-                return event;
-            }
-        }
-        for (Event event : UPCOMING_EVENTS) {
+        for (Event event : ALL_EVENTS) {
             if (event.getId() == eventId) {
                 return event;
             }
@@ -280,8 +269,7 @@ public class DataManager {
     }
 
     private static List<Event> filterEvents(List<Event> allEvents) {
-
-        Set<String> myLocations = MainActivity.getSharedPrefs()
+        Set<String> myLocations = MainActivity.getPreferences()
                                               .getStringSet(LOCATIONS_INTEREST.get(), null);
         if (myLocations != null) {
             List<Event> result = new ArrayList<>();
@@ -294,11 +282,5 @@ public class DataManager {
             return result;
         }
         return allEvents;
-    }
-
-    private static List<String> getGroups(Context context) {
-        String myEvents = context.getString(R.string.my_events);
-        String upcomingEvents = context.getString(R.string.upcoming_events);
-        return Arrays.asList(myEvents, upcomingEvents);
     }
 }

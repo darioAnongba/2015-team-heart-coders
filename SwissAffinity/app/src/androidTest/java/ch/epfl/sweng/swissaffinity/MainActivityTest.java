@@ -62,11 +62,6 @@ public class MainActivityTest {
     }
 
     @Test
-    public void testOnCreateOptionsMenu() throws Exception {
-
-    }
-
-    @Test
     public void testOnOptionsItemSelected() throws Exception {
 
     }
@@ -74,7 +69,7 @@ public class MainActivityTest {
     @LargeTest
     public void testCanGreetUsers() {
 
-        String userName = MainActivity.getSharedPrefs().getString(ServerTags.USERNAME.get(), "");
+        String userName = MainActivity.getPreferences().getString(ServerTags.USERNAME.get(), "");
 
         String welcomeText =
                 String.format(
@@ -94,7 +89,7 @@ public class MainActivityTest {
         onView(withId(R.id.action_settings)).perform(click());
         pressBack();
 
-        String userName = MainActivity.getSharedPrefs().getString(ServerTags.USERNAME.get(), "");
+        String userName = MainActivity.getPreferences().getString(ServerTags.USERNAME.get(), "");
 
         String welcomeText = String.format(
                 mActivityRule.getActivity().getString(R.string.welcome_registered_text),
