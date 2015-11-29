@@ -1,75 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Swiss Affinity</string>
     <string name="facebook_app_id">539583159528191</string>
-    <string name="action_settings">Preferences</string>
-    <string name="action_about">About</string>
+    <string name="app_name">Swiss Affinity</string>
+    <string name="title_activity_about">About</string>
+    <string name="title_activity_event">Event</string>
+    <string name="title_activity_preference">Preferences</string>
+    <string name="loading">Loading&#8230;</string>
+    <string name="my_events">My events :</string>
+    <string name="upcoming_events">Upcoming events :</string>
+
     <string name="welcome_registered_text">Welcome %s</string>
-    <string name="welcome_not_registered_text">To start, you need to register</string>
     <string name="welcome_not_logged_text">To start, you have to login:</string>
 
-    <string name="title_activity_about">About</string>
     <string name="about_leader">Leader de l\'organisation événementielle pour célibataires en Suisse romande</string>
     <string name="about_text_link">http://swiss-affinity.ch</string>
     <string name="about_info_text">Pour de plus amples informations:</string>
     <string name="about_logged">You\'re loged in as %s</string>
 
-    <string name="title_activity_event">Event</string>
     <string name="event_name">Event Name</string>
-    <string name="my_events">My events :</string>
-    <string name="upcoming_events">Upcoming events :</string>
+    <string name="event_location">Location</string>
+    <string name="event_description">Description</string>
+    <string name="event_date_begin">Date Begin</string>
+    <string name="event_date_end">Date End</string>
     <string name="event_price">Price : %.2f CHF</string>
     <string name="event_max_people">Max people : %d</string>
     <string name="event_registered_people">\u2640 %1$d/%2$d \u2642 %3$d/%4$d</string>
+    <string name="event_unregister">Unregister</string>
+    <string name="event_register">Register</string>
+    <string name="event_registration_success">Done!</string>
+    <string name="event_registration_problem">Problem with registration, try again.</string>
 
-    <!-- Strings related to Settings -->
-    <string name="title_activity_settings">Settings</string>
-    <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
+    <string name="register_positive">You have been successfully registered.</string>
+    <string name="register_text">Please fill in all the fields:</string>
+    <string name="register_username">User Name</string>
+    <string name="register_firstname">First Name</string>
+    <string name="register_lastname">Last Name</string>
+    <string name="register_email">Email</string>
+    <string name="register_password">Password</string>
+    <string name="register_passforn_confirmation">Password Confirmation</string>
+    <string name="register_birthdate">Birth Date</string>
+    <string name="register_female">Female</string>
+    <string name="register_male">Male</string>
 
-    <string name="event_type_preferences">Event Type Preferences</string>
-    <string-array name="event_type_list">
-        <item>Blind Date</item>
-    </string-array>
-    <string-array name="event_type_list_values">
-        <item>Blind Date</item>
-    </string-array>
-
-    <string name="event_place_preferences">Location Preferences</string>
-    <string-array name="location_list">
-        <item>Geneve</item>
-        <item>Lausanne</item>
-        <item>Fribourg</item>
-        <item>Zurich</item>
-        <item>Berne</item>
-        <item>Bulle</item>
-
-    </string-array>
-    <string-array name="location_list_values">
-        <item>Geneve</item>
-        <item>Lausanne</item>
-        <item>Fribourg</item>
-        <item>Zurich</item>
-        <item>Berne</item>
-        <item>Bulle</item>
-    </string-array>
-    <string-array name="empty_array"/>
-    <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
-
-    <string name="pref_title_administrator_notifications">Administrator notifications</string>
-
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
-    <string name="pref_title_vibrate">Vibrate</string>
-    <string name="loading">Loading&#8230;</string>
     <string name="alert_no_internet">No internet connexion</string>
     <string name="alert_message">Cross check your internet connectivity and try again.</string>
     <string name="alert_positive">OK</string>
     <string name="alert_negative">Cancel</string>
-    <string name="facebook_cancel">You canceled your login attempt</string>
-    <string name="facebook_error">Login attempt failed :\n%s</string>
-    <string name="event_registration_problem">Problem with registration</string>
-    <string name="register_positive">You have been registered</string>
+
+    <string-array name="location_list">
+        <item>Genève</item>
+        <item>Lausanne</item>
+        <item>Fribourg</item>
+        <item>Zürich</item>
+        <item>Berne</item>
+        <item>Bulle</item>
+    </string-array>
+
+    <string name="facebook_cancel">You canceled your login attempt.</string>
+    <string name="facebook_error">Login attempt failed:\n%s</string>
+
+    <string name="preference_choose_locations">Show upcoming events in:</string>
 
 </resources>
