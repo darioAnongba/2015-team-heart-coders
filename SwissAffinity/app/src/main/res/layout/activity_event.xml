@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context="ch.epfl.sweng.swissaffinity.EventActivity">
+    tools:context="ch.epfl.sweng.swissaffinity.EventActivity"
+    >
 
     <RelativeLayout
         android:id="@+id/eventRelativeLayout"
@@ -16,7 +17,6 @@
             android:id="@+id/eventName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:text="@string/event_name"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/black"/>
@@ -27,10 +27,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/eventName"
-            android:text="Location"
+            android:paddingBottom="10dp"
+            android:text="@string/event_location"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/black"
-            android:paddingBottom="10dp"/>
+            android:textColor="@android:color/black"/>
 
         <TextView
             android:id="@+id/eventDescription"
@@ -40,7 +40,7 @@
             android:layout_below="@+id/eventPicture"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
-            android:text="Description"
+            android:text="@string/event_description"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/black"/>
 
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/eventDescription"
-            android:text="Date Begin"
+            android:text="@string/event_date_begin"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/black"/>
 
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/eventDateBegin"
-            android:text="Date End"
+            android:text="@string/event_date_end"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/black"/>
 
@@ -72,7 +72,8 @@
             android:layout_below="@+id/eventLocation"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@android:drawable/ic_menu_mapmode"/>
+            android:src="@android:drawable/ic_menu_mapmode"
+            tools:ignore="ContentDescription"/>
 
         <TextView
             android:id="@+id/eventPrice"
@@ -110,10 +111,11 @@
             android:id="@+id/eventRegistration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="register"
-            android:text="Register"
             android:layout_alignBottom="@+id/eventRegisteredPeople"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignParentEnd="true"
+            android:onClick="register"
+            android:text="@string/event_register"
+            />
 
     </RelativeLayout>
 </ScrollView>

@@ -1,6 +1,7 @@
 package ch.epfl.sweng.swissaffinity.events;
 
 import java.io.Serializable;
+import java.util.Locale;
 import java.util.Objects;
 
 import ch.epfl.sweng.swissaffinity.utilities.Address;
@@ -215,6 +216,6 @@ public class Establishment implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s\n%s", mName, mAddress.toString());
+        return String.format(Locale.getDefault(), "%s\n%s", mName, mAddress.toString());
     }
 }

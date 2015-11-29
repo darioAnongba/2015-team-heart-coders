@@ -46,5 +46,19 @@
     <string name="facebook_error">Login attempt failed :\n%s</string>
 
     <string name="preference_choose_locations">Upcoming events in:</string>
+    <string name="event_location">Location</string>
+    <string name="event_description">Description</string>
+    <string name="event_date_begin">Date Begin</string>
+    <string name="event_date_end">Date End</string>
+    <string name="register_text">Please fill in all the fields:</string>
+    <string name="register_username">User Name</string>
+    <string name="register_firstname">First Name</string>
+    <string name="register_lastname">Last Name</string>
+    <string name="register_email">Email</string>
+    <string name="register_password">Password</string>
+    <string name="register_passforn_confirmation">Password Confirmation</string>
+    <string name="register_birthdate">Birth Date</string>
+    <string name="register_female">Female</string>
+    <string name="register_male">Male</string>
 
 </resources>

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import ch.epfl.sweng.swissaffinity.EventActivity;
@@ -37,7 +38,7 @@ public class EventExpandableListAdapter extends AbstractExpandableListAdapter<St
         String title = (String) getGroup(groupPosition);
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(R.layout.list_group, null);
+            convertView = inflater.inflate(R.layout.list_group, parent, false);
         }
         TextView textView = (TextView) convertView.findViewById(R.id.groupEvents);
         textView.setText(title);
@@ -56,7 +57,7 @@ public class EventExpandableListAdapter extends AbstractExpandableListAdapter<St
         final Event event = (Event) getChild(groupPosition, childPosition);
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(R.layout.list_item, null);
+            convertView = inflater.inflate(R.layout.list_item, parent, false);
             convertView.setOnClickListener(
                 new View.OnClickListener() {
                     @Override

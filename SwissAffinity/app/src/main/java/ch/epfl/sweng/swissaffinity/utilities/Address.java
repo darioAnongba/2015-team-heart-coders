@@ -1,6 +1,7 @@
 package ch.epfl.sweng.swissaffinity.utilities;
 
 import java.io.Serializable;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -26,12 +27,12 @@ public class Address implements Serializable {
      * @param street       the street name
      */
     public Address(
-        String country,
-        int zipCode,
-        String city,
-        String province,
-        int streetNumber,
-        String street)
+            String country,
+            int zipCode,
+            String city,
+            String province,
+            int streetNumber,
+            String street)
     {
         if (country == null || zipCode < 0 || city == null || province == null ||
             streetNumber < 0 || street == null)
@@ -70,7 +71,13 @@ public class Address implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s %d\n%d %s",mStreet,mStreetNumber,mZipCode,mCity);
+        return String.format(
+                Locale.getDefault(),
+                "%s %d\n%d %s",
+                mStreet,
+                mStreetNumber,
+                mZipCode,
+                mCity);
     }
 
     /**
