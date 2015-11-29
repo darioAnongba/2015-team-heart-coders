@@ -72,15 +72,15 @@ public class Establishment implements Serializable {
      * @param logoPath    the relative path to the logo
      */
     public Establishment(
-        int id,
-        String name,
-        Type type,
-        Address address,
-        String phoneNumber,
-        String description,
-        String url,
-        int maxSeats,
-        String logoPath)
+            int id,
+            String name,
+            Type type,
+            Address address,
+            String phoneNumber,
+            String description,
+            String url,
+            int maxSeats,
+            String logoPath)
     {
         if (id < 0 || maxSeats < 0 || name == null || type == null || address == null ||
             phoneNumber == null || description == null || url == null || logoPath == null)
@@ -202,14 +202,19 @@ public class Establishment implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(
-            mId,
-            mName,
-            mType,
-            mAddress,
-            mPhoneNumber,
-            mDescription,
-            mUrl,
-            mMaxSeats,
-            mLogoPath);
+                mId,
+                mName,
+                mType,
+                mAddress,
+                mPhoneNumber,
+                mDescription,
+                mUrl,
+                mMaxSeats,
+                mLogoPath);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s\n%s", mName, mAddress.toString());
     }
 }

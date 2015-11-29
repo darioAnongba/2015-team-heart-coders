@@ -28,7 +28,7 @@ public class EventActivity extends AppCompatActivity {
     private static final String REGISTER_OP = "register";
     private static final String UNREGISTER_OP = "unregister";
 
-    private Event mEvent;
+    private int mEventId;
     private String mUserName;
     private int mRegistrationId;
 
@@ -36,9 +36,12 @@ public class EventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-        mEvent = DataManager.getEvent(getIntent().getIntExtra(MainActivity.EXTRA_EVENT, -1));
+        mEventId = getIntent().getIntExtra(MainActivity.EXTRA_EVENT, -1);
         mUserName = MainActivity.getSharedPrefs().getString(USERNAME.get(), "");
-        new DownloadImageTask().execute(mEvent.getImagePath());
+        Event event = DataManager.getEvent(mEventId);
+        if (event != null) {
+            new DownloadImageTask().execute(event.getImagePath());
+        }
     }
 
     @Override
@@ -55,37 +58,42 @@ public class EventActivity extends AppCompatActivity {
             if (mRegistrationId > 0) {
                 operation = UNREGISTER_OP;
             }
-            new RegisterEventTask().execute(mUserName, "" + mEvent.getId(), operation);
+            new RegisterEventTask().execute(mUserName, "" + mEventId, operation);
         }
     }
 
     private void updateUI() {
-        mRegistrationId = DataManager.getRegistrationId(mEvent.getId());
+        mRegistrationId = DataManager.getRegistrationId(mEventId);
         Button button = (Button) findViewById(R.id.eventRegistration);
         if (mRegistrationId > 0) {
-            button.setText("Unregister");
+            button.setText(R.string.event_unregister);
         } else {
-            button.setText("Register");
+            button.setText(R.string.event_register);
         }
-        ((TextView) findViewById(R.id.eventName)).setText(mEvent.getName());
-        ((TextView) findViewById(R.id.eventDateBegin)).setText(dateToString(mEvent.getDateBegin()));
-        ((TextView) findViewById(R.id.eventDateEnd)).setText(dateToString(mEvent.getDateEnd()));
-        ((TextView) findViewById(R.id.eventLocation)).setText(mEvent.getLocation().getName());
-        ((TextView) findViewById(R.id.eventDescription)).setText(mEvent.getDescription());
-        String price = String.format(getString(R.string.event_price), mEvent.getBasePrice());
-        ((TextView) findViewById(R.id.eventPrice)).setText(price);
-        String maxPeople =
-                String.format(getString(R.string.event_max_people), mEvent.getMaxPeople());
-        ((TextView) findViewById(R.id.eventMaxPeople)).setText(maxPeople);
-        if (mEvent instanceof SpeedDatingEvent) {
-            SpeedDatingEvent event = (SpeedDatingEvent) mEvent;
-            int men = event.getMenRegistered();
-            int maxMen = event.getMenSeats();
-            int women = event.getWomenRegistered();
-            int maxWomen = event.getWomenSeats();
-            String menWomen = String.format(
-                    getString(R.string.event_registered_people), women, maxWomen, men, maxMen);
-            ((TextView) findViewById(R.id.eventRegisteredPeople)).setText(menWomen);
+        Event event = DataManager.getEvent(mEventId);
+        if (event != null) {
+            ((TextView) findViewById(R.id.eventName)).setText(event.getName());
+            ((TextView) findViewById(R.id.eventDateBegin)).setText(dateToString(event.getDateBegin()));
+            ((TextView) findViewById(R.id.eventDateEnd)).setText(dateToString(event.getDateEnd()));
+            TextView location = (TextView) findViewById(R.id.eventLocation);
+            location.setText(event.getLocation().getName());
+            ((TextView) findViewById(R.id.eventDescription)).setText(event.getDescription());
+            String price = String.format(getString(R.string.event_price), event.getBasePrice());
+            ((TextView) findViewById(R.id.eventPrice)).setText(price);
+            String maxPeople =
+                    String.format(getString(R.string.event_max_people), event.getMaxPeople());
+            ((TextView) findViewById(R.id.eventMaxPeople)).setText(maxPeople);
+            if (event instanceof SpeedDatingEvent) {
+                SpeedDatingEvent speedDatingEvent = (SpeedDatingEvent) event;
+                location.setText(speedDatingEvent.getEstablishment().toString());
+                int men = speedDatingEvent.getMenRegistered();
+                int maxMen = speedDatingEvent.getMenSeats();
+                int women = speedDatingEvent.getWomenRegistered();
+                int maxWomen = speedDatingEvent.getWomenSeats();
+                String menWomen = String.format(
+                        getString(R.string.event_registered_people), women, maxWomen, men, maxMen);
+                ((TextView) findViewById(R.id.eventRegisteredPeople)).setText(menWomen);
+            }
         }
     }
 
@@ -105,7 +113,9 @@ public class EventActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
-                ((ImageView) findViewById(R.id.eventPicture)).setImageBitmap(bitmap);
+                ImageView imageView = (ImageView) findViewById(R.id.eventPicture);
+                imageView.setContentDescription("");
+                imageView.setImageBitmap(bitmap);
             }
             super.onPostExecute(bitmap);
         }
@@ -142,15 +152,19 @@ public class EventActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Integer response) {
+            String message;
             switch (response) {
                 case HTTP_NO_CONTENT:
+                    message = getString(R.string.event_registration_success);
                     updateUI();
                     break;
                 default:
-                    String message = getString(R.string.event_registration_problem);
-                    Toast.makeText(EventActivity.this, message, Toast.LENGTH_SHORT).show();
+                    message = getString(R.string.event_registration_problem);
             }
-            dialog.dismiss();
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            Toast.makeText(EventActivity.this, message, Toast.LENGTH_SHORT).show();
             super.onPostExecute(response);
         }
     }

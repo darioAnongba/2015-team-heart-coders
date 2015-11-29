@@ -68,6 +68,11 @@ public class Address implements Serializable {
         return Objects.hash(mStreet, mStreetNumber, mZipCode, mCity, mProvince, mCountry);
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s %d\n%d %s",mStreet,mStreetNumber,mZipCode,mCity);
+    }
+
     /**
      * Get the street name
      *

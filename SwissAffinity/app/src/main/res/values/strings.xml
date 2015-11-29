@@ -1,47 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Swiss Affinity</string>
     <string name="facebook_app_id">539583159528191</string>
-    <string name="action_settings">Preferences</string>
-    <string name="action_about">About</string>
+    <string name="app_name">Swiss Affinity</string>
+    <string name="title_activity_about">About</string>
+    <string name="title_activity_event">Event</string>
+    <string name="title_activity_preference">Preferences</string>
+    <string name="loading">Loading&#8230;</string>
+    <string name="my_events">My events :</string>
+    <string name="upcoming_events">Upcoming events :</string>
+
     <string name="welcome_registered_text">Welcome %s</string>
-    <string name="welcome_not_registered_text">To start, you need to register</string>
     <string name="welcome_not_logged_text">To start, you have to login:</string>
 
-    <string name="title_activity_about">About</string>
     <string name="about_leader">Leader de l\'organisation événementielle pour célibataires en Suisse romande</string>
     <string name="about_text_link">http://swiss-affinity.ch</string>
     <string name="about_info_text">Pour de plus amples informations:</string>
     <string name="about_logged">You\'re loged in as %s</string>
 
-    <string name="title_activity_event">Event</string>
     <string name="event_name">Event Name</string>
-    <string name="my_events">My events :</string>
-    <string name="upcoming_events">Upcoming events :</string>
     <string name="event_price">Price : %.2f CHF</string>
     <string name="event_max_people">Max people : %d</string>
     <string name="event_registered_people">\u2640 %1$d/%2$d \u2642 %3$d/%4$d</string>
+    <string name="event_unregister">Unregister</string>
+    <string name="event_register">Register</string>
+    <string name="event_registration_success">Done!</string>
+    <string name="event_registration_problem">Problem with registration, try again.</string>
+
+    <string name="register_positive">You have been successfully registered.</string>
+
+    <string name="alert_no_internet">No internet connexion</string>
+    <string name="alert_message">Cross check your internet connectivity and try again.</string>
+    <string name="alert_positive">OK</string>
+    <string name="alert_negative">Cancel</string>
 
     <string-array name="location_list">
-        <item>Geneve</item>
+        <item>Genève</item>
         <item>Lausanne</item>
         <item>Fribourg</item>
         <item>Zürich</item>
         <item>Berne</item>
         <item>Bulle</item>
-
     </string-array>
 
-    <string name="loading">Loading&#8230;</string>
-    <string name="alert_no_internet">No internet connexion</string>
-    <string name="alert_message">Cross check your internet connectivity and try again.</string>
-    <string name="alert_positive">OK</string>
-    <string name="alert_negative">Cancel</string>
     <string name="facebook_cancel">You canceled your login attempt</string>
     <string name="facebook_error">Login attempt failed :\n%s</string>
-    <string name="event_registration_problem">Problem with registration</string>
-    <string name="register_positive">You have been registered</string>
-    <string name="title_activity_preference">Preferences</string>
+
     <string name="preference_choose_locations">Upcoming events in:</string>
 
 </resources>
