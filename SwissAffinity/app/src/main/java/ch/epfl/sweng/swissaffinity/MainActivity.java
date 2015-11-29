@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, AboutActivity.class));
                 return true;
             case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
+                startActivity(new Intent(this, PreferenceActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);

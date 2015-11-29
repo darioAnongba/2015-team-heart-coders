@@ -188,7 +188,9 @@ public class AboutActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             }
-            dialog.dismiss();
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
             finish();
         }
     }

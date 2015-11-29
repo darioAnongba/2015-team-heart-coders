@@ -22,46 +22,16 @@
     <string name="event_max_people">Max people : %d</string>
     <string name="event_registered_people">\u2640 %1$d/%2$d \u2642 %3$d/%4$d</string>
 
-    <!-- Strings related to Settings -->
-    <string name="title_activity_settings">Settings</string>
-    <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
-
-    <string name="event_type_preferences">Event Type Preferences</string>
-    <string-array name="event_type_list">
-        <item>Blind Date</item>
-    </string-array>
-    <string-array name="event_type_list_values">
-        <item>Blind Date</item>
-    </string-array>
-
-    <string name="event_place_preferences">Location Preferences</string>
     <string-array name="location_list">
         <item>Geneve</item>
         <item>Lausanne</item>
         <item>Fribourg</item>
-        <item>Zurich</item>
+        <item>Zürich</item>
         <item>Berne</item>
         <item>Bulle</item>
 
     </string-array>
-    <string-array name="location_list_values">
-        <item>Geneve</item>
-        <item>Lausanne</item>
-        <item>Fribourg</item>
-        <item>Zurich</item>
-        <item>Berne</item>
-        <item>Bulle</item>
-    </string-array>
-    <string-array name="empty_array"/>
-    <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
 
-    <string name="pref_title_administrator_notifications">Administrator notifications</string>
-
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
-    <string name="pref_title_vibrate">Vibrate</string>
     <string name="loading">Loading&#8230;</string>
     <string name="alert_no_internet">No internet connexion</string>
     <string name="alert_message">Cross check your internet connectivity and try again.</string>
@@ -71,5 +41,7 @@
     <string name="facebook_error">Login attempt failed :\n%s</string>
     <string name="event_registration_problem">Problem with registration</string>
     <string name="register_positive">You have been registered</string>
+    <string name="title_activity_preference">Preferences</string>
+    <string name="preference_choose_locations">Upcoming events in:</string>
 
 </resources>

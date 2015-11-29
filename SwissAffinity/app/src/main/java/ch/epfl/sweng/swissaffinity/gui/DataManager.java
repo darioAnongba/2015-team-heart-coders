@@ -11,13 +11,16 @@ import android.widget.ExpandableListView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import ch.epfl.sweng.swissaffinity.MainActivity;
 import ch.epfl.sweng.swissaffinity.R;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.users.Registration;
 import ch.epfl.sweng.swissaffinity.users.User;
+import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClient;
@@ -32,6 +35,7 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.GENDER;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_NAME;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LOCATIONS_INTEREST;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
 /**
@@ -57,8 +61,8 @@ public class DataManager {
     public static EventClient getEventClient() {
         if (EVENT_CLIENT == null) {
             EVENT_CLIENT = new NetworkEventClient(
-                NetworkProvider.SERVER_URL,
-                new DefaultNetworkProvider());
+                    NetworkProvider.SERVER_URL,
+                    new DefaultNetworkProvider());
         }
         return EVENT_CLIENT;
     }
@@ -80,7 +84,7 @@ public class DataManager {
     public static UserClient getUserClient() {
         if (USER_CLIENT == null) {
             USER_CLIENT =
-                new NetworkUserClient(NetworkProvider.SERVER_URL, new DefaultNetworkProvider());
+                    new NetworkUserClient(NetworkProvider.SERVER_URL, new DefaultNetworkProvider());
         }
         return USER_CLIENT;
     }
@@ -107,7 +111,7 @@ public class DataManager {
      */
     public static boolean isNetworkConnected(Context context) {
         ConnectivityManager connectivityManager =
-            (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo network = connectivityManager.getActiveNetworkInfo();
         return network != null && network.isConnected();
     }
@@ -123,18 +127,18 @@ public class DataManager {
             alert.setTitle(R.string.alert_no_internet)
                  .setMessage(R.string.alert_message)
                  .setPositiveButton(
-                     R.string.alert_positive, new DialogInterface.OnClickListener() {
-                         public void onClick(DialogInterface dialog, int which) {
-                             showNetworkAlert(context);
-                             dialog.dismiss();
-                         }
-                     })
+                         R.string.alert_positive, new DialogInterface.OnClickListener() {
+                             public void onClick(DialogInterface dialog, int which) {
+                                 showNetworkAlert(context);
+                                 dialog.dismiss();
+                             }
+                         })
                  .setNegativeButton(
-                     R.string.alert_negative, new DialogInterface.OnClickListener() {
-                         public void onClick(DialogInterface dialog, int which) {
-                             dialog.dismiss();
-                         }
-                     });
+                         R.string.alert_negative, new DialogInterface.OnClickListener() {
+                             public void onClick(DialogInterface dialog, int which) {
+                                 dialog.dismiss();
+                             }
+                         });
             alert.show();
         }
     }
@@ -144,19 +148,17 @@ public class DataManager {
      * Has to be used async.
      */
     public static void updateData() {
-        List<Event> myEvents = new ArrayList<>();
-        List<Event> upcomingEvents = new ArrayList<>();
+        List<Event> allEvents = new ArrayList<>();
         List<Registration> registrations = new ArrayList<>();
         String userName = MainActivity.getSharedPrefs().getString(USERNAME.get(), "");
         try {
-            upcomingEvents.addAll(getEventClient().fetchAll());
+            allEvents.addAll(getEventClient().fetchAll());
             registrations.addAll(getEventClient().fetchForUser(userName));
         } catch (EventClientException e) {
             Log.e("FetchEvent", e.getMessage());
         }
-        for (Registration registration : registrations) {
-            myEvents.add(registration.getEvent());
-        }
+        List<Event> upcomingEvents = filterEvents(allEvents);
+        List<Event> myEvents = getMyEvents(registrations);
         upcomingEvents.removeAll(myEvents);
         Collections.sort(myEvents);
         Collections.sort(upcomingEvents);
@@ -176,8 +178,11 @@ public class DataManager {
     public static void displayData(ExpandableListView listView) {
         if (hasData()) {
             EventExpandableListAdapter adapter =
-                (EventExpandableListAdapter) listView.getExpandableListAdapter();
-            adapter.setData(getGroups(listView.getContext()), MY_EVENTS, UPCOMING_EVENTS);
+                    (EventExpandableListAdapter) listView.getExpandableListAdapter();
+            adapter.setData(
+                    getGroups(listView.getContext()),
+                    MY_EVENTS,
+                    filterEvents(UPCOMING_EVENTS));
             for (int i = 0; i < adapter.getGroupCount(); ++i) {
                 listView.expandGroup(i);
             }
@@ -199,6 +204,7 @@ public class DataManager {
                     .putString(GENDER.get(), null)
                     .putString(BIRTHDAY.get(), null)
                     .putString(EMAIL.get(), null)
+                    .putStringSet(LOCATIONS_INTEREST.get(), null)
                     .apply();
     }
 
@@ -208,6 +214,10 @@ public class DataManager {
      * @param user the user
      */
     public static void saveUser(User user) {
+        Set<String> locations = new HashSet<>();
+        for (Location location : user.getAreasOfInterest()) {
+            locations.add(location.getName());
+        }
         MainActivity.getSharedPrefs().edit()
                     .putString(FACEBOOK_ID.get(), user.getFacebookId())
                     .putString(USERNAME.get(), user.getUsername())
@@ -216,6 +226,7 @@ public class DataManager {
                     .putString(GENDER.get(), user.getGender().get())
                     .putString(BIRTHDAY.get(), user.getBirthDate().toString())
                     .putString(EMAIL.get(), user.getEmail())
+                    .putStringSet(LOCATIONS_INTEREST.get(), locations)
                     .apply();
     }
 
@@ -252,6 +263,31 @@ public class DataManager {
             }
         }
         return null;
+    }
+
+    private static List<Event> getMyEvents(List<Registration> registrations) {
+        List<Event> result = new ArrayList<>();
+        for (Registration registration : registrations) {
+            result.add(registration.getEvent());
+        }
+        return result;
+    }
+
+    private static List<Event> filterEvents(List<Event> allEvents) {
+
+        Set<String> myLocations = MainActivity.getSharedPrefs()
+                                              .getStringSet(LOCATIONS_INTEREST.get(), null);
+        if (myLocations != null) {
+            List<Event> result = new ArrayList<>();
+            for (Event event : allEvents) {
+                String location = event.getLocation().getName();
+                if (myLocations.contains(location)) {
+                    result.add(event);
+                }
+            }
+            return result;
+        }
+        return allEvents;
     }
 
     private static List<String> getGroups(Context context) {
