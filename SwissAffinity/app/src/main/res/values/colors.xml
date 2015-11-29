@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="blue" type="color">#36A6C7</item>
+    <!--<item name="blue" type="color">#36A6C7</item>
     <item name="pink" type="color">#FF338A</item>
     <item name="green" type="color">#99CC00</item>
     <item name="orange" type="color">#FFBB33</item>
     <item name="red" type="color">#FF4444</item>
     <item name="darkblue" type="color">#0099CC</item>
-    <item name="darkpink" type="color">#CC3352</item>
+    <item name="darkpink" type="color">#CC3352</item>-->
     <item name="darkgray" type="color">#646464</item>
     <item name="white" type="color">#FFFFFF</item>
     <item name="black" type="color">#000000</item>
