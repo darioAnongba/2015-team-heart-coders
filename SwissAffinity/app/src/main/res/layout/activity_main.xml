@@ -5,32 +5,31 @@
               android:layout_height="match_parent"
               android:gravity="center_horizontal"
               android:orientation="vertical"
-              tools:context="ch.epfl.sweng.swissaffinity.MainActivity"
-    >
+              tools:context="ch.epfl.sweng.swissaffinity.MainActivity">
 
     <TextView
         android:id="@+id/mainWelcomeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/darkgray"
-        android:textColor="@color/white"
-        android:textAlignment="center"
+        android:enabled="false"
+        android:gravity="center"
         android:padding="5dp"
         android:text="@string/welcome_registered_text"
+        android:textAlignment="center"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold"
-        android:phoneNumber="false"
-        android:autoText="false"
-        android:enabled="false"
-        android:gravity="center"/>
+        android:textColor="@color/white"
+        android:textStyle="bold"/>
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/mainImage"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
         android:src="@drawable/logo"
-        android:padding="5dp"/>
+        tools:ignore="ContentDescription"/>
 
     <ExpandableListView
         android:id="@+id/mainEventListView"
@@ -38,8 +37,6 @@
         android:layout_height="match_parent"
         android:choiceMode="singleChoice"
         android:headerDividersEnabled="true"
-        android:smoothScrollbar="true"
-        />
+        android:smoothScrollbar="true"/>
 
 </LinearLayout>
-

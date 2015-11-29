@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/aboutLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:src="@drawable/logo"
@@ -41,7 +41,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/aboutLeaderText"
-        android:paddingLeft="10dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
         android:text="@string/about_info_text"
         android:textAppearance="?android:attr/textAppearanceSmall"/>
 
@@ -53,7 +54,8 @@
         android:layout_below="@+id/aboutInfoText"
         android:autoLink="web"
         android:clickable="true"
-        android:paddingLeft="10dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
         android:text="@string/about_text_link"
         android:textAppearance="?android:attr/textAppearanceSmall"/>
 

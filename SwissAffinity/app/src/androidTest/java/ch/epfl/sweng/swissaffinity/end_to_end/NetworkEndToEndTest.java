@@ -1,13 +1,17 @@
 package ch.epfl.sweng.swissaffinity.end_to_end;
 
-import android.os.SystemClock;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -17,6 +21,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import ch.epfl.sweng.swissaffinity.MainActivity;
 import ch.epfl.sweng.swissaffinity.events.Establishment;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
 import ch.epfl.sweng.swissaffinity.users.User;
@@ -49,31 +54,38 @@ import static junit.framework.Assert.fail;
 /**
  * Created by Joel on 11/19/2015.
  */
+@RunWith(AndroidJUnit4.class)
 @LargeTest
 public class NetworkEndToEndTest {
     /**
      * Admin (Dario) is used as test user here.
      */
 
-    @Ignore
+    @Rule
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
+            MainActivity.class);
+
+    @Before
+    public void setUp() {
+        mActivityRule.getActivity();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
     public void testNullNetworkProviderForUser() {
-        NetworkProvider networkProvider = null;
-        new NetworkUserClient("http://beecreative.ch", networkProvider);
+        new NetworkUserClient("http://beecreative.ch", null);
     }
 
-    @Ignore
+    @Test(expected = IllegalArgumentException.class)
     public void testNullNetworkProviderForEvent() {
-        NetworkProvider networkProvider = null;
-        new NetworkUserClient("http://beecreative.ch", networkProvider);
+        new NetworkEventClient("http://beecreative.ch", null);
     }
 
-    @Ignore
+    @LargeTest
     public void testGetUser() {
         try {
             NetworkProvider networkProvider = new DefaultNetworkProvider();
             UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
             User user = userClient.fetchByFacebookID(Integer.toString(1271175799)); //Dario's fb id
-            SystemClock.sleep(10000L);
             List<Location> locationsOfInterest = new ArrayList<>();
             locationsOfInterest.add(new Location(3, "Lausanne"));
             Date birthDay = DateParser.parseFromString(
@@ -113,7 +125,7 @@ public class NetworkEndToEndTest {
         }
     }
 
-    @Ignore
+    @LargeTest
     public void postRegistrationToEvent() throws UserClientException {
         final int eventIdToRegister = 7;
         final String userToRegister = "lio";
@@ -123,8 +135,8 @@ public class NetworkEndToEndTest {
         try {
             userClient.registerUser(userToRegister, eventIdToRegister);
         } catch (UserClientException e) {
-            if (e.getMessage().equals("You are already registered to this event")) {
-                //SUCCESS
+            if (!e.getMessage().equals("You are already registered to this event")) {
+                fail(e.getMessage());
             }
         }
         String registrationsString;
@@ -165,7 +177,7 @@ public class NetworkEndToEndTest {
 
     }
 
-    @Test
+    @LargeTest
     public void deleteUserTest() {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
         UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
@@ -176,7 +188,7 @@ public class NetworkEndToEndTest {
         }
     }
 
-    @Ignore
+    @LargeTest
     public void postUserTest() {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
         UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
@@ -190,7 +202,6 @@ public class NetworkEndToEndTest {
         try {
             JSONObject jsonUser = new JSONObject();
             userClient.deleteUser("DumbUser666");
-            SystemClock.sleep(10000L);
             jsonUser.put(EMAIL.get(), "dumbuser666@gmail.com");
             jsonUser.put(USERNAME.get(), "DumbUser666");
             jsonUser.put("firstName", "Dumb");
@@ -200,7 +211,6 @@ public class NetworkEndToEndTest {
             jsonUser.put("facebookId", "666");
             jsonUser.put("plainPassword", "dumbpassword");
             JSONObject responseJSON = userClient.postUser(jsonUser);
-            SystemClock.sleep(10000L);
             List<Location> areasOfInterest = new ArrayList<>();
             JSONArray areas = responseJSON.getJSONArray("locations_of_interest");
             for (int i = 0; i < areas.length(); i++) {
@@ -231,7 +241,7 @@ public class NetworkEndToEndTest {
         }
     }
 
-    @Ignore
+    @LargeTest
     public void testGetSpeedDatingEvent() throws EventClientException {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
         EventClient eventClient = new NetworkEventClient("http://beecreative.ch", networkProvider);
@@ -283,7 +293,9 @@ public class NetworkEndToEndTest {
                     );
     }
 
+    @Ignore
     private static final class CollectionComparator<E> {
+        @Ignore
         boolean compare(List<E> coll1, List<E> coll2) {
             if (coll1.size() != coll2.size()) {
                 return false;

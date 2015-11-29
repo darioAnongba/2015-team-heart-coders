@@ -37,7 +37,6 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
         mEventId = getIntent().getIntExtra(MainActivity.EXTRA_EVENT, -1);
-        mUserName = MainActivity.getSharedPrefs().getString(USERNAME.get(), "");
         Event event = DataManager.getEvent(mEventId);
         if (event != null) {
             new DownloadImageTask().execute(event.getImagePath());
@@ -63,6 +62,7 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
+        mUserName = MainActivity.getSharedPrefs().getString(USERNAME.get(), "");
         mRegistrationId = DataManager.getRegistrationId(mEventId);
         Button button = (Button) findViewById(R.id.eventRegistration);
         if (mRegistrationId > 0) {

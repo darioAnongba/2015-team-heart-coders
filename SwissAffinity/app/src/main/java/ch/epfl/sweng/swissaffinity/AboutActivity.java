@@ -25,8 +25,8 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.gui.DataManager;
+import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;

@@ -14,7 +14,7 @@
         android:paddingTop="5dp"
         android:text="@string/event_name"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@android:color/black"/>
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/rowEventLocation"
@@ -26,7 +26,7 @@
         android:paddingStart="5dp"
         android:text="@string/event_location"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/black"/>
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/rowEventDateBegin"
@@ -38,6 +38,6 @@
         android:paddingStart="5dp"
         android:text="@string/event_date_begin"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/black"/>
+        android:textColor="@color/black"/>
 
 </RelativeLayout>

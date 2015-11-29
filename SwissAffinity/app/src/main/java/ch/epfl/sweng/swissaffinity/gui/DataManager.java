@@ -3,6 +3,7 @@ package ch.epfl.sweng.swissaffinity.gui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -214,20 +215,25 @@ public class DataManager {
      * @param user the user
      */
     public static void saveUser(User user) {
-        Set<String> locations = new HashSet<>();
-        for (Location location : user.getAreasOfInterest()) {
-            locations.add(location.getName());
+        SharedPreferences preferences = MainActivity.getSharedPrefs();
+        Set<String> locations = preferences.getStringSet(
+                LOCATIONS_INTEREST.get(),
+                new HashSet<String>());
+        if (locations.isEmpty()) {
+            for (Location location : user.getAreasOfInterest()) {
+                locations.add(location.getName());
+            }
         }
-        MainActivity.getSharedPrefs().edit()
-                    .putString(FACEBOOK_ID.get(), user.getFacebookId())
-                    .putString(USERNAME.get(), user.getUsername())
-                    .putString(LAST_NAME.get(), user.getLastName())
-                    .putString(FIRST_NAME.get(), user.getFirstName())
-                    .putString(GENDER.get(), user.getGender().get())
-                    .putString(BIRTHDAY.get(), user.getBirthDate().toString())
-                    .putString(EMAIL.get(), user.getEmail())
-                    .putStringSet(LOCATIONS_INTEREST.get(), locations)
-                    .apply();
+        preferences.edit()
+                   .putString(FACEBOOK_ID.get(), user.getFacebookId())
+                   .putString(USERNAME.get(), user.getUsername())
+                   .putString(LAST_NAME.get(), user.getLastName())
+                   .putString(FIRST_NAME.get(), user.getFirstName())
+                   .putString(GENDER.get(), user.getGender().get())
+                   .putString(BIRTHDAY.get(), user.getBirthDate().toString())
+                   .putString(EMAIL.get(), user.getEmail())
+                   .putStringSet(LOCATIONS_INTEREST.get(), locations)
+                   .apply();
     }
 
     /**

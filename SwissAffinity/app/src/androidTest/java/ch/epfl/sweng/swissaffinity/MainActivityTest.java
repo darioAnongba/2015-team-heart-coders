@@ -1,95 +1,103 @@
 package ch.epfl.sweng.swissaffinity;
 
-import android.app.ActivityManager;
-import android.app.Instrumentation;
-import android.content.Context;
-import android.content.res.Resources;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.IdlingResource;
-import android.support.test.espresso.assertion.ViewAssertions;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
-import android.test.ActivityInstrumentationTestCase2;
+import android.support.test.runner.AndroidJUnit4;
+import android.test.suitebuilder.annotation.LargeTest;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.swissaffinity.utilities.network.ServerTags;
 
-
-import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EVENTS_ATTENDED;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
 /**
- * Created by sahinfurkan on 26/11/15.
+ * Created by Lionel on 29.11.15.
  */
-public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
+@RunWith(AndroidJUnit4.class)
+@LargeTest
+public class MainActivityTest {
 
-    private IntentServiceIdlingResource idlingResource;
     @Rule
-    public ActivityTestRule<AboutActivity> activityRule = new ActivityTestRule<>(AboutActivity.class);
+    public ActivityTestRule<MainActivity> mActivityRule
+            = new ActivityTestRule<>(MainActivity.class);
 
     @Before
-    public void registerIntentIdling() {
-        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-        idlingResource = new IntentServiceIdlingResource(instrumentation.getTargetContext());
-        Espresso.registerIdlingResources(idlingResource);
+    public void setUp() {
+        mActivityRule.getActivity();
     }
 
     @After
-    public void unregisterIntentIdling() {
-        Espresso.unregisterIdlingResources(idlingResource);
+    public void tearDown() throws Exception {
+
     }
 
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
+    @Test
+    public void testGetSharedPrefs() throws Exception {
+
     }
 
-    public MainActivityTest() {
-        super(MainActivity.class);
+    @Test
+    public void testGetLoadingDialog() throws Exception {
+
     }
 
+    @Test
+    public void testOnCreate() throws Exception {
+
+    }
+
+    @Test
+    public void testOnResume() throws Exception {
+
+    }
+
+    @Test
+    public void testOnCreateOptionsMenu() throws Exception {
+
+    }
+
+    @Test
+    public void testOnOptionsItemSelected() throws Exception {
+
+    }
+
+    @LargeTest
     public void testCanGreetUsers() {
-        getActivity();
 
         String userName = MainActivity.getSharedPrefs().getString(ServerTags.USERNAME.get(), "");
 
         String welcomeText =
-                String.format(getActivity().getString(R.string.welcome_registered_text), userName);
+                String.format(
+                        mActivityRule.getActivity()
+                                     .getString(R.string.welcome_registered_text), userName);
         onView(withId(R.id.mainWelcomeText)).check(matches(withText(welcomeText)));
     }
 
+    @LargeTest
     public void testAbout() {
-        getActivity();
-
         onView(withId(R.id.action_about)).perform(click());
         onView(withId(R.id.aboutSwissAffinityText)).check(matches(isDisplayed()));
     }
 
+    @LargeTest
     public void testSettings() {
-        getActivity();
         onView(withId(R.id.action_settings)).perform(click());
         pressBack();
 
         String userName = MainActivity.getSharedPrefs().getString(ServerTags.USERNAME.get(), "");
 
         String welcomeText = String.format(
-                getActivity().getString(R.string.welcome_registered_text),
+                mActivityRule.getActivity().getString(R.string.welcome_registered_text),
                 userName);
         onView(withId(R.id.mainWelcomeText)).check(matches(withText(welcomeText)));
     }

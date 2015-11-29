@@ -18,6 +18,10 @@
     <string name="about_logged">You\'re loged in as %s</string>
 
     <string name="event_name">Event Name</string>
+    <string name="event_location">Location</string>
+    <string name="event_description">Description</string>
+    <string name="event_date_begin">Date Begin</string>
+    <string name="event_date_end">Date End</string>
     <string name="event_price">Price : %.2f CHF</string>
     <string name="event_max_people">Max people : %d</string>
     <string name="event_registered_people">\u2640 %1$d/%2$d \u2642 %3$d/%4$d</string>
@@ -27,6 +31,16 @@
     <string name="event_registration_problem">Problem with registration, try again.</string>
 
     <string name="register_positive">You have been successfully registered.</string>
+    <string name="register_text">Please fill in all the fields:</string>
+    <string name="register_username">User Name</string>
+    <string name="register_firstname">First Name</string>
+    <string name="register_lastname">Last Name</string>
+    <string name="register_email">Email</string>
+    <string name="register_password">Password</string>
+    <string name="register_passforn_confirmation">Password Confirmation</string>
+    <string name="register_birthdate">Birth Date</string>
+    <string name="register_female">Female</string>
+    <string name="register_male">Male</string>
 
     <string name="alert_no_internet">No internet connexion</string>
     <string name="alert_message">Cross check your internet connectivity and try again.</string>
@@ -42,23 +56,9 @@
         <item>Bulle</item>
     </string-array>
 
-    <string name="facebook_cancel">You canceled your login attempt</string>
-    <string name="facebook_error">Login attempt failed :\n%s</string>
+    <string name="facebook_cancel">You canceled your login attempt.</string>
+    <string name="facebook_error">Login attempt failed:\n%s</string>
 
-    <string name="preference_choose_locations">Upcoming events in:</string>
-    <string name="event_location">Location</string>
-    <string name="event_description">Description</string>
-    <string name="event_date_begin">Date Begin</string>
-    <string name="event_date_end">Date End</string>
-    <string name="register_text">Please fill in all the fields:</string>
-    <string name="register_username">User Name</string>
-    <string name="register_firstname">First Name</string>
-    <string name="register_lastname">Last Name</string>
-    <string name="register_email">Email</string>
-    <string name="register_password">Password</string>
-    <string name="register_passforn_confirmation">Password Confirmation</string>
-    <string name="register_birthdate">Birth Date</string>
-    <string name="register_female">Female</string>
-    <string name="register_male">Male</string>
+    <string name="preference_choose_locations">Show upcoming events in:</string>
 
 </resources>
