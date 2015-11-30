@@ -71,10 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.v("UserJson", json.toString());
                             new UploadUserTask().execute(json.toString());
                         } else {
-                            Toast.makeText(
-                                    getApplicationContext(),
-                                    "There has been a problem",
-                                    Toast.LENGTH_LONG).show();
+
                         }
                     }
                 });
@@ -87,27 +84,31 @@ public class RegisterActivity extends AppCompatActivity {
 
         User user = (User) getIntent().getSerializableExtra(MainActivity.EXTRA_USER);
 
-        userNameText = (EditText) findViewById(R.id.registerUserName);
-        userNameText.setText(user.getUsername());
-        firstNameText = (EditText) findViewById(R.id.registerFirstName);
-        firstNameText.setText(user.getFirstName());
-        lastNameText = (EditText) findViewById(R.id.registerLastName);
-        lastNameText.setText(user.getLastName());
-        emailText = (EditText) findViewById(R.id.registerEmail);
-        emailText.setText(user.getEmail());
-        birthdayText = (EditText) findViewById(R.id.registerBirthDay);
-        SimpleDateFormat dateFormat =
-                new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        birthdayText.setText(dateFormat.format(user.getBirthDate()));
-        gender = user.getGender().get();
-        facebookId = user.getFacebookId();
-        if (gender.equalsIgnoreCase(Gender.FEMALE.get())) {
-            ((RadioButton) findViewById(R.id.registerFemale)).setChecked(true);
-        } else if (gender.equalsIgnoreCase(Gender.MALE.get())) {
-            ((RadioButton) findViewById(R.id.registerMale)).setChecked(true);
+            userNameText = (EditText) findViewById(R.id.registerUserName);
+            firstNameText = (EditText) findViewById(R.id.registerFirstName);
+            lastNameText = (EditText) findViewById(R.id.registerLastName);
+            emailText = (EditText) findViewById(R.id.registerEmail);
+            birthdayText = (EditText) findViewById(R.id.registerBirthDay);
+            passwordText = (EditText) findViewById(R.id.registerPassword);
+            passwordConfirmation = (EditText) findViewById(R.id.registerPasswordConfirmation);
+
+        if (user != null) {
+            userNameText.setText(user.getUsername());
+            firstNameText.setText(user.getFirstName());
+            emailText.setText(user.getEmail());
+            SimpleDateFormat dateFormat =
+                    new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            birthdayText.setText(dateFormat.format(user.getBirthDate()));
+            lastNameText.setText(user.getLastName());
+            gender = user.getGender().get();
+            facebookId = user.getFacebookId();
+            if (gender.equalsIgnoreCase(Gender.FEMALE.get())) {
+                ((RadioButton) findViewById(R.id.registerFemale)).setChecked(true);
+            } else if (gender.equalsIgnoreCase(Gender.MALE.get())) {
+                ((RadioButton) findViewById(R.id.registerMale)).setChecked(true);
+            }
         }
-        passwordText = (EditText) findViewById(R.id.registerPassword);
-        passwordConfirmation = (EditText) findViewById(R.id.registerPasswordConfirmation);
+
     }
 
     /**

@@ -61,4 +61,8 @@
 
     <string name="preference_choose_locations">Show upcoming events in:</string>
 
+    <!-- String for Toast in RegisterActivity needed to be tested -->
+    <string name="toast_text_error_mail">Mail is not in a valid format , empty or over 100 characters</string>
+    <string name="toast_text_error_username">Username is empty , or over 50 characters</string>
+    <string name="toast_text_error_firstname">First Name is empty , or over 50 characters</string>
 </resources>
