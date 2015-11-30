@@ -80,7 +80,7 @@ public class NetworkEndToEndTest {
         new NetworkEventClient("http://beecreative.ch", null);
     }
 
-    @LargeTest
+    @Test
     public void testGetUser() {
         try {
             NetworkProvider networkProvider = new DefaultNetworkProvider();
@@ -125,7 +125,7 @@ public class NetworkEndToEndTest {
         }
     }
 
-    @LargeTest
+    @Test
     public void postRegistrationToEvent() throws UserClientException {
         final int eventIdToRegister = 7;
         final String userToRegister = "lio";
@@ -177,18 +177,8 @@ public class NetworkEndToEndTest {
 
     }
 
-    @LargeTest
-    public void deleteUserTest() {
-        NetworkProvider networkProvider = new DefaultNetworkProvider();
-        UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
-        try {
-            userClient.deleteUser("DumbUser666");
-        } catch (UserClientException e) {
-            fail(e.getMessage());
-        }
-    }
 
-    @LargeTest
+    @Test
     public void postUserTest() {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
         UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
@@ -235,13 +225,13 @@ public class NetworkEndToEndTest {
                     new CollectionComparator<Location>().compare(
                             locationsOfInterest,
                             areasOfInterest));
-
+            userClient.deleteUser("DumbUser666");
         } catch (UserClientException | ParserException | JSONException e) {
             fail(e.getMessage());
         }
     }
 
-    @LargeTest
+    @Test
     public void testGetSpeedDatingEvent() throws EventClientException {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
         EventClient eventClient = new NetworkEventClient("http://beecreative.ch", networkProvider);
