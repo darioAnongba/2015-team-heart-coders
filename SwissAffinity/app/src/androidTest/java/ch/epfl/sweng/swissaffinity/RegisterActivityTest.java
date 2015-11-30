@@ -7,6 +7,7 @@ import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.test.ActivityInstrumentationTestCase2;
+import android.util.Log;
 
 import org.junit.After;
 import org.junit.Before;
@@ -44,16 +45,53 @@ public class RegisterActivityTest  extends ActivityInstrumentationTestCase2<Regi
     }
 
 
-    public void testEditText(){
+    public void testEditTextEmpty(){
         getActivity();
-        onView(withId(R.id.registerPassword)).perform(typeText("lool"), ViewActions.closeSoftKeyboard());
+        closeSoftKeyboard();
+        onView(withId(R.id.userRegistration)).perform(click());
+        onView(withText(R.string.toast_text_error_mail)).inRoot(withDecorView(not(is(getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+    }
+
+    public void testEditTextEmailNotValid() {
+        getActivity();
+        onView(withId(R.id.registerEmail)).perform(typeText("ceci ne marcheras pas"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.userRegistration)).perform(click());
+        onView(withText(R.string.toast_text_error_mail)).inRoot(withDecorView(not(is(getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+
+    }
+
+    public void testEditTextEmailTooLong() {
+        getActivity();
+        onView(withId(R.id.registerEmail)).perform(typeText("azertyuiopqsdfghjklmwxcvbnazertyuiopqsdfghjklmwxcvbnazertyuiopqsdfghjklmwxcvbnazertyuiopqsdf"));
+        closeSoftKeyboard();
+        onView(withId(R.id.userRegistration)).perform(click());
+        onView(withText(R.string.toast_text_error_mail)).inRoot(withDecorView(not(is(getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e("Test failed",e.getMessage());
         }
-        onView(withId(R.id.userRegistration)).perform(scrollTo(),click());
-        onView(withText(R.string.toast_text_error_mail)).inRoot(withDecorView(not(is(getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+    }
+
+    public void testEmailIsGood() {
+        getActivity();
+        onView(withId(R.id.registerEmail)).perform(typeText("maxime.premitestneedtobelong@test.test"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.userRegistration)).perform(click());
+        onView(withText(R.string.toast_text_error_username)).inRoot(withDecorView(not(is(getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            Log.e("Test failed",e.getMessage());
+        }
+    }
+
+    public void testUsername() {
+        getActivity();
+        onView(withId(R.id.registerEmail)).perform(typeText("max.premi@test.test"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.registerUserName)).perform(typeText("maxpremi"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.userRegistration)).perform(click());
+        onView(withText(R.string.toast_text_error_firstname)).inRoot(withDecorView(not(is(getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+
     }
 
 

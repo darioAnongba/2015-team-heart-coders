@@ -71,10 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.v("UserJson", json.toString());
                             new UploadUserTask().execute(json.toString());
                         } else {
-                            Toast.makeText(
-                                    getApplicationContext(),
-                                    "There has been a problem",
-                                    Toast.LENGTH_LONG).show();
+
                         }
                     }
                 });
@@ -94,6 +91,7 @@ public class RegisterActivity extends AppCompatActivity {
             birthdayText = (EditText) findViewById(R.id.registerBirthDay);
             passwordText = (EditText) findViewById(R.id.registerPassword);
             passwordConfirmation = (EditText) findViewById(R.id.registerPasswordConfirmation);
+
         if (user != null) {
             userNameText.setText(user.getUsername());
             firstNameText.setText(user.getFirstName());
