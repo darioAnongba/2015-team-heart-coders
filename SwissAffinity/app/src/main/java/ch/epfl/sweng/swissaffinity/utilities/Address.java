@@ -1,6 +1,8 @@
 package ch.epfl.sweng.swissaffinity.utilities;
 
 import java.io.Serializable;
+import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Representation of a postal address.
@@ -46,35 +48,36 @@ public class Address implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null){
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        if (getClass() != obj.getClass()){
-            return false;
-        }
-        final Address other = (Address) obj;
-        if (this.mStreetNumber != other.getStreetNumber() ||
-                this.mZipCode != other.getZipCode()){
-            return false;
-        }
-        if ((this.mStreet == null) ? (other.getStreet() != null) :
-                (! this.mStreet.equals(other.getStreet()))){
-            return false;
-        }
-        if ((this.mCity == null) ? (other.getCity() != null) :
-                (! this.mCity.equals(other.getCity()))){
-            return false;
-        }
-        if ((this.mProvince == null) ? (other.getProvince() != null) :
-                (! this.mProvince.equals(other.getProvince()))){
-            return false;
-        }
-        if ((this.mCountry == null) ? (other.getCountry() != null) :
-                (! this.mCountry.equals(other.getCountry()))){
-            return false;
-        }
-        return true;
+        Address address = (Address) o;
+        return Objects.equals(mStreetNumber, address.mStreetNumber) &&
+               Objects.equals(mZipCode, address.mZipCode) &&
+               Objects.equals(mStreet, address.mStreet) &&
+               Objects.equals(mCity, address.mCity) &&
+               Objects.equals(mProvince, address.mProvince) &&
+               Objects.equals(mCountry, address.mCountry);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mStreet, mStreetNumber, mZipCode, mCity, mProvince, mCountry);
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                Locale.getDefault(),
+                "%s %d\n%d %s",
+                mStreet,
+                mStreetNumber,
+                mZipCode,
+                mCity);
     }
 
     /**

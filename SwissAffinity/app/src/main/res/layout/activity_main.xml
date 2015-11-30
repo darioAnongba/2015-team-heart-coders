@@ -9,19 +9,32 @@
 
     <TextView
         android:id="@+id/mainWelcomeText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/darkgray"
+        android:enabled="false"
+        android:gravity="center"
         android:padding="5dp"
         android:text="@string/welcome_registered_text"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white"
+        android:textStyle="bold"/>
+
+    <ImageView
+        android:id="@+id/mainImage"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/logo"
+        tools:ignore="ContentDescription"/>
 
     <ExpandableListView
         android:id="@+id/mainEventListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:choiceMode="singleChoice"
-        android:headerDividersEnabled="true"
-        android:smoothScrollbar="true"/>
+        android:choiceMode="singleChoice"/>
 
 </LinearLayout>
-

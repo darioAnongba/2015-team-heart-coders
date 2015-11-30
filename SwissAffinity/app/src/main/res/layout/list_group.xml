@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="#b4b4b4"
+              android:background="@color/darkgray"
               android:gravity="center_vertical"
               android:orientation="vertical"
               android:paddingEnd="40dp"
@@ -12,9 +12,11 @@
         android:id="@+id/groupEvents"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="My events :"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="@string/my_events"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"/>
+        android:textColor="@color/white"/>
+
 </LinearLayout>

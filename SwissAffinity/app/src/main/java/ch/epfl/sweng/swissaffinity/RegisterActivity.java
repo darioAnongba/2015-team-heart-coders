@@ -16,18 +16,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ch.epfl.sweng.swissaffinity.users.User.Gender;
-import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
-import ch.epfl.sweng.swissaffinity.utilities.network.users.NetworkUserClient;
-import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
+import ch.epfl.sweng.swissaffinity.gui.DataManager;
+import ch.epfl.sweng.swissaffinity.users.User;
+import ch.epfl.sweng.swissaffinity.users.User.Gender;
+import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.user.UserParser;
+
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.GENDER;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_NAME;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
+import static ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject.DEFAULT_STRING;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -39,8 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText passwordText;
     private EditText passwordConfirmation;
     private String facebookId;
-    private String gender = "";
-    private final String SERVER_URL = "http://beecreative.ch";
+    private String gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,6 @@ public class RegisterActivity extends AppCompatActivity {
 
                     @Override
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
-
                         if (checkedId == R.id.registerFemale) {
                             gender = "female";
                         } else if (checkedId == R.id.registerMale) {
@@ -71,10 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.v("UserJson", json.toString());
                             new UploadUserTask().execute(json.toString());
                         } else {
-                            Toast.makeText(
-                                    getApplicationContext(),
-                                    "There has been a problem",
-                                    Toast.LENGTH_LONG).show();
+
                         }
                     }
                 });
@@ -85,31 +82,33 @@ public class RegisterActivity extends AppCompatActivity {
      */
     private void fillData() {
 
-        String userName = MainActivity.getSharedPrefs().getString(USERNAME.get(), "");
-        String firstName = MainActivity.getSharedPrefs().getString(FIRST_NAME.get(), "");
-        String lastName = MainActivity.getSharedPrefs().getString(LAST_NAME.get(), "");
-        String email = MainActivity.getSharedPrefs().getString(EMAIL.get(), "");
-        String birthday = MainActivity.getSharedPrefs().getString(BIRTHDAY.get(), "");
-        gender = MainActivity.getSharedPrefs().getString(GENDER.get(), "");
-        facebookId = MainActivity.getSharedPrefs().getString(FACEBOOK_ID.get(), "");
+        User user = (User) getIntent().getSerializableExtra(MainActivity.EXTRA_USER);
 
-        userNameText = (EditText) findViewById(R.id.registerUserName);
-        userNameText.setText(userName);
-        firstNameText = (EditText) findViewById(R.id.registerFirstName);
-        firstNameText.setText(firstName);
-        lastNameText = (EditText) findViewById(R.id.registerLastName);
-        lastNameText.setText(lastName);
-        emailText = (EditText) findViewById(R.id.registerEmail);
-        emailText.setText(email);
-        birthdayText = (EditText) findViewById(R.id.registerBirthDay);
-        birthdayText.setText(birthday);
-        if (gender.equalsIgnoreCase(Gender.FEMALE.get())) {
-            ((RadioButton) findViewById(R.id.registerFemale)).setChecked(true);
-        } else if (gender.equalsIgnoreCase(Gender.MALE.get())) {
-            ((RadioButton) findViewById(R.id.registerMale)).setChecked(true);
+            userNameText = (EditText) findViewById(R.id.registerUserName);
+            firstNameText = (EditText) findViewById(R.id.registerFirstName);
+            lastNameText = (EditText) findViewById(R.id.registerLastName);
+            emailText = (EditText) findViewById(R.id.registerEmail);
+            birthdayText = (EditText) findViewById(R.id.registerBirthDay);
+            passwordText = (EditText) findViewById(R.id.registerPassword);
+            passwordConfirmation = (EditText) findViewById(R.id.registerPasswordConfirmation);
+
+        if (user != null) {
+            userNameText.setText(user.getUsername());
+            firstNameText.setText(user.getFirstName());
+            emailText.setText(user.getEmail());
+            SimpleDateFormat dateFormat =
+                    new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            birthdayText.setText(dateFormat.format(user.getBirthDate()));
+            lastNameText.setText(user.getLastName());
+            gender = user.getGender().get();
+            facebookId = user.getFacebookId();
+            if (gender.equalsIgnoreCase(Gender.FEMALE.get())) {
+                ((RadioButton) findViewById(R.id.registerFemale)).setChecked(true);
+            } else if (gender.equalsIgnoreCase(Gender.MALE.get())) {
+                ((RadioButton) findViewById(R.id.registerMale)).setChecked(true);
+            }
         }
-        passwordText = (EditText) findViewById(R.id.registerPassword);
-        passwordConfirmation = (EditText) findViewById(R.id.registerPasswordConfirmation);
+
     }
 
     /**
@@ -190,7 +189,6 @@ public class RegisterActivity extends AppCompatActivity {
      * Check is the mail is a valid format
      *
      * @param target the sequence of character
-     *
      * @return true if it has the form of an email
      */
     public static boolean isValidEmail(CharSequence target) {
@@ -211,17 +209,12 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-
-            NetworkUserClient networkUserClient =
-                    new NetworkUserClient(SERVER_URL, new DefaultNetworkProvider());
             JSONObject response = new JSONObject();
             try {
                 JSONObject jsonObject = new JSONObject(params[0]);
-                response = networkUserClient.postUser(jsonObject);
-            } catch (UserClientException e) {
-                Log.e("Error with the server", e.getMessage());
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
+                response = DataManager.getUserClient().postUser(jsonObject);
+            } catch (UserClientException | JSONException e) {
+                Log.e("UploadUserTask", e.getMessage());
             }
             return response.toString();
         }
@@ -229,15 +222,16 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String response) {
             dialog.dismiss();
-            JSONObject responseJson;
             try {
-                responseJson = new JSONObject(response);
-                if (responseJson != null &&
-                    responseJson.getString("email").equals(emailText.getText().toString()) &&
-                    responseJson.getString("username").equals(userNameText.getText().toString()))
+                SafeJSONObject responseJson = new SafeJSONObject(response);
+                if (responseJson.get(EMAIL.get(), DEFAULT_STRING)
+                                .equals(emailText.getText().toString()) &&
+                    responseJson.get(FIRST_NAME.get(), DEFAULT_STRING)
+                                .equals(firstNameText.getText().toString()))
                 {
+                    DataManager.saveUser(new UserParser().parse(responseJson));
                     Toast.makeText(
-                            RegisterActivity.this, "you have been registered",
+                            RegisterActivity.this, R.string.register_positive,
                             Toast.LENGTH_LONG).show();
                     finish();
                 } else {
@@ -276,10 +270,9 @@ public class RegisterActivity extends AppCompatActivity {
                                 Toast.LENGTH_LONG).show();
                     }
                 }
-            } catch (JSONException e) {
-                Log.e("No response", response);
+            } catch (JSONException | ParserException e) {
+                Log.e("UploadUserTask", e.getMessage());
             }
-
         }
     }
 }

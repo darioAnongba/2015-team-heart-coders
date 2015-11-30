@@ -1,6 +1,8 @@
 package ch.epfl.sweng.swissaffinity.events;
 
 import java.io.Serializable;
+import java.util.Locale;
+import java.util.Objects;
 
 import ch.epfl.sweng.swissaffinity.utilities.Address;
 
@@ -35,12 +37,11 @@ public class Establishment implements Serializable {
          * Getter for the type of an establishment
          *
          * @param type the server API type
-         *
          * @return the corresponding type
          */
         public static Type getType(String type) {
             for (Type t : Type.values()) {
-                if (t.mType.equalsIgnoreCase(type)) {
+                if (t.mType.equals(type)) {
                     return t;
                 }
             }
@@ -82,8 +83,8 @@ public class Establishment implements Serializable {
             int maxSeats,
             String logoPath)
     {
-        if (id < 0 || maxSeats<=0 || name == null || type == null || address == null || phoneNumber == null ||
-            description == null || url == null || logoPath == null)
+        if (id < 0 || maxSeats < 0 || name == null || type == null || address == null ||
+            phoneNumber == null || description == null || url == null || logoPath == null)
         {
             throw new IllegalArgumentException();
         }
@@ -96,54 +97,6 @@ public class Establishment implements Serializable {
         mUrl = url;
         mMaxSeats = maxSeats;
         mLogoPath = logoPath;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null){
-            return false;
-        }
-        if (getClass() != obj.getClass()){
-            return false;
-        }
-        final Establishment other = (Establishment) obj;
-        if (this.mId != other.getId() ||
-                this.mMaxSeats != other.getmMaxSeats()){
-            return false;
-        }
-        if ((this.mName == null)? (other.getName() != null) :
-                (!this.mName.equals(other.getName()))){
-            return false;
-        }
-        if ((this.mType == null) ? (other.getType() != null) :
-                (! this.mType.equals(other.getType()))){
-            return false;
-        }
-        if ((this.mAddress == null) ? (other.getAddress() != null) :
-                (! this.mAddress.equals(other.getAddress()))){
-            return false;
-        }
-        if ((this.mPhoneNumber == null) ? (other.getPhoneNumber() != null) :
-                (! this.mPhoneNumber.equals(other.getPhoneNumber()))){
-            return false;
-        }
-        if ((this.mDescription == null) ? (other.getDescription() != null) :
-                (! this.mDescription.equals(other.getDescription()))){
-            return false;
-        }
-        if ((this.mUrl == null) ? (other.getUrl() != null) :
-                (! this.mUrl.equals(other.getUrl()))){
-            return false;
-        }
-        if ((this.mLogoPath == null)? (other.getLogoPath()!= null) :
-                (! this.mLogoPath.equals(other.getLogoPath()))){
-            return false;
-        }
-        return true;
-    }
-
-    public int getmMaxSeats() {
-        return mMaxSeats;
     }
 
     /**
@@ -209,7 +162,60 @@ public class Establishment implements Serializable {
         return mType;
     }
 
+    /**
+     * Getter for the maximum seats
+     *
+     * @return the maximum seats in an establishment
+     */
+    public int getMaxSeats() {
+        return mMaxSeats;
+    }
+
+    /**
+     * Getter for the phone number
+     *
+     * @return the phone number of the establishment
+     */
     public String getPhoneNumber() {
         return mPhoneNumber;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Establishment that = (Establishment) o;
+        return Objects.equals(mId, that.mId) &&
+               Objects.equals(mMaxSeats, that.mMaxSeats) &&
+               Objects.equals(mName, that.mName) &&
+               Objects.equals(mType, that.mType) &&
+               Objects.equals(mAddress, that.mAddress) &&
+               Objects.equals(mPhoneNumber, that.mPhoneNumber) &&
+               Objects.equals(mDescription, that.mDescription) &&
+               Objects.equals(mUrl, that.mUrl) &&
+               Objects.equals(mLogoPath, that.mLogoPath);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                mId,
+                mName,
+                mType,
+                mAddress,
+                mPhoneNumber,
+                mDescription,
+                mUrl,
+                mMaxSeats,
+                mLogoPath);
+    }
+
+    @Override
+    public String toString() {
+        return String.format(Locale.getDefault(), "%s\n%s", mName, mAddress.toString());
     }
 }

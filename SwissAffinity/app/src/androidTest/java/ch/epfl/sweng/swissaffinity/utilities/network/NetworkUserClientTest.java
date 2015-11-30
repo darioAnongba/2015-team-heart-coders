@@ -1,4 +1,6 @@
-package ch.epfl.sweng.swissaffinity.utilities.parsers.network;
+package ch.epfl.sweng.swissaffinity.utilities.network;
+
+import android.test.suitebuilder.annotation.LargeTest;
 
 import org.json.JSONException;
 import org.junit.Before;
@@ -12,15 +14,11 @@ import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.DataForTesting;
 import ch.epfl.sweng.swissaffinity.events.Event;
-import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
-import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
-import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.NetworkUserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
-import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.user.UserParser;
 
 import static org.junit.Assert.assertEquals;
@@ -29,7 +27,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-
+@LargeTest
 public class NetworkUserClientTest {
 
     private String mockServerURL;
@@ -71,6 +69,7 @@ public class NetworkUserClientTest {
     public void testFetchByUsername() throws UserClientException {
         returnedUser = networkUserClient.fetchByUsername("testUsername");
 
+
         assertEquals(testUser.getId(), returnedUser.getId());
         assertEquals(testUser.getFacebookId(), returnedUser.getFacebookId());
 
@@ -81,7 +80,7 @@ public class NetworkUserClientTest {
         assertEquals(testUser.getHomePhone(), returnedUser.getHomePhone());
         assertEquals(testUser.getMobilePhone(), returnedUser.getMobilePhone());
         assertEquals(testUser.getEmail(), returnedUser.getEmail());
-        assertEquals(testUser.getAddress().getCity(), returnedUser.getAddress().getCity());
+        assertEquals(testUser.getAddress(), returnedUser.getAddress());
         assertEquals(testUser.getProfession(), returnedUser.getProfession());
 
         assertEquals(testUser.getLocked(), returnedUser.getLocked());
@@ -121,7 +120,7 @@ public class NetworkUserClientTest {
         assertEquals(testUser.getHomePhone(), returnedUser.getHomePhone());
         assertEquals(testUser.getMobilePhone(), returnedUser.getMobilePhone());
         assertEquals(testUser.getEmail(), returnedUser.getEmail());
-        assertEquals(testUser.getAddress().getCity(), returnedUser.getAddress().getCity());
+        assertEquals(testUser.getAddress(), returnedUser.getAddress());
         assertEquals(testUser.getProfession(), returnedUser.getProfession());
 
         assertEquals(testUser.getLocked(), returnedUser.getLocked());

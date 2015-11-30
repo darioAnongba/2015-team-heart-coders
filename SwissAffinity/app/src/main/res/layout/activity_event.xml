@@ -1,131 +1,122 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context="ch.epfl.sweng.swissaffinity.EventActivity">
+    tools:context="ch.epfl.sweng.swissaffinity.EventActivity"
+    >
+
+    <RelativeLayout
+        android:id="@+id/eventRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@+id/eventRegistration">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/eventName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/eventRelativeLayout">
+            android:text="@string/event_name"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/black"/>
 
+        <TextView
+            android:id="@+id/eventLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/eventName"
+            android:paddingBottom="10dp"
+            android:text="@string/event_location"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/black"/>
 
-            <TextView
-                android:id="@+id/eventName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+        <TextView
+            android:id="@+id/eventDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/eventPicture"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/event_description"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/black"/>
 
-                android:text="@string/event_name"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@android:color/black" />
+        <TextView
+            android:id="@+id/eventDateBegin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/eventDescription"
+            android:text="@string/event_date_begin"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/black"/>
 
-            <TextView
-                android:id="@+id/eventLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/eventName"
-                android:text="Location"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/black" />
+        <TextView
+            android:id="@+id/eventDateEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/eventDateBegin"
+            android:text="@string/event_date_end"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/black"/>
 
-            <TextView
-                android:id="@+id/eventDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/eventPicture"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:text="Description"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/black" />
+        <ImageView
+            android:id="@+id/eventPicture"
+            android:layout_width="fill_parent"
+            android:layout_height="128dp"
+            android:layout_alignParentStart="false"
+            android:layout_below="@+id/eventLocation"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@android:drawable/ic_menu_mapmode"
+            tools:ignore="ContentDescription"/>
 
-            <TextView
-                android:id="@+id/eventDateBegin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/eventDescription"
-                android:text="Date Begin"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/black" />
+        <TextView
+            android:id="@+id/eventPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/eventDateEnd"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/event_price"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/black"/>
 
-            <TextView
-                android:id="@+id/eventDateEnd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/eventDateBegin"
-                android:text="Date End"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/black" />
+        <TextView
+            android:id="@+id/eventMaxPeople"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/eventPrice"
+            android:text="@string/event_max_people"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/black"/>
 
-            <ImageView
-                android:id="@+id/eventPicture"
-                android:layout_width="fill_parent"
-                android:layout_height="128dp"
-                android:adjustViewBounds="true"
-                android:padding="10dp"
-                android:scaleType="fitCenter"
-                android:src="@android:drawable/ic_menu_mapmode"
-                android:layout_below="@+id/eventLocation"
-                android:layout_alignParentStart="false" />
+        <TextView
+            android:id="@+id/eventRegisteredPeople"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/eventMaxPeople"
+            android:text="@string/event_registered_people"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/black"/>
 
-            <TextView
-                android:id="@+id/eventPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/eventDateEnd"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:text="@string/event_price"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/black" />
+        <Button
+            android:id="@+id/eventRegistration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/eventRegisteredPeople"
+            android:layout_alignParentEnd="true"
+            android:onClick="register"
+            android:text="@string/event_register"
+            />
 
-            <TextView
-                android:id="@+id/eventMaxPeople"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/eventPrice"
-                android:text="@string/event_max_people"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/black" />
+    </RelativeLayout>
+</ScrollView>
 
-            <TextView
-                android:id="@+id/eventRegisteredPeople"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/eventMaxPeople"
-                android:text="@string/event_registered_people"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/black" />
-
-
-        </RelativeLayout>
-    </ScrollView>
-
-    <Button
-        android:id="@+id/eventRegistration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:onClick="register"
-        android:text="Register"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
-
-
-</RelativeLayout>
