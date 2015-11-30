@@ -25,8 +25,8 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.gui.DataManager;
+import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
@@ -82,7 +82,7 @@ public class AboutActivity extends AppCompatActivity {
      */
     private void updateUI() {
         TextView logged = ((TextView) findViewById(R.id.aboutLogedText));
-        String userName = MainActivity.getSharedPrefs().getString(USERNAME.get(), null);
+        String userName = MainActivity.getPreferences().getString(USERNAME.get(), null);
         if (userName == null) {
             logged.setText(getString(R.string.welcome_not_logged_text));
             logged.setTextSize(20);
@@ -188,7 +188,9 @@ public class AboutActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             }
-            dialog.dismiss();
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
             finish();
         }
     }

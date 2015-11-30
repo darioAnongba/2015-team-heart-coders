@@ -1,13 +1,17 @@
-package ch.epfl.sweng.swissaffinity.EndToEndTests;
+package ch.epfl.sweng.swissaffinity.end_to_end;
 
-import android.os.SystemClock;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -17,6 +21,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import ch.epfl.sweng.swissaffinity.MainActivity;
 import ch.epfl.sweng.swissaffinity.events.Establishment;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
 import ch.epfl.sweng.swissaffinity.users.User;
@@ -24,7 +29,6 @@ import ch.epfl.sweng.swissaffinity.utilities.Address;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
 import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
-import ch.epfl.sweng.swissaffinity.utilities.network.ServerTags;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClientException;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.NetworkEventClient;
@@ -36,14 +40,11 @@ import ch.epfl.sweng.swissaffinity.utilities.parsers.LocationParser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTH_DATE;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.ENABLED;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.GENDER;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_NAME;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LOCATIONS_INTEREST;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LOCKED;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 import static junit.framework.Assert.assertEquals;
@@ -53,31 +54,38 @@ import static junit.framework.Assert.fail;
 /**
  * Created by Joel on 11/19/2015.
  */
+@RunWith(AndroidJUnit4.class)
 @LargeTest
 public class NetworkEndToEndTest {
     /**
      * Admin (Dario) is used as test user here.
      */
 
+    @Rule
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
+            MainActivity.class);
+
+    @Before
+    public void setUp() {
+        mActivityRule.getActivity();
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testNullNetworkProviderForUser() {
-        NetworkProvider networkProvider = null;
-        new NetworkUserClient("http://beecreative.ch", networkProvider);
+        new NetworkUserClient("http://beecreative.ch", null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNullNetworkProviderForEvent() {
-        NetworkProvider networkProvider = null;
-        new NetworkUserClient("http://beecreative.ch", networkProvider);
+        new NetworkEventClient("http://beecreative.ch", null);
     }
 
-    @Test
+    @LargeTest
     public void testGetUser() {
         try {
             NetworkProvider networkProvider = new DefaultNetworkProvider();
             UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
             User user = userClient.fetchByFacebookID(Integer.toString(1271175799)); //Dario's fb id
-            SystemClock.sleep(10000L);
             List<Location> locationsOfInterest = new ArrayList<>();
             locationsOfInterest.add(new Location(3, "Lausanne"));
             Date birthDay = DateParser.parseFromString(
@@ -117,7 +125,7 @@ public class NetworkEndToEndTest {
         }
     }
 
-    @Test
+    @LargeTest
     public void postRegistrationToEvent() throws UserClientException {
         final int eventIdToRegister = 7;
         final String userToRegister = "lio";
@@ -127,15 +135,15 @@ public class NetworkEndToEndTest {
         try {
             userClient.registerUser(userToRegister, eventIdToRegister);
         } catch (UserClientException e) {
-            if (e.getMessage().equals("You are already registered to this event")) {
-                //SUCCESS
+            if (!e.getMessage().equals("You are already registered to this event")) {
+                fail(e.getMessage());
             }
         }
         String registrationsString;
         JSONArray registrations;
         try {
             registrationsString = networkProvider.getContent(
-                "http://beecreative.ch/api/users/" + userToRegister + "/registrations");
+                    "http://beecreative.ch/api/users/" + userToRegister + "/registrations");
             registrations = new JSONArray(registrationsString);
         } catch (JSONException | IOException e) {
             throw new UserClientException(e);
@@ -159,7 +167,7 @@ public class NetworkEndToEndTest {
         HttpURLConnection conn;
         try {
             url = new URL(
-                "http://beecreative.ch/api/registrations/" + testRegistrationId.toString());
+                    "http://beecreative.ch/api/registrations/" + testRegistrationId.toString());
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("DELETE");
             conn.getResponseCode();
@@ -169,7 +177,7 @@ public class NetworkEndToEndTest {
 
     }
 
-    @Test
+    @LargeTest
     public void deleteUserTest() {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
         UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
@@ -180,7 +188,7 @@ public class NetworkEndToEndTest {
         }
     }
 
-    @Test
+    @LargeTest
     public void postUserTest() {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
         UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
@@ -194,7 +202,6 @@ public class NetworkEndToEndTest {
         try {
             JSONObject jsonUser = new JSONObject();
             userClient.deleteUser("DumbUser666");
-            SystemClock.sleep(10000L);
             jsonUser.put(EMAIL.get(), "dumbuser666@gmail.com");
             jsonUser.put(USERNAME.get(), "DumbUser666");
             jsonUser.put("firstName", "Dumb");
@@ -204,7 +211,6 @@ public class NetworkEndToEndTest {
             jsonUser.put("facebookId", "666");
             jsonUser.put("plainPassword", "dumbpassword");
             JSONObject responseJSON = userClient.postUser(jsonUser);
-            SystemClock.sleep(10000L);
             List<Location> areasOfInterest = new ArrayList<>();
             JSONArray areas = responseJSON.getJSONArray("locations_of_interest");
             for (int i = 0; i < areas.length(); i++) {
@@ -219,21 +225,23 @@ public class NetworkEndToEndTest {
             assertEquals(responseJSON.getString(LAST_NAME.get()), "User");
             assertEquals(responseJSON.getString(GENDER.get()), "male");
             assertEquals(
-                responseJSON.getString("birth_date"),
-                "1993-02-18T00:00:00+0100");
+                    responseJSON.getString("birth_date"),
+                    "1993-02-18T00:00:00+0100");
             assertEquals(fb_id, "666");
             assertEquals(responseJSON.getBoolean(LOCKED.get()), false);
             assertEquals(responseJSON.getBoolean(ENABLED.get()), false);
             assertTrue(
-                "Unexpected locations of preference",
-                new CollectionComparator<Location>().compare(locationsOfInterest, areasOfInterest));
+                    "Unexpected locations of preference",
+                    new CollectionComparator<Location>().compare(
+                            locationsOfInterest,
+                            areasOfInterest));
 
         } catch (UserClientException | ParserException | JSONException e) {
             fail(e.getMessage());
         }
     }
 
-    @Test
+    @LargeTest
     public void testGetSpeedDatingEvent() throws EventClientException {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
         EventClient eventClient = new NetworkEventClient("http://beecreative.ch", networkProvider);
@@ -243,21 +251,21 @@ public class NetworkEndToEndTest {
         Date endDate;
         try {
             beginDate = DateParser.parseFromString(
-                "2016-10-15T21:00:00+0200",
-                DateParser.SERVER_DATE_FORMAT);
+                    "2016-10-15T21:00:00+0200",
+                    DateParser.SERVER_DATE_FORMAT);
             endDate = DateParser.parseFromString(
-                "2016-10-16T00:00:00+0200",
-                DateParser.SERVER_DATE_FORMAT);
+                    "2016-10-16T00:00:00+0200",
+                    DateParser.SERVER_DATE_FORMAT);
         } catch (ParserException e) {
             throw new EventClientException(e);
         }
 
         assertEquals(event.getName(), "Let's celebrate Oktoberfest");
         assertEquals(
-            event.getDescription(),
-            "Come and join us" +
-            " to celebrate the Oktoberfest , and use this occasion to meet new People . The event" +
-            " will take place to Forum , a bar in the center of Zürich.");
+                event.getDescription(),
+                "Come and join us" +
+                " to celebrate the Oktoberfest , and use this occasion to meet new People . The event" +
+                " will take place to Forum , a bar in the center of Zürich.");
         assertEquals(event.getImagePath(), "5647627162808.jpg");
         assertEquals(event.getMinAge(), 21);
         assertEquals(event.getMaxAge(), 32);
@@ -271,21 +279,23 @@ public class NetworkEndToEndTest {
         assertEquals(event.getDateEnd().toString(), endDate.toString());
         assertEquals(event.getLocation().getName(), new Location(6, "Zürich").getName());
         assertEquals(
-            event.getEstablishment(),
-            new Establishment(
-                2,
-                "Forum",
-                Establishment.Type.BAR,
-                new Address("CH", 8004, "Zürich", "Zürich", 120, "Badenerstrasse"),
-                "+41 43 243 88 88",
-                "Located at the corner of Badenerstrasse, Forum is an airy lounge bar and restaurant, ideal for kicking back and unwinding.",
-                SafeJSONObject.DEFAULT_STRING,
-                250,
-                SafeJSONObject.DEFAULT_STRING)
+                event.getEstablishment(),
+                new Establishment(
+                        2,
+                        "Forum",
+                        Establishment.Type.BAR,
+                        new Address("CH", 8004, "Zürich", "Zürich", 120, "Badenerstrasse"),
+                        "+41 43 243 88 88",
+                        "Located at the corner of Badenerstrasse, Forum is an airy lounge bar and restaurant, ideal for kicking back and unwinding.",
+                        SafeJSONObject.DEFAULT_STRING,
+                        250,
+                        SafeJSONObject.DEFAULT_STRING)
                     );
     }
 
-    private class CollectionComparator<E> {
+    @Ignore
+    private static final class CollectionComparator<E> {
+        @Ignore
         boolean compare(List<E> coll1, List<E> coll2) {
             if (coll1.size() != coll2.size()) {
                 return false;

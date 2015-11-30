@@ -1,133 +1,102 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="16dp"
-                tools:context="ch.epfl.sweng.swissaffinity.EventActivity">
+<ScrollView
+    android:id="@+id/registerScrollView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context="ch.epfl.sweng.swissaffinity.RegisterActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <ScrollView
-        android:id="@+id/registerScrollView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentTop="true">
-
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/registerInstruction"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:text="@string/register_text"/>
 
+        <EditText
+            android:id="@+id/registerUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/register_username"
+            android:inputType="textPersonName"/>
 
-            <TextView
-                android:id="@+id/registerInstruction"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:text="Please fill these fields so you can register"/>
+        <EditText
+            android:id="@+id/registerFirstName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/register_firstname"/>
 
-            <EditText
-                android:id="@+id/registerUserName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/registerEmail"
-                android:layout_below="@+id/registerInstruction"
-                android:ems="10"
-                android:hint="Name"
-                android:inputType="textPersonName"/>
+        <EditText
+            android:id="@+id/registerLastName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/register_lastname"/>
 
-            <EditText
-                android:id="@+id/registerFirstName"
+        <EditText
+            android:id="@+id/registerEmail"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/register_email"
+            android:inputType="textEmailAddress"/>
+
+        <EditText
+            android:id="@+id/registerPassword"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/register_password"
+            android:inputType="textPassword"/>
+
+        <EditText
+            android:id="@+id/registerPasswordConfirmation"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/register_passforn_confirmation"
+            android:inputType="textPassword"/>
+
+        <EditText
+            android:id="@+id/registerBirthDay"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/register_birthdate"
+            android:inputType="date"/>
+
+        <RadioGroup
+            android:id="@+id/registerGender"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/registerFemale"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignTop="@+id/registerScrollView"
-                android:hint="First Name"/>
+                android:checked="false"
+                android:text="@string/register_female"/>
 
-            <EditText
-                android:id="@+id/registerLastName"
+            <RadioButton
+                android:id="@+id/registerMale"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/registerFirstName"
-                android:hint="Last Name"/>
+                android:checked="false"
+                android:text="@string/register_male"/>
 
-            <EditText
-                android:id="@+id/registerEmail"
-                android:layout_width="391dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/registerUserName"
-                android:layout_centerHorizontal="true"
-                android:ems="10"
-                android:hint="Email"
-                android:inputType="textEmailAddress"/>
+        </RadioGroup>
 
-            <EditText
-                android:id="@+id/registerPassword"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/registerEmail"
-                android:layout_centerHorizontal="true"
-                android:ems="10"
-                android:hint="Password"
-                android:inputType="textPassword"/>
+        <Button
+            android:id="@+id/userRegistration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/event_register"/>
 
-            <EditText
-                android:id="@+id/registerPasswordConfirmation"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/registerPhoneNumber"
-                android:layout_below="@+id/registerPhoneNumber"
-                android:ems="10"
-                android:hint="Password Confirmation"
-                android:inputType="textPassword"/>
-
-            <EditText
-                android:id="@+id/registerBirthDay"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/registerAddress"
-                android:layout_centerHorizontal="true"
-                android:ems="10"
-                android:hint="Date of Birth"
-                android:inputType="date"/>
-
-            <RadioGroup
-                android:id="@+id/registerGender"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/registerBirthDay"
-                android:layout_alignStart="@+id/registerBirthDay"
-                android:layout_below="@+id/registerBirthDay"
-                android:layout_toStartOf="@+id/eventRegistration">
-
-                <RadioButton
-                    android:id="@+id/registerFemale"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:text="Female"/>
-
-                <RadioButton
-                    android:id="@+id/registerMale"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:text="Male"/>
-
-            </RadioGroup>
-
-            <Button
-                android:id="@+id/userRegistration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/registerScrollView"
-                android:layout_centerHorizontal="true"
-                android:text="Register"
-                android:layout_gravity="center_horizontal"/>
-
-        </LinearLayout>
-    </ScrollView>
-</RelativeLayout>
+    </LinearLayout>
+</ScrollView>

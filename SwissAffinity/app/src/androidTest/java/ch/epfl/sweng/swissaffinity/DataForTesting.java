@@ -1,10 +1,8 @@
 package ch.epfl.sweng.swissaffinity;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -19,12 +17,8 @@ import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.Address;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
-import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClientException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser;
-import ch.epfl.sweng.swissaffinity.utilities.parsers.Parser;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
-import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserFactory;
-import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 
 /**
  * Class created to test events display and eventParser
@@ -78,7 +72,7 @@ public class DataForTesting {
                     new Location(6, "Zurich"),
                     new Location(7, "Berne"),
                     new Location(8, "Bulle")
-            ));
+                         ));
 
     public static URL testURL() {
         try {
@@ -95,7 +89,7 @@ public class DataForTesting {
                     new Address("Suisse", 1200, "Geneve", "GE", 16, "Rue du Port Franc"),
                     new Address("Suisse", 1200, "Geneve", "GE", 14, "Grand-Places"),
                     new Address("Suisse", 1200, "Geneve", "GE", 6, "Widdergasse")
-            ));
+                         ));
 
     public static List<Establishment> ESTABLISHMENTS = new ArrayList<>(
             Arrays.asList(
@@ -140,7 +134,7 @@ public class DataForTesting {
                             100,
                             "logoTest")
 
-            ));
+                         ));
 
     public static List<GregorianCalendar> DATES = new ArrayList<>(
             Arrays.asList(
@@ -155,7 +149,7 @@ public class DataForTesting {
 
                     new GregorianCalendar(2015, 11, 30, 20, 00),
                     new GregorianCalendar(2015, 11, 30, 23, 59)
-            ));
+                         ));
 
     public static SpeedDatingEvent createSpeedDatingEvent() throws ParserException {
 
@@ -232,5 +226,4 @@ public class DataForTesting {
             return null;
         }
     }
-
 }

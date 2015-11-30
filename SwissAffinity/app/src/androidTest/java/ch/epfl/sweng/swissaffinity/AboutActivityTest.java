@@ -1,24 +1,13 @@
 package ch.epfl.sweng.swissaffinity;
 
-import android.app.ActivityManager;
-import android.app.Instrumentation;
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
-import android.test.ActivityInstrumentationTestCase2;
-import android.view.View;
-import android.view.animation.Animation;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.support.test.runner.AndroidJUnit4;
+import android.test.suitebuilder.annotation.LargeTest;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import ch.epfl.sweng.swissaffinity.utilities.network.ServerTags;
 
@@ -31,43 +20,35 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
- * Created by max on 28/11/2015.
+ * Created by Lionel on 29.11.15.
  */
-public class AboutActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
-
-    private IntentServiceIdlingResource idlingResource;
-
-    public AboutActivityTest() {
-        super(MainActivity.class);
-    }
+@RunWith(AndroidJUnit4.class)
+@LargeTest
+public class AboutActivityTest {
 
     @Rule
-    public ActivityTestRule<AboutActivity> activityRule = new ActivityTestRule<>(AboutActivity.class);
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
+            MainActivity.class);
 
     @Before
-    public void registerIntentIdling() {
-        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-        idlingResource = new IntentServiceIdlingResource(instrumentation.getTargetContext());
-        Espresso.registerIdlingResources(idlingResource);
+    public void setUp() {
+        mActivityRule.getActivity();
     }
 
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
+    @Test
+    public void testOnCreate() throws Exception {
+
     }
 
-    @After
-    public void unregisterIntentIdling() {
-        Espresso.unregisterIdlingResources(idlingResource);
+    @Test
+    public void testOnActivityResult() throws Exception {
+
     }
 
-
-    public void testLoginButton() {
-
-        getActivity();
+    @LargeTest
+    public void testLoginButton() throws Exception {
         onView(withId(R.id.action_about)).perform(click());
-        if (!MainActivity.getSharedPrefs().getString(ServerTags.USERNAME.get(), "").equals("")) {
+        if (!MainActivity.getPreferences().getString(ServerTags.USERNAME.get(), "").equals("")) {
             onView(withId(R.id.login_button)).perform(click());
             pressBack();
             pressBack();
@@ -78,5 +59,4 @@ public class AboutActivityTest extends ActivityInstrumentationTestCase2<MainActi
             onView(withId(R.id.aboutLogedText)).check(matches(withText(R.string.welcome_not_logged_text)));
         }
     }
-
 }
