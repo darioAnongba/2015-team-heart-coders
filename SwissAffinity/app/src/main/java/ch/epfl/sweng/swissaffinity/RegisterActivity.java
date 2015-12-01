@@ -70,8 +70,6 @@ public class RegisterActivity extends AppCompatActivity {
                         if (json != null) {
                             Log.v("UserJson", json.toString());
                             new UploadUserTask().execute(json.toString());
-                        } else {
-
                         }
                     }
                 });
@@ -114,7 +112,8 @@ public class RegisterActivity extends AppCompatActivity {
     /**
      * Create a Json with the editText , got a lot of condition to avoid some field
      *
-     * @return a json with the info of a user
+     * @return a json with the info of a user, null in case some field's content is not
+     * in the correct format.
      */
     private JSONObject createJson() {
 
@@ -126,46 +125,46 @@ public class RegisterActivity extends AppCompatActivity {
         {
             Toast.makeText(
                     RegisterActivity.this,
-                    "Mail is not in a valid format , empty or over 100 characters",
+                    R.string.toast_text_error_mail,
                     Toast.LENGTH_SHORT).show();
         } else if ((userNameText.getText().toString().isEmpty() ||
                     userNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
-                    RegisterActivity.this, "Username is empty , or over 50 characters",
+                    RegisterActivity.this, R.string.toast_text_error_username,
                     Toast.LENGTH_SHORT).show();
         } else if ((firstNameText.getText().toString().isEmpty() ||
                     firstNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
-                    RegisterActivity.this, "First Name is empty , or over 50 characters",
+                    RegisterActivity.this, R.string.toast_text_error_firstname,
                     Toast.LENGTH_SHORT).show();
         } else if ((lastNameText.getText().toString().isEmpty() ||
                     lastNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
-                    RegisterActivity.this, "Last Name is empty , or over 50 characters",
+                    RegisterActivity.this, R.string.toast_text_error_lastname,
                     Toast.LENGTH_SHORT).show();
         } else if (passwordText.getText().toString().isEmpty()) {
             Toast.makeText(
-                    RegisterActivity.this, "Password is empty ",
+                    RegisterActivity.this, R.string.toast_text_error_password,
                     Toast.LENGTH_SHORT).show();
         } else if (!passwordText.getText().toString().equals(
                 passwordConfirmation.getText()
                                     .toString()))
         {
             Toast.makeText(
-                    RegisterActivity.this, "Password do not match ",
+                    RegisterActivity.this, R.string.toast_text_error_passwordconfirmation,
                     Toast.LENGTH_SHORT).show();
         } else if (gender == null) {
             Toast.makeText(
-                    RegisterActivity.this, "No value found for Gender ",
+                    RegisterActivity.this, R.string.toast_text_error_gender,
                     Toast.LENGTH_SHORT).show();
         } else if (birthdayText.getText().toString().length() == 0 ||
                    birthdayText.getText().toString().length() > 20)
         {
             Toast.makeText(
-                    RegisterActivity.this, "Birth Date is empty or too long ",
+                    RegisterActivity.this, R.string.toast_text_error_birthday,
                     Toast.LENGTH_SHORT).show();
         } else {
             try {

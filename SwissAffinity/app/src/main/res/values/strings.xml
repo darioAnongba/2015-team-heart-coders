@@ -65,4 +65,9 @@
     <string name="toast_text_error_mail">Mail is not in a valid format , empty or over 100 characters</string>
     <string name="toast_text_error_username">Username is empty , or over 50 characters</string>
     <string name="toast_text_error_firstname">First Name is empty , or over 50 characters</string>
+    <string name="toast_text_error_lastname">Last Name is empty , or over 50 characters</string>
+    <string name="toast_text_error_password">Password is empty</string>
+    <string name="toast_text_error_passwordconfirmation">Password do not match</string>
+    <string name="toast_text_error_gender">No value found for Gender</string>
+    <string name="toast_text_error_birthday">Birth Date is empty or too long</string>
 </resources>
