@@ -1,6 +1,7 @@
 package ch.epfl.sweng.swissaffinity.events;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 
 /**
@@ -11,14 +12,10 @@ public class SpeedDatingEvent extends Event implements Serializable {
     private final int mMenSeats;
     private final int mWomenSeats;
     private final int mMenRegistered;
-
-
-
     private final int mWomenRegistered;
     private final int mMinAge;
     private final int mMaxAge;
     private final Establishment mEstablishment;
-
 
     private SpeedDatingEvent(Builder builder) {
         super(builder);
@@ -29,31 +26,6 @@ public class SpeedDatingEvent extends Event implements Serializable {
         this.mMinAge = builder.mMinAge;
         this.mMaxAge = builder.mMaxAge;
         this.mEstablishment = builder.mEstablishment;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null){
-            return false;
-        }
-        if (getClass() != obj.getClass()){
-            return false;
-        }
-        final SpeedDatingEvent other = (SpeedDatingEvent) obj;
-        if (this.mMenSeats != other.getMenSeats() ||
-                this.mWomenSeats != other.getWomenSeats() ||
-                this.mMenRegistered != other.getMenRegistered() ||
-                this.mWomenRegistered != other.getWomenRegistered() ||
-                this.mMinAge != other.getMinAge() ||
-                this.mMaxAge != other.getMaxAge()){
-            return false;
-        }
-        if ((this.mEstablishment == null) ? (other.getEstablishment() != null)
-                : !this.mEstablishment.equals(other.getEstablishment())){
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -91,16 +63,64 @@ public class SpeedDatingEvent extends Event implements Serializable {
     public int getWomenRegistered() {
         return mWomenRegistered;
     }
+
+    /**
+     * Getter for the maximum age
+     *
+     * @return the maximum age for the event
+     */
     public int getMaxAge() {
         return mMaxAge;
     }
 
+    /**
+     * Getter for the minimum age
+     *
+     * @return the minimum age for the event
+     */
     public int getMinAge() {
         return mMinAge;
     }
+
+    /**
+     * Getter for the establishment
+     *
+     * @return the establishment for the event
+     */
     public Establishment getEstablishment() {
-        return mEstablishment;//TODO: deep copy
+        return mEstablishment;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        SpeedDatingEvent that = (SpeedDatingEvent) o;
+        return Objects.equals(mMenSeats, that.mMenSeats) &&
+               Objects.equals(mWomenSeats, that.mWomenSeats) &&
+               Objects.equals(mMenRegistered, that.mMenRegistered) &&
+               Objects.equals(mWomenRegistered, that.mWomenRegistered) &&
+               Objects.equals(mMinAge, that.mMinAge) &&
+               Objects.equals(mMaxAge, that.mMaxAge) &&
+               Objects.equals(mEstablishment, that.mEstablishment);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+            mMenSeats,
+            mWomenSeats,
+            mMenRegistered,
+            mWomenRegistered,
+            mMinAge,
+            mMaxAge,
+            mEstablishment);
+    }
+
     /**
      * Builder for a speed dating event.
      */
@@ -118,11 +138,10 @@ public class SpeedDatingEvent extends Event implements Serializable {
          * Setter for men seats
          *
          * @param menSeats the number of men seats
-         *
          * @return this
          */
         public Builder setMenSeats(int menSeats) {
-            if (menSeats < 0){
+            if (menSeats < 0) {
                 throw new IllegalArgumentException();
             }
             mMenSeats = menSeats;
@@ -133,11 +152,10 @@ public class SpeedDatingEvent extends Event implements Serializable {
          * Setter for women seats
          *
          * @param womenSeats the number of women seats
-         *
          * @return this
          */
         public Builder setWomenSeats(int womenSeats) {
-            if (womenSeats < 0){
+            if (womenSeats < 0) {
                 throw new IllegalArgumentException();
             }
             mWomenSeats = womenSeats;
@@ -148,11 +166,10 @@ public class SpeedDatingEvent extends Event implements Serializable {
          * Setter for registered men
          *
          * @param menRegistered the number of registered men
-         *
          * @return this
          */
         public Builder setMenRegistered(int menRegistered) {
-            if (menRegistered < 0){
+            if (menRegistered < 0) {
                 throw new IllegalArgumentException();
             }
             mMenRegistered = menRegistered;
@@ -163,11 +180,10 @@ public class SpeedDatingEvent extends Event implements Serializable {
          * Setter for registered women
          *
          * @param womenRegistered the number of registered women
-         *
          * @return this
          */
         public Builder setWomenRegistered(int womenRegistered) {
-            if (womenRegistered < 0){
+            if (womenRegistered < 0) {
                 throw new IllegalArgumentException();
             }
             mWomenRegistered = womenRegistered;
@@ -179,12 +195,12 @@ public class SpeedDatingEvent extends Event implements Serializable {
          * Setter for minimum age
          *
          * @param minAge the minimum age
-         *
          * @return this
          */
         public Builder setMinAge(int minAge) {
             if (minAge < 0 ||
-                    (mMaxAge > 0 && minAge > mMaxAge)){
+                (mMaxAge > 0 && minAge > mMaxAge))
+            {
                 throw new IllegalArgumentException();
             }
 
@@ -196,12 +212,12 @@ public class SpeedDatingEvent extends Event implements Serializable {
          * Setter for maximum age
          *
          * @param maxAge the maximum age
-         *
          * @return this
          */
         public Builder setMaxAge(int maxAge) {
             if (maxAge < 0 ||
-                    (mMinAge > 0 && mMinAge > maxAge)){
+                (mMinAge > 0 && mMinAge > maxAge))
+            {
                 throw new IllegalArgumentException();
             }
             mMaxAge = maxAge;
@@ -212,11 +228,10 @@ public class SpeedDatingEvent extends Event implements Serializable {
          * Setter for establishment
          *
          * @param establishment the establishment {@link Establishment}
-         *
          * @return this
          */
         public Builder setEstablishment(Establishment establishment) {
-            if(establishment == null){
+            if (establishment == null) {
                 throw new IllegalArgumentException();
             }
             mEstablishment = establishment;
