@@ -12,7 +12,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,10 +25,6 @@ import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.user.UserParser;
-
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
-import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
-import static ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject.DEFAULT_STRING;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -212,8 +207,10 @@ public class RegisterActivity extends AppCompatActivity {
             try {
                 JSONObject jsonObject = new JSONObject(params[0]);
                 response = DataManager.getUserClient().postUser(jsonObject);
-            } catch (UserClientException | JSONException e) {
+            } catch (JSONException e) {
                 Log.e("UploadUserTask", e.getMessage());
+            } catch (UserClientException e){
+                return e.getMessage();
             }
             return response.toString();
         }
@@ -223,53 +220,16 @@ public class RegisterActivity extends AppCompatActivity {
             dialog.dismiss();
             try {
                 SafeJSONObject responseJson = new SafeJSONObject(response);
-                if (responseJson.get(EMAIL.get(), DEFAULT_STRING)
-                                .equals(emailText.getText().toString()) &&
-                    responseJson.get(FIRST_NAME.get(), DEFAULT_STRING)
-                                .equals(firstNameText.getText().toString()))
-                {
-                    DataManager.saveUser(new UserParser().parse(responseJson));
-                    Toast.makeText(
-                            RegisterActivity.this, R.string.register_positive,
-                            Toast.LENGTH_LONG).show();
-                    finish();
-                } else {
-                    String error = "";
-                    try {
-                        JSONArray jsonUsernameError = responseJson.getJSONObject("errors")
-                                                                  .getJSONObject("children")
-                                                                  .getJSONObject("username")
-                                                                  .getJSONArray("errors");
-
-                        for (int i = 0; i < jsonUsernameError.length(); i++) {
-                            error = error + jsonUsernameError.getString(i);
-                        }
-                    } catch (JSONException e) {
-                        Log.e("No Username Error", e.getMessage());
-                    }
-                    try {
-                        JSONArray jsonEmailError = responseJson.getJSONObject("errors")
-                                                               .getJSONObject("children")
-                                                               .getJSONObject("email")
-                                                               .getJSONArray("errors");
-
-                        for (int i = 0; i < jsonEmailError.length(); i++) {
-                            error = error + jsonEmailError.getString(i);
-                        }
-                    } catch (JSONException e) {
-                        Log.e("No Email Error", e.getMessage());
-                    }
-                    if (!error.equals("")) {
-                        Toast.makeText(
-                                RegisterActivity.this, error,
-                                Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(
-                                RegisterActivity.this, "unhandled error " + response,
-                                Toast.LENGTH_LONG).show();
-                    }
-                }
-            } catch (JSONException | ParserException e) {
+                DataManager.saveUser(new UserParser().parse(responseJson));
+                Toast.makeText(
+                        RegisterActivity.this, R.string.register_positive,
+                        Toast.LENGTH_LONG).show();
+                finish();
+            } catch (JSONException e) {
+                Toast.makeText(
+                        RegisterActivity.this, response,
+                        Toast.LENGTH_LONG).show();
+            } catch (ParserException e){
                 Log.e("UploadUserTask", e.getMessage());
             }
         }
