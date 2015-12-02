@@ -25,12 +25,13 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ch.epfl.sweng.swissaffinity.gui.DataManager;
 import ch.epfl.sweng.swissaffinity.users.User;
+import ch.epfl.sweng.swissaffinity.utilities.DataManager;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.user.FacebookUserParser;
+import ch.epfl.sweng.swissaffinity.utilities.parsers.user.UserParser;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
@@ -82,7 +83,7 @@ public class AboutActivity extends AppCompatActivity {
      */
     private void updateUI() {
         TextView logged = ((TextView) findViewById(R.id.aboutLogedText));
-        String userName = MainActivity.getPreferences().getString(USERNAME.get(), null);
+        String userName = MainActivity.getSharedPrefs().getString(USERNAME.get(), null);
         if (userName == null) {
             logged.setText(getString(R.string.welcome_not_logged_text));
             logged.setTextSize(20);
@@ -182,15 +183,12 @@ public class AboutActivity extends AppCompatActivity {
         protected void onPostExecute(User user) {
             if (user != null) {
                 DataManager.saveUser(user);
-                if (user.getId() == 0) {
-                    Intent intent = new Intent(AboutActivity.this, RegisterActivity.class);
-                    intent.putExtra(MainActivity.EXTRA_USER, user);
-                    startActivity(intent);
-                }
+            } else {
+                Intent intent = new Intent(AboutActivity.this, RegisterActivity.class);
+                intent.putExtra(MainActivity.EXTRA_USER, user);
+                startActivity(intent);
             }
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
+            dialog.dismiss();
             finish();
         }
     }

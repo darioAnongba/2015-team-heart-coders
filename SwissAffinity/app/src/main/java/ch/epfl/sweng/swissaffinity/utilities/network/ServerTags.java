@@ -18,13 +18,11 @@ public enum ServerTags {
     ENABLED("enabled"),
     GENDER("gender"),
     BIRTH_DATE("birth_date"),
-    BIRTHDAY("birthday"), // This one is for Facebook API
+    BIRTHDAY("birthday"),//TODO: this is redundant and was causing bugs in the tests. BIRTHDAY should be removed.
     PROFESSION("profession"),
     PROFILE_PICTURE("profile_picture"),
     LOCATIONS_INTEREST("locations_of_interest"),
     EVENTS_ATTENDED("events_attended"),
-    REST_USER_REGISTRATION("rest_user_registration"),
-    REST_EVENT_REGISTRATION("rest_event_registration"),
     LOCATION("location"),
     MAX_PEOPLE("max_people"),
     DATE_BEGIN("date_start"),
@@ -53,7 +51,6 @@ public enum ServerTags {
     MAX_SEATS("max_seats"),
     LOGO_PATH("logo_path"),
     EVENT_TYPE("discr"),
-    EVENT_ID("eventId"),
     EVENT("event"),
     SPEED_DATING_TYPE("speed_dating");
 

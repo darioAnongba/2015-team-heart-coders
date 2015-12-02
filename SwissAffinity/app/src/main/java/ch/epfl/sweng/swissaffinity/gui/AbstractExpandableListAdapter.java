@@ -12,7 +12,7 @@ import java.util.Map;
  * Representation of an Expandable List Adapter.
  *
  * @param <A> Type for the groups (usually String)
- * @param <B> Type for the children
+ * @param <B> Type for the data (could be any type)
  */
 public abstract class AbstractExpandableListAdapter<A, B> extends BaseExpandableListAdapter {
 
@@ -32,16 +32,17 @@ public abstract class AbstractExpandableListAdapter<A, B> extends BaseExpandable
      * @param groups   the groups.
      * @param children the children to add.
      */
-    public void setData(List<A> groups, List<List<B>> children) {
-        if (groups == null || children == null || groups.size() != children.size()) {
+    @SafeVarargs
+    public final void setData(List<A> groups, List<B>... children) {
+        if (groups == null || children == null || groups.size() != children.length) {
             throw new IllegalArgumentException();
         }
         notifyDataSetInvalidated();
         mGroups.clear();
         mChildren.clear();
-        for (int i = 0; i < children.size(); ++i) {
+        for (int i = 0; i < children.length; ++i) {
             A group = groups.get(i);
-            List<B> child = children.get(i);
+            List<B> child = children[i];
             if (child != null && !child.isEmpty()) {
                 mGroups.add(group);
                 mChildren.put(group, child);

@@ -26,7 +26,7 @@ public class DateParser {
     public static Date parseFromString(String dateString, String dateFormat)
             throws ParserException
     {
-        if (dateString == null || dateFormat == null) {
+        if (dateString == null) {
             throw new IllegalArgumentException();
         }
         try {

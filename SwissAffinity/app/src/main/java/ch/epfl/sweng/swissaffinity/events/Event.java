@@ -1,8 +1,6 @@
 package ch.epfl.sweng.swissaffinity.events;
 
 
-import android.support.annotation.NonNull;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -77,18 +75,14 @@ public abstract class Event implements Serializable, Comparable<Event> {
         mLastUpdate = builder.mLastUpdate;
     }
 
-    @Override
-    public int compareTo(@NonNull Event other) {
-        return mDateBegin.compareTo(other.mDateBegin);
-    }
 
     /**
      * Getter for the ID
      *
      * @return the id
      */
-    public int getId() {
-        return mId;
+    public String getId() {
+        return String.valueOf(mId);
     }
 
     /**
@@ -161,24 +155,6 @@ public abstract class Event implements Serializable, Comparable<Event> {
      */
     public int getMaxPeople() {
         return mMaxPeople;
-    }
-
-    /**
-     * Getter for the state
-     *
-     * @return the state of the event {@link State}
-     */
-    public State getState() {
-        return mState;
-    }
-
-    /**
-     * Getter for the last update date.
-     *
-     * @return the last update date and time {@link Date}
-     */
-    public Date getLastUpdate() {
-        return mLastUpdate;
     }
 
     /**
@@ -351,5 +327,11 @@ public abstract class Event implements Serializable, Comparable<Event> {
             mLastUpdate = lastUpdate;
             return this;
         }
+
+    }
+
+    @Override
+    public int compareTo(Event other) {
+        return mDateBegin.compareTo(other.mDateBegin);
     }
 }

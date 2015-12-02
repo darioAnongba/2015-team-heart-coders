@@ -8,36 +8,33 @@
         android:id="@+id/rowEventName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
         android:layout_alignParentTop="true"
-        android:paddingEnd="5dp"
-        android:paddingStart="5dp"
+        android:paddingLeft="5dp"
         android:paddingTop="5dp"
-        android:text="@string/event_name"
+        android:text="Event Name"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/black"/>
+        android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/rowEventLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/rowEventDateBegin"
-        android:paddingEnd="5dp"
-        android:paddingStart="5dp"
-        android:text="@string/event_location"
+        android:paddingLeft="5dp"
+        android:text="Location"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/black"/>
+        android:layout_alignTop="@+id/rowEventDateBegin"
+        android:layout_alignParentEnd="true"
+        android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/rowEventDateBegin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/rowEventName"
-        android:paddingEnd="5dp"
-        android:paddingStart="5dp"
-        android:text="@string/event_date_begin"
+        android:paddingLeft="5dp"
+        android:text="Date begin"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/black"/>
-
+        android:layout_below="@+id/rowEventName"
+        android:textColor="@android:color/black" />
 </RelativeLayout>

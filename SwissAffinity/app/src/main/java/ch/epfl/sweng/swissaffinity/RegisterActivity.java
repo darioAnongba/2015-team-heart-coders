@@ -16,20 +16,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
-import ch.epfl.sweng.swissaffinity.gui.DataManager;
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.users.User.Gender;
+import ch.epfl.sweng.swissaffinity.utilities.network.DefaultNetworkProvider;
+import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
+import ch.epfl.sweng.swissaffinity.utilities.network.users.NetworkUserClient;
 import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
-import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
-import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
-import ch.epfl.sweng.swissaffinity.utilities.parsers.user.UserParser;
 
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.BIRTHDAY;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EMAIL;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FACEBOOK_ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.FIRST_NAME;
-import static ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject.DEFAULT_STRING;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.GENDER;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.LAST_NAME;
+import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -71,7 +71,10 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.v("UserJson", json.toString());
                             new UploadUserTask().execute(json.toString());
                         } else {
-
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "There has been a problem",
+                                    Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -84,31 +87,23 @@ public class RegisterActivity extends AppCompatActivity {
 
         User user = (User) getIntent().getSerializableExtra(MainActivity.EXTRA_USER);
 
-            userNameText = (EditText) findViewById(R.id.registerUserName);
-            firstNameText = (EditText) findViewById(R.id.registerFirstName);
-            lastNameText = (EditText) findViewById(R.id.registerLastName);
-            emailText = (EditText) findViewById(R.id.registerEmail);
-            birthdayText = (EditText) findViewById(R.id.registerBirthDay);
-            passwordText = (EditText) findViewById(R.id.registerPassword);
-            passwordConfirmation = (EditText) findViewById(R.id.registerPasswordConfirmation);
-
-        if (user != null) {
-            userNameText.setText(user.getUsername());
-            firstNameText.setText(user.getFirstName());
-            emailText.setText(user.getEmail());
-            SimpleDateFormat dateFormat =
-                    new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            birthdayText.setText(dateFormat.format(user.getBirthDate()));
-            lastNameText.setText(user.getLastName());
-            gender = user.getGender().get();
-            facebookId = user.getFacebookId();
-            if (gender.equalsIgnoreCase(Gender.FEMALE.get())) {
-                ((RadioButton) findViewById(R.id.registerFemale)).setChecked(true);
-            } else if (gender.equalsIgnoreCase(Gender.MALE.get())) {
-                ((RadioButton) findViewById(R.id.registerMale)).setChecked(true);
-            }
+        userNameText = (EditText) findViewById(R.id.registerUserName);
+        userNameText.setText(user.getUsername());
+        firstNameText = (EditText) findViewById(R.id.registerFirstName);
+        firstNameText.setText(user.getFirstName());
+        lastNameText = (EditText) findViewById(R.id.registerLastName);
+        lastNameText.setText(user.getLastName());
+        emailText = (EditText) findViewById(R.id.registerEmail);
+        emailText.setText(user.getEmail());
+        birthdayText = (EditText) findViewById(R.id.registerBirthDay);
+        birthdayText.setText(user.getBirthDate().toString());
+        if (gender.equalsIgnoreCase(Gender.FEMALE.get())) {
+            ((RadioButton) findViewById(R.id.registerFemale)).setChecked(true);
+        } else if (gender.equalsIgnoreCase(Gender.MALE.get())) {
+            ((RadioButton) findViewById(R.id.registerMale)).setChecked(true);
         }
-
+        passwordText = (EditText) findViewById(R.id.registerPassword);
+        passwordConfirmation = (EditText) findViewById(R.id.registerPasswordConfirmation);
     }
 
     /**
@@ -189,6 +184,7 @@ public class RegisterActivity extends AppCompatActivity {
      * Check is the mail is a valid format
      *
      * @param target the sequence of character
+     *
      * @return true if it has the form of an email
      */
     public static boolean isValidEmail(CharSequence target) {
@@ -209,12 +205,17 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
+
+            NetworkUserClient networkUserClient =
+                    new NetworkUserClient(NetworkProvider.SERVER_URL, new DefaultNetworkProvider());
             JSONObject response = new JSONObject();
             try {
                 JSONObject jsonObject = new JSONObject(params[0]);
-                response = DataManager.getUserClient().postUser(jsonObject);
-            } catch (UserClientException | JSONException e) {
-                Log.e("UploadUserTask", e.getMessage());
+                response = networkUserClient.postUser(jsonObject);
+            } catch (UserClientException e) {
+                Log.e("Error with the server", e.getMessage());
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
             }
             return response.toString();
         }
@@ -222,16 +223,15 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String response) {
             dialog.dismiss();
+            JSONObject responseJson;
             try {
-                SafeJSONObject responseJson = new SafeJSONObject(response);
-                if (responseJson.get(EMAIL.get(), DEFAULT_STRING)
-                                .equals(emailText.getText().toString()) &&
-                    responseJson.get(FIRST_NAME.get(), DEFAULT_STRING)
-                                .equals(firstNameText.getText().toString()))
+                responseJson = new JSONObject(response);
+                if (responseJson != null &&
+                    responseJson.getString("email").equals(emailText.getText().toString()) &&
+                    responseJson.getString("username").equals(userNameText.getText().toString()))
                 {
-                    DataManager.saveUser(new UserParser().parse(responseJson));
                     Toast.makeText(
-                            RegisterActivity.this, R.string.register_positive,
+                            RegisterActivity.this, "you have been registered",
                             Toast.LENGTH_LONG).show();
                     finish();
                 } else {
@@ -270,9 +270,10 @@ public class RegisterActivity extends AppCompatActivity {
                                 Toast.LENGTH_LONG).show();
                     }
                 }
-            } catch (JSONException | ParserException e) {
-                Log.e("UploadUserTask", e.getMessage());
+            } catch (JSONException e) {
+                Log.e("No response", response);
             }
+
         }
     }
 }

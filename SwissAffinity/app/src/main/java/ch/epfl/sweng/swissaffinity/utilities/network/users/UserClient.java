@@ -13,54 +13,26 @@ public interface UserClient {
      * Fetch a user regarding his user name
      *
      * @param userName the user name
+     *
      * @return the user
-     * @throws UserClientException
+     *
+     * @throws UserClientException if a problem occurs
      */
     User fetchByUsername(String userName) throws UserClientException;
 
     /**
-     * Fetch a user regarding his ID or Facebook ID
+     * Fetch a user reagrding his ID or Facebook ID
      *
-     * @param facebookId the user facebook ID
+     * @param id the user facebook ID
+     *
      * @return the user
-     * @throws UserClientException
-     */
-    User fetchByFacebookID(String facebookId) throws UserClientException;
-
-    /**
-     * Post a new user to the server.
      *
-     * @param jsonUserObject a json user
-     * @return the json object back from server.
-     * @throws UserClientException
+     * @throws UserClientException if a problem occurs
      */
+    User fetchByFacebookID(String id) throws UserClientException;
+
     JSONObject postUser(JSONObject jsonUserObject) throws UserClientException;
 
-    /**
-     * Delete a user from the server
-     *
-     * @param userName the user name
-     * @return the response code returned by the server
-     * @throws UserClientException
-     */
-    int deleteUser(String userName) throws UserClientException;
-
-    /**
-     * Register a user to an event.
-     *
-     * @param username the name of the user.
-     * @param eventId  the ID of the event.
-     * @return the response from server.
-     * @throws UserClientException
-     */
-    int registerUser(String username, int eventId) throws UserClientException;
-
-    /**
-     * Unregister a user from an event
-     *
-     * @param registrationId the registration ID {@link ch.epfl.sweng.swissaffinity.users.Registration}
-     * @return the response code from the server
-     * @throws UserClientException
-     */
-    int unregisterUser(int registrationId) throws UserClientException;
+    //TODO: as code develops, calls to this method should be restrained to the User class. It will probably be relocated.
+    String registerUser(String username, int eventId) throws UserClientException;
 }

@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.List;
 
 import ch.epfl.sweng.swissaffinity.events.Event;
-import ch.epfl.sweng.swissaffinity.users.Registration;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 
 /**
@@ -26,10 +25,10 @@ public interface EventClient {
      * Fetch the events a user has registered.
      *
      * @param userName the user name
-     * @return all the registrations for a user
+     * @return all the events the user has registered to
      * @throws EventClientException
      */
-    List<Registration> fetchForUser(String userName) throws EventClientException;
+    List<Event> fetchAllForUser(String userName) throws EventClientException;
 
     /**
      * Fetch the events for a given collection of locations
@@ -52,9 +51,9 @@ public interface EventClient {
     /**
      * Fetch the image for the given event
      *
-     * @param imagePath the path of the image of the event
+     * @param event the event
      * @return the image {@link Bitmap}
      * @throws EventClientException
      */
-    Bitmap imageFor(String imagePath) throws EventClientException;
+    Bitmap imageFor(Event event) throws EventClientException;
 }
