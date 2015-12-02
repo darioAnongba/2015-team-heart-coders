@@ -12,9 +12,8 @@ import android.view.MenuItem;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import ch.epfl.sweng.swissaffinity.gui.DataManager;
 import ch.epfl.sweng.swissaffinity.gui.EventExpandableListAdapter;
-import ch.epfl.sweng.swissaffinity.users.User;
-import ch.epfl.sweng.swissaffinity.utilities.DataManager;
 
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
@@ -28,12 +27,15 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String SHARED_PREFS_ID = "ch.epfl.sweng.swissaffinity.shared_prefs";
 
-    private static SharedPreferences mSharedPrefs;
+    private static SharedPreferences SHARED_PREFERENCES;
 
     private ExpandableListView mListView;
 
-    public static SharedPreferences getSharedPrefs() {
-        return mSharedPrefs;
+    public static SharedPreferences getPreferences() {
+        if (SHARED_PREFERENCES == null) {
+            throw new UnsupportedOperationException();
+        }
+        return SHARED_PREFERENCES;
     }
 
     public static ProgressDialog getLoadingDialog(Context context) {
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mSharedPrefs = getSharedPreferences(SHARED_PREFS_ID, MODE_PRIVATE);
+        SHARED_PREFERENCES = getSharedPreferences(SHARED_PREFS_ID, MODE_PRIVATE);
         mListView = (ExpandableListView) findViewById(R.id.mainEventListView);
         mListView.setAdapter(new EventExpandableListAdapter(this));
     }
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, AboutActivity.class));
                 return true;
             case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
+                startActivity(new Intent(this, PreferenceActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUI() {
         String welcome = getString(R.string.welcome_registered_text);
-        String userName = getSharedPrefs().getString(USERNAME.get(), "");
+        String userName = SHARED_PREFERENCES.getString(USERNAME.get(), "");
         TextView textView = (TextView) findViewById(R.id.mainWelcomeText);
         textView.setText(String.format(welcome, userName));
 
@@ -89,14 +91,14 @@ public class MainActivity extends AppCompatActivity {
             DataManager.displayData(mListView);
             withDialog = false;
         }
-        if (DataManager.isConnected(this)) {
-            new DownloadEventsTask().execute(withDialog);
+        if (DataManager.isNetworkConnected(this)) {
+            new DataManagerTask().execute(withDialog);
         } else {
-            DataManager.displayAlert(this);
+            DataManager.showNetworkAlert(this);
         }
     }
 
-    private final class DownloadEventsTask extends AsyncTask<Boolean, Boolean, Void> {
+    private final class DataManagerTask extends AsyncTask<Boolean, Boolean, Void> {
         private final ProgressDialog dialog = getLoadingDialog(MainActivity.this);
 
         @Override
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Boolean... params) {
             publishProgress(params[0]);
-            DataManager.updateData();
+            DataManager.updateData(MainActivity.this);
             return null;
         }
 
