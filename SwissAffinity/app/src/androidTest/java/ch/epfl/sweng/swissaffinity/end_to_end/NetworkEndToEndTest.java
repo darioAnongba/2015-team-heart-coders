@@ -177,6 +177,65 @@ public class NetworkEndToEndTest {
 
     }
 
+    //TODO: Server responses come sometimes in french other times in english.
+    @Test
+    public void postUserMalformat() {
+        NetworkProvider networkProvider = new DefaultNetworkProvider();
+        UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
+        JSONObject jsonUser = new JSONObject();
+        try {
+            userClient.deleteUser("DumbUser666");
+            jsonUser.put(EMAIL.get(), "dumbuser666@gmail.com");
+            jsonUser.put(USERNAME.get(), "DumbUser666");
+            jsonUser.put("firstName", "Dumb");
+            jsonUser.put("lastName", "User");
+            jsonUser.put(GENDER.get(), "maleo");//test incorrect gender format
+            jsonUser.put("birthDate", "18-02-1993");//test incorrect bday format
+            jsonUser.put("facebookId", "666");
+            jsonUser.put("plainPassword", "dumbpassword");
+        } catch (JSONException | UserClientException e){
+            fail(e.getMessage());
+        }
+        try{
+            userClient.postUser(jsonUser);
+        } catch (UserClientException e){
+            StringBuilder expectedMessage= new StringBuilder();
+            expectedMessage.append("Validation Failed: ");
+            // make explicit the server response, it does not come with \s.
+            expectedMessage.append("Le choix du sexe n'est pas valide." + " ");
+            expectedMessage.append("This value is not valid." + " ");
+            assertEquals(expectedMessage.toString(),e.getMessage());
+        }
+    }
+
+    @Test
+    public void postUserEmailUnameTaken() {
+        NetworkProvider networkProvider = new DefaultNetworkProvider();
+        UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
+        JSONObject jsonUser = new JSONObject();
+        try {
+            jsonUser.put(EMAIL.get(), "dario.anongba@epfl.ch");//email should be taken
+            jsonUser.put(USERNAME.get(), "Admin"); //username should be taken
+            jsonUser.put("firstName", "SomeFirstName");
+            jsonUser.put("lastName", "SomeLastName");
+            jsonUser.put(GENDER.get(), "male");//test incorrect gender format
+            jsonUser.put("birthDate", "18/02/1993");//test incorrect bday format
+            jsonUser.put("facebookId", "666");
+            jsonUser.put("plainPassword", "dumbpassword");
+        } catch (JSONException e){
+            fail(e.getMessage());
+        }
+        try{
+            userClient.postUser(jsonUser);
+        } catch (UserClientException e){
+            StringBuilder expectedMessage= new StringBuilder();
+            expectedMessage.append("Validation Failed: ");
+            // make explicit the server response, it does not come with \s.
+            expectedMessage.append("The email is already used" + " ");
+            expectedMessage.append("The username is already used" + " ");
+            assertEquals(expectedMessage.toString(),e.getMessage());
+        }
+    }
 
     @Test
     public void postUserTest() {
