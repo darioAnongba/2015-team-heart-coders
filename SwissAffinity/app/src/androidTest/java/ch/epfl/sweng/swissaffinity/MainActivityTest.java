@@ -1,5 +1,6 @@
 package ch.epfl.sweng.swissaffinity;
 
+import android.content.SharedPreferences;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -43,7 +44,8 @@ public class MainActivityTest {
 
     @Test
     public void testGetSharedPrefs() throws Exception {
-
+        SharedPreferences preferences = MainActivity.getPreferences();
+        assert preferences != null;
     }
 
     @Test
