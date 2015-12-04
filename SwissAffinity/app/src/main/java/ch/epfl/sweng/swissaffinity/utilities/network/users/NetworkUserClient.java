@@ -1,10 +1,11 @@
 package ch.epfl.sweng.swissaffinity.utilities.network.users;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 
 import ch.epfl.sweng.swissaffinity.users.User;
 import ch.epfl.sweng.swissaffinity.utilities.network.NetworkProvider;
@@ -30,6 +31,8 @@ public class NetworkUserClient implements UserClient {
     private final String mServerUrl;
     private final NetworkProvider mNetworkProvider;
 
+    public static final String FIELD_SUBMIT_OK = "Reg-field fmt correct.";
+
     /**
      * Constructor of the class
      *
@@ -54,19 +57,88 @@ public class NetworkUserClient implements UserClient {
         return fetch(id);
     }
 
+    /**
+     *
+     * @param jsonObject
+     * @return User object formatted as json by the server.
+     * @throws UserClientException when one of the Register fields does not have a correct format or other errors.
+     * In the case, the cause for the exception is format all errors are appended to be displayed in the toast
+     * of RegisterActivity.
+     */
     @Override
     public JSONObject postUser(JSONObject jsonObject) throws UserClientException {
         if (jsonObject == null) {
             throw new IllegalArgumentException();
         }
         JSONObject jsonRequest = new JSONObject();
+        JSONObject jsonResponse;
+
+        /*
+        DO NOT CHANGE/CLEAN THIS CODE WITHOUT ASKING OR COMPLETELY UNDERSTAND THE EXCEPTIONS FLOW.
+         */
         try {
             jsonRequest.put(REST_USER_REGISTRATION.get(), jsonObject);
             String response = mNetworkProvider.postContent(mServerUrl + USERS, jsonRequest);
-            return new JSONObject(response);
+            jsonResponse = new JSONObject(response);
         } catch (IOException | JSONException e) {
             throw new UserClientException(e);
         }
+
+        StringBuilder error = new StringBuilder();
+        try{
+            error.append(jsonResponse.get("message")+": ");
+        } catch (JSONException e){
+            return jsonResponse;
+        }
+
+        try{
+            JSONObject errorsJSON = jsonResponse.getJSONObject("errors").getJSONObject("children");
+            try {
+                error.append(errorsJSON.getJSONObject("email").getJSONArray("errors").getString(0) + " ");
+            } catch (JSONException e){
+                Log.e(FIELD_SUBMIT_OK,"EMAIL");
+            }
+            try {
+                error.append(errorsJSON.getJSONObject("username").getJSONArray("errors").getString(0) + " ");
+            } catch (JSONException e){
+                Log.e(FIELD_SUBMIT_OK,"USERNAME");
+            }
+            try {
+                error.append(errorsJSON.getJSONObject("firstName").getJSONArray("errors").getString(0)+ " ");
+            } catch (JSONException e){
+                Log.e(FIELD_SUBMIT_OK,"FIRST_NAME");
+            }
+            try {
+                error.append(errorsJSON.getJSONObject("lastName").getJSONArray("errors").getString(0)+ " ");
+            } catch (JSONException e){
+                Log.e(FIELD_SUBMIT_OK,"LAST_NAME");
+            }
+            try {
+                error.append(errorsJSON.getJSONObject("gender").getJSONArray("errors").getString(0)+ " ");
+            } catch (JSONException e){
+                Log.e(FIELD_SUBMIT_OK,"GENDER");
+            }
+            try {
+                error.append(errorsJSON.getJSONObject("birthDate").getJSONArray("errors").getString(0)+ " ");
+            } catch (JSONException e){
+                Log.e(FIELD_SUBMIT_OK,"BIRTH_DATE");
+            }
+            try {
+                error.append(errorsJSON.getJSONObject("facebookId").getJSONArray("errors").getString(0)+ " ");
+            } catch (JSONException e){
+                Log.e(FIELD_SUBMIT_OK,"FACEBOOK_ID");
+            }
+            try {
+                error.append(errorsJSON.getJSONObject("plainPassword").getJSONArray("errors").getString(0)+ " ");
+            } catch (JSONException e){
+                Log.e(FIELD_SUBMIT_OK,"PASSWORD");
+            }
+
+            throw new UserClientException(error.toString());
+        } catch (JSONException e){
+            throw new UserClientException(e);
+        }
+
     }
 
     @Override
