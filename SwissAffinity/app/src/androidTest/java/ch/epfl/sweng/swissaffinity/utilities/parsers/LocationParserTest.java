@@ -29,4 +29,9 @@ public class LocationParserTest {
     public void nameTest() throws JSONException {
         assertEquals(location.getName(), jsonLocation.getString(ServerTags.NAME.get()));
     }
+
+    @Test(expected = JSONException.class)
+    public void malformedJsonTest() throws JSONException, ParserException {
+        location = new LocationParser().parse(new SafeJSONObject(""));
+    }
 }
