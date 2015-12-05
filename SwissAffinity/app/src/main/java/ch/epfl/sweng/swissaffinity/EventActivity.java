@@ -30,6 +30,7 @@ public class EventActivity extends AppCompatActivity {
     private String mUserName;
     private int mRegistrationId;
     private Button mButton;
+    private ProgressDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,12 @@ public class EventActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         updateUI();
+    }
+
+    @Override
+    protected void onPause() {
+        mDialog = null;
+        super.onPause();
     }
 
     public void register(View view) {
@@ -115,13 +122,12 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private final class RegisterEventTask extends AsyncTask<String, Void, Integer> {
-        private ProgressDialog dialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            dialog = MainActivity.getLoadingDialog(EventActivity.this);
-            dialog.show();
+            mDialog = MainActivity.getLoadingDialog(EventActivity.this);
+            mDialog.show();
         }
 
         @Override
@@ -151,8 +157,8 @@ public class EventActivity extends AppCompatActivity {
                 default:
                     message = getString(R.string.event_registration_problem);
             }
-            if (dialog.isShowing()) {
-                dialog.dismiss();
+            if (mDialog != null && mDialog.isShowing()) {
+                mDialog.dismiss();
             }
             Toast.makeText(EventActivity.this, message, Toast.LENGTH_SHORT).show();
             updateUI();
