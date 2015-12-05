@@ -2,6 +2,7 @@ package ch.epfl.sweng.swissaffinity.gui;
 
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +22,7 @@ import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.ParserException;
 
+import static android.support.test.InstrumentationRegistry.getContext;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -35,9 +37,10 @@ public class EventExpandableListAdapterTest {
     EventExpandableListAdapter adapter;
     List<List<Event>> childrenTest;
     List<String> groupsTest;
+    Context context;
     @Before
     public void setUp(){
-        Context context = Mockito.mock(Context.class);
+        context = Mockito.mock(Context.class);
 
         adapter = new EventExpandableListAdapter(context);
 
@@ -104,8 +107,15 @@ public class EventExpandableListAdapterTest {
 
     @Test
     public void getGroupViewTest(){
-        // TODO
-    }
+/*        adapter.setData(groupsTest, childrenTest);
+        Mockito.doReturn(getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .when(context)
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        ViewGroup parent = Mockito.mock(ViewGroup.class);
+        View convertView = adapter.getGroupView(0, true, null, parent);
+        assert convertView != null;
+*/    }
 
     @Test
     public void getChildViewTest(){
