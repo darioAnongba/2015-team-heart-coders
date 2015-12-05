@@ -15,6 +15,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -43,9 +44,9 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        final RadioGroup.OnCheckedChangeListener radioChecker =
-                new RadioGroup.OnCheckedChangeListener() {
-
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.registerGender);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+                {
                     @Override
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
                         if (checkedId == R.id.registerFemale) {
@@ -54,7 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
                             gender = "male";
                         }
                     }
-                };
+                });
 
         fillData();
 
@@ -163,7 +164,7 @@ public class RegisterActivity extends AppCompatActivity {
                     RegisterActivity.this, R.string.toast_text_error_gender,
                     Toast.LENGTH_SHORT).show();
         } else if (birthdayText.getText().toString().length() == 0 ||
-                   birthdayText.getText().toString().length() > 20)
+                   birthdayText.getText().toString().length() > 20 || !isThisDateValid(birthdayText.getText().toString(),"dd/MM/yyyy"))
         {
             Toast.makeText(
                     RegisterActivity.this, R.string.toast_text_error_birthday,
@@ -195,6 +196,29 @@ public class RegisterActivity extends AppCompatActivity {
      */
     public static boolean isValidEmail(CharSequence target) {
         return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+    }
+
+    public static boolean isThisDateValid(String dateToValidate, String dateFromat){
+
+        if(dateToValidate == null){
+            return false;
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFromat);
+        sdf.setLenient(false);
+
+        try {
+            //if not valid, it will throw ParseException
+            java.util.Date date = sdf.parse(dateToValidate);
+            System.out.println(date);
+
+        } catch (ParseException e) {
+
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
     /**
