@@ -91,11 +91,7 @@ public class MainActivity extends AppCompatActivity {
             DataManager.displayData(mListView);
             withDialog = false;
         }
-        if (DataManager.isNetworkConnected(this)) {
-            new DataManagerTask().execute(withDialog);
-        } else {
-            DataManager.showNetworkAlert(this);
-        }
+        new DataManagerTask().execute(withDialog);
     }
 
     private final class DataManagerTask extends AsyncTask<Boolean, Boolean, Void> {
