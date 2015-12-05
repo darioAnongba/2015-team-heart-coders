@@ -75,12 +75,6 @@ public class NetworkUserClientTest {
         networkUserClient.postUser(null);
     }
 
-    @Test(expected = UserClientException.class)
-    public void testConnectionErrorOnPostUser() throws IOException, UserClientException, JSONException {
-        when(mockNetworkProvider.postContent(anyString(), any(JSONObject.class))).thenThrow(ConnectException.class);
-        networkUserClient.postUser(new JSONObject(DataForTesting.userJSONcontent));
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void testNullJSONObjectDeleteUser() throws UserClientException {
         networkUserClient.deleteUser(null);
@@ -231,7 +225,7 @@ public class NetworkUserClientTest {
     @Test
     public void testRegisterUser() throws UserClientException, IOException {
         when(mockNetworkProvider.postContent(anyString(), any(JSONObject.class))).thenReturn("");
-        assertEquals(networkUserClient.registerUser("testUsername", 100), -1);
+        assertEquals(networkUserClient.registerUser("testUsername", 100), 204);
     }
 
     @Test
