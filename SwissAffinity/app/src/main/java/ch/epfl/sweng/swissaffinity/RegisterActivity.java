@@ -37,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText passwordConfirmation;
     private String facebookId;
     private String gender;
+    private ProgressDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,12 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
+    @Override
+    protected void onPause() {
+        mDialog = null;
+        super.onPause();
+    }
+
     /**
      * Fill the EditText with the info sended by facebook
      */
@@ -77,13 +84,13 @@ public class RegisterActivity extends AppCompatActivity {
 
         User user = (User) getIntent().getSerializableExtra(MainActivity.EXTRA_USER);
 
-            userNameText = (EditText) findViewById(R.id.registerUserName);
-            firstNameText = (EditText) findViewById(R.id.registerFirstName);
-            lastNameText = (EditText) findViewById(R.id.registerLastName);
-            emailText = (EditText) findViewById(R.id.registerEmail);
-            birthdayText = (EditText) findViewById(R.id.registerBirthDay);
-            passwordText = (EditText) findViewById(R.id.registerPassword);
-            passwordConfirmation = (EditText) findViewById(R.id.registerPasswordConfirmation);
+        userNameText = (EditText) findViewById(R.id.registerUserName);
+        firstNameText = (EditText) findViewById(R.id.registerFirstName);
+        lastNameText = (EditText) findViewById(R.id.registerLastName);
+        emailText = (EditText) findViewById(R.id.registerEmail);
+        birthdayText = (EditText) findViewById(R.id.registerBirthDay);
+        passwordText = (EditText) findViewById(R.id.registerPassword);
+        passwordConfirmation = (EditText) findViewById(R.id.registerPasswordConfirmation);
 
         if (user != null) {
             userNameText.setText(user.getUsername());
@@ -183,6 +190,7 @@ public class RegisterActivity extends AppCompatActivity {
      * Check is the mail is a valid format
      *
      * @param target the sequence of character
+     *
      * @return true if it has the form of an email
      */
     public static boolean isValidEmail(CharSequence target) {
@@ -194,11 +202,10 @@ public class RegisterActivity extends AppCompatActivity {
      */
     private class UploadUserTask extends AsyncTask<String, Void, String> {
 
-        private final ProgressDialog dialog = MainActivity.getLoadingDialog(RegisterActivity.this);
-
         @Override
         protected void onPreExecute() {
-            dialog.show();
+            mDialog = MainActivity.getLoadingDialog(RegisterActivity.this);
+            mDialog.show();
         }
 
         @Override
@@ -209,7 +216,7 @@ public class RegisterActivity extends AppCompatActivity {
                 response = DataManager.getUserClient().postUser(jsonObject);
             } catch (JSONException e) {
                 Log.e("UploadUserTask", e.getMessage());
-            } catch (UserClientException e){
+            } catch (UserClientException e) {
                 return e.getMessage();
             }
             return response.toString();
@@ -217,7 +224,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String response) {
-            dialog.dismiss();
             try {
                 SafeJSONObject responseJson = new SafeJSONObject(response);
                 DataManager.saveUser(new UserParser().parse(responseJson));
@@ -229,8 +235,11 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(
                         RegisterActivity.this, response,
                         Toast.LENGTH_LONG).show();
-            } catch (ParserException e){
+            } catch (ParserException e) {
                 Log.e("UploadUserTask", e.getMessage());
+            }
+            if (mDialog != null && mDialog.isShowing()) {
+                mDialog.dismiss();
             }
         }
     }
