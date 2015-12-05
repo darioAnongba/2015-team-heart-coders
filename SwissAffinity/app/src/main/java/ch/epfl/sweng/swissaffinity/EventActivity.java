@@ -21,21 +21,22 @@ import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 import static ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser.dateToString;
-import static ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject.DEFAULT_STRING;
 import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
+import static java.net.HttpURLConnection.HTTP_OK;
 
 public class EventActivity extends AppCompatActivity {
-    private static final String REGISTER_OP = "register";
-    private static final String UNREGISTER_OP = "unregister";
 
     private int mEventId;
     private String mUserName;
     private int mRegistrationId;
+    private Button mButton;
+    private ProgressDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
+        mButton = (Button) findViewById(R.id.eventRegistration);
         mEventId = getIntent().getIntExtra(MainActivity.EXTRA_EVENT, -1);
         Event event = DataManager.getEvent(mEventId);
         if (event != null) {
@@ -49,27 +50,26 @@ public class EventActivity extends AppCompatActivity {
         updateUI();
     }
 
+    @Override
+    protected void onPause() {
+        mDialog = null;
+        super.onPause();
+    }
+
     public void register(View view) {
+        mButton.setEnabled(false);
         if (mUserName.isEmpty()) {
             startActivity(new Intent(EventActivity.this, AboutActivity.class));
         } else {
-            String operation = REGISTER_OP;
-            if (mRegistrationId > 0) {
-                operation = UNREGISTER_OP;
-            }
-            new RegisterEventTask().execute(mUserName, "" + mEventId, operation);
+            new RegisterEventTask().execute();
         }
     }
 
     private void updateUI() {
         mUserName = MainActivity.getPreferences().getString(USERNAME.get(), "");
         mRegistrationId = DataManager.getRegistrationId(mEventId);
-        Button button = (Button) findViewById(R.id.eventRegistration);
-        if (mRegistrationId > 0) {
-            button.setText(R.string.event_unregister);
-        } else {
-            button.setText(R.string.event_register);
-        }
+        mButton.setEnabled(true);
+        mButton.setText(mRegistrationId > 0 ? R.string.event_unregister : R.string.event_register);
         Event event = DataManager.getEvent(mEventId);
         if (event != null) {
             ((TextView) findViewById(R.id.eventName)).setText(event.getName());
@@ -122,26 +122,22 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private final class RegisterEventTask extends AsyncTask<String, Void, Integer> {
-        private final ProgressDialog dialog = MainActivity.getLoadingDialog(EventActivity.this);
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            dialog.show();
+            mDialog = MainActivity.getLoadingDialog(EventActivity.this);
+            mDialog.show();
         }
 
         @Override
         protected Integer doInBackground(String... params) {
             int response = -1;
-            String userName = params[0];
-            String eventId = params[1];
-            String operation = params[2];
             try {
-                if (!mUserName.equals(DEFAULT_STRING) && operation.equals(REGISTER_OP)) {
-                    int id = Integer.parseInt(eventId);
-                    response = DataManager.getUserClient().registerUser(userName, id);
-                } else if (operation.equals(UNREGISTER_OP)) {
+                if (mRegistrationId > 0) {
                     response = DataManager.getUserClient().unregisterUser(mRegistrationId);
+                } else {
+                    response = DataManager.getUserClient().registerUser(mUserName, mEventId);
                 }
             } catch (UserClientException e) {
                 Log.e("RegisterEventTask", e.getMessage());
@@ -155,16 +151,17 @@ public class EventActivity extends AppCompatActivity {
             String message;
             switch (response) {
                 case HTTP_NO_CONTENT:
+                case HTTP_OK:
                     message = getString(R.string.event_registration_success);
-                    updateUI();
                     break;
                 default:
                     message = getString(R.string.event_registration_problem);
             }
-            if (dialog.isShowing()) {
-                dialog.dismiss();
+            if (mDialog != null && mDialog.isShowing()) {
+                mDialog.dismiss();
             }
             Toast.makeText(EventActivity.this, message, Toast.LENGTH_SHORT).show();
+            updateUI();
             super.onPostExecute(response);
         }
     }

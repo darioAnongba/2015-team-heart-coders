@@ -23,6 +23,9 @@ public class DefaultNetworkProvider implements NetworkProvider {
 
     @Override
     public HttpURLConnection getConnection(String serverURL) throws IOException {
+        if (serverURL == null) {
+            throw new IllegalArgumentException();
+        }
         URL url = new URL(serverURL);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setReadTimeout(10000 /* milliseconds */);
@@ -32,6 +35,9 @@ public class DefaultNetworkProvider implements NetworkProvider {
 
     @Override
     public String getContent(String serverURL) throws IOException {
+        if (serverURL == null) {
+            throw new IllegalArgumentException();
+        }
         HttpURLConnection conn = getConnection(serverURL);
         conn.setDoInput(true);
         conn.setRequestMethod("GET");
@@ -44,6 +50,9 @@ public class DefaultNetworkProvider implements NetworkProvider {
 
     @Override
     public String postContent(String serverURL, JSONObject json) throws IOException {
+        if (serverURL == null || json == null) {
+            throw new IllegalArgumentException();
+        }
         HttpURLConnection conn = getConnection(serverURL);
         conn.setDoInput(true);
         conn.setDoOutput(true);
@@ -72,6 +81,9 @@ public class DefaultNetworkProvider implements NetworkProvider {
 
     @Override
     public int deleteContent(String serverURL) throws IOException {
+        if (serverURL == null) {
+            throw new IllegalArgumentException();
+        }
         HttpURLConnection conn = getConnection(serverURL);
         conn.setDoOutput(true);
         conn.setRequestMethod("DELETE");

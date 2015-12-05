@@ -37,35 +37,10 @@ public class MainActivityTest {
         mActivityRule.getActivity();
     }
 
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
     @Test
     public void testGetSharedPrefs() throws Exception {
         SharedPreferences preferences = MainActivity.getPreferences();
         assert preferences != null;
-    }
-
-    @Test
-    public void testGetLoadingDialog() throws Exception {
-
-    }
-
-    @Test
-    public void testOnCreate() throws Exception {
-
-    }
-
-    @Test
-    public void testOnResume() throws Exception {
-
-    }
-
-    @Test
-    public void testOnOptionsItemSelected() throws Exception {
-
     }
 
     @LargeTest
