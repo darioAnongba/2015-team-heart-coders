@@ -8,4 +8,8 @@ public class EventClientException extends Exception {
     public EventClientException(Throwable throwable) {
         super(throwable);
     }
+
+    public EventClientException() {
+        super();
+    }
 }
