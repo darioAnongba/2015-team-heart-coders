@@ -21,8 +21,6 @@ import ch.epfl.sweng.swissaffinity.utilities.network.users.UserClientException;
 
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 import static ch.epfl.sweng.swissaffinity.utilities.parsers.DateParser.dateToString;
-import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
-import static java.net.HttpURLConnection.HTTP_OK;
 
 public class EventActivity extends AppCompatActivity {
 
@@ -31,6 +29,7 @@ public class EventActivity extends AppCompatActivity {
     private int mRegistrationId;
     private Button mButton;
     private ProgressDialog mDialog;
+    private String mErrorMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +120,7 @@ public class EventActivity extends AppCompatActivity {
         }
     }
 
-    private final class RegisterEventTask extends AsyncTask<String, Void, Integer> {
+    private final class RegisterEventTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -131,38 +130,40 @@ public class EventActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Integer doInBackground(String... params) {
-            int response = -1;
+        protected Void doInBackground(Void... params) {
             try {
                 if (mRegistrationId > 0) {
-                    response = DataManager.getUserClient().unregisterUser(mRegistrationId);
+                    DataManager.getUserClient().unregisterUser(mRegistrationId);
                 } else {
-                    response = DataManager.getUserClient().registerUser(mUserName, mEventId);
+                    DataManager.getUserClient().registerUser(mUserName, mEventId);
                 }
             } catch (UserClientException e) {
                 Log.e("RegisterEventTask", e.getMessage());
+                mErrorMessage = e.getMessage();
             }
             DataManager.updateData(EventActivity.this);
-            return response;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(Integer response) {
-            String message;
-            switch (response) {
-                case HTTP_NO_CONTENT:
-                case HTTP_OK:
-                    message = getString(R.string.event_registration_success);
-                    break;
-                default:
-                    message = getString(R.string.event_registration_problem);
-            }
+        protected void onPostExecute(Void arg) {
             if (mDialog != null && mDialog.isShowing()) {
                 mDialog.dismiss();
             }
-            Toast.makeText(EventActivity.this, message, Toast.LENGTH_SHORT).show();
+            if (mErrorMessage == null){
+                if (mRegistrationId > 0){
+                    Toast.makeText(EventActivity.this, getString(R.string.event_unregister_success),
+                            Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(EventActivity.this, getString(R.string.event_registration_success),
+                            Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(EventActivity.this, mErrorMessage.replace("\"",""),
+                        Toast.LENGTH_SHORT).show();
+                mErrorMessage = null;
+            }
             updateUI();
-            super.onPostExecute(response);
         }
     }
 }

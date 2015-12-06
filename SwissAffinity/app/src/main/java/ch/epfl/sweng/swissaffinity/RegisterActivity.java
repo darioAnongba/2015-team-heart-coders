@@ -39,6 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String facebookId;
     private String gender;
     private ProgressDialog mDialog;
+    private String mErrorMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -241,13 +242,20 @@ public class RegisterActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 Log.e("UploadUserTask", e.getMessage());
             } catch (UserClientException e) {
-                return e.getMessage();
+                mErrorMessage = e.getMessage();
             }
             return response.toString();
         }
 
         @Override
         protected void onPostExecute(String response) {
+            if (mErrorMessage != null){
+                Toast.makeText(
+                        RegisterActivity.this, mErrorMessage.replace("\"",""),
+                        Toast.LENGTH_LONG).show();
+                mErrorMessage = null;
+                return;
+            }
             try {
                 SafeJSONObject responseJson = new SafeJSONObject(response);
                 DataManager.saveUser(new UserParser().parse(responseJson));
@@ -255,11 +263,7 @@ public class RegisterActivity extends AppCompatActivity {
                         RegisterActivity.this, R.string.register_positive,
                         Toast.LENGTH_LONG).show();
                 finish();
-            } catch (JSONException e) {
-                Toast.makeText(
-                        RegisterActivity.this, response,
-                        Toast.LENGTH_LONG).show();
-            } catch (ParserException e) {
+            } catch (JSONException|ParserException e) {
                 Log.e("UploadUserTask", e.getMessage());
             }
             if (mDialog != null && mDialog.isShowing()) {
