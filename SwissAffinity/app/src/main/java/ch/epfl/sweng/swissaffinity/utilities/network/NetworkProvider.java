@@ -52,5 +52,5 @@ public interface NetworkProvider {
      * @return the response code from the server
      * @throws IOException if no success with the request.
      */
-    int deleteContent(String serverURL) throws IOException;
+    String deleteContent(String serverURL) throws IOException;
 }

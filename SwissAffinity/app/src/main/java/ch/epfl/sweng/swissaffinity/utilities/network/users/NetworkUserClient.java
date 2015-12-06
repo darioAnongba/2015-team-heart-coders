@@ -17,7 +17,6 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.EVENT_ID;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.REST_EVENT_REGISTRATION;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.REST_USER_REGISTRATION;
 import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
-import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
 
 
 /**
@@ -142,19 +141,30 @@ public class NetworkUserClient implements UserClient {
     }
 
     @Override
-    public int deleteUser(String userName) throws UserClientException {
+    public void deleteUser(String userName) throws UserClientException {
         if (userName == null) {
             throw new IllegalArgumentException();
         }
         try {
-            return mNetworkProvider.deleteContent(mServerUrl + USERS + "/" + userName);
+            String response = mNetworkProvider.deleteContent(mServerUrl + USERS + "/" + userName);
+            if(!response.equals("")){
+                SafeJSONObject jsonResponse;
+                String errorMessage;
+                try {
+                     jsonResponse = new SafeJSONObject(response);
+                     errorMessage = jsonResponse.get("message", SafeJSONObject.DEFAULT_STRING);
+                } catch (JSONException e){
+                    throw new UserClientException(e);
+                }
+                throw new UserClientException(errorMessage);
+            }
         } catch (IOException e) {
             throw new UserClientException(e);
         }
     }
 
     @Override
-    public int registerUser(String username, int eventId) throws UserClientException {
+    public void registerUser(String username, int eventId) throws UserClientException {
         if (username == null || eventId < 0) {
             throw new IllegalArgumentException();
         }
@@ -164,21 +174,37 @@ public class NetworkUserClient implements UserClient {
             jsonObject.put(USERNAME.get(), username);
             jsonObject.put(EVENT_ID.get(), Integer.toString(eventId));
             jsonRequest.put(REST_EVENT_REGISTRATION.get(), jsonObject);
+            //An error log represents an exception for the service the UserClient is supposed to deliver.
+            //This is not the case in the layer below e.g. NetworkProvider.
             String response = mNetworkProvider.postContent(mServerUrl + REGISTRATIONS, jsonRequest);
-            return response.equals("") ? HTTP_NO_CONTENT : -1;
+            if(!response.equals("")){
+                throw new UserClientException(response);
+            }
         } catch (IOException | JSONException e) {
             throw new UserClientException(e);
         }
     }
 
     @Override
-    public int unregisterUser(int registrationId) throws UserClientException {
+    public void unregisterUser(int registrationId) throws UserClientException {
         if (registrationId < 0) {
             throw new IllegalArgumentException();
         }
         try {
             String url = mServerUrl + REGISTRATIONS + "/" + registrationId;
-            return mNetworkProvider.deleteContent(url);
+            String response = mNetworkProvider.deleteContent(url);
+
+            if(!response.equals("")){
+                SafeJSONObject jsonResponse;
+                String errorMessage;
+                try {
+                    jsonResponse = new SafeJSONObject(response);
+                    errorMessage = jsonResponse.get("message", SafeJSONObject.DEFAULT_STRING);
+                } catch (JSONException e){
+                    throw new UserClientException(e);
+                }
+                throw new UserClientException(errorMessage);
+            }
         } catch (IOException e) {
             throw new UserClientException(e);
         }
