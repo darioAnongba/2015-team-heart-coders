@@ -79,10 +79,9 @@ public class NetworkUserClient implements UserClient {
             jsonRequest.put(REST_USER_REGISTRATION.get(), jsonObject);
             String response = mNetworkProvider.postContent(mServerUrl + USERS, jsonRequest);
             jsonResponse = new JSONObject(response);
-        } catch (IOException | JSONException e) {
+        } catch (IOException | JSONException  e) {
             throw new UserClientException(e);
         }
-
         StringBuilder error = new StringBuilder();
         try{
             error.append(jsonResponse.get("message")+": ");

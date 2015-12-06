@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -26,9 +25,9 @@ import ch.epfl.sweng.swissaffinity.utilities.parsers.user.UserParser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.startsWith;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -218,19 +217,34 @@ public class NetworkUserClientTest {
 
     @Test
     public void testDeleteUser() throws UserClientException, IOException {
-        when(mockNetworkProvider.deleteContent(anyString())).thenReturn(200);
-        assertEquals(networkUserClient.deleteUser("testUsername"), 200);
+        when(mockNetworkProvider.deleteContent(anyString())).thenReturn("");
+        try{
+            networkUserClient.deleteUser("testUsername");
+        } catch (UserClientException e){
+            fail(e.getMessage());
+        }
     }
 
     @Test
     public void testRegisterUser() throws UserClientException, IOException {
-        when(mockNetworkProvider.postContent(anyString(), any(JSONObject.class))).thenReturn("");
-        assertEquals(networkUserClient.registerUser("testUsername", 100), 204);
+        when(mockNetworkProvider.postContent(anyString(), any(JSONObject.class)))
+                .thenReturn("");
+        try{
+            networkUserClient.registerUser("testUsername", 100);
+        } catch (UserClientException e){
+            fail(e.getMessage());
+        }
     }
 
     @Test
     public void testUnregisterUser() throws UserClientException, IOException {
-        when(mockNetworkProvider.deleteContent(anyString())).thenReturn(200);
-        assertEquals(networkUserClient.unregisterUser(100), 200);
+        //Server sends empty String by default when successful
+        when(mockNetworkProvider.deleteContent(anyString())).thenReturn("");
+        try{
+            networkUserClient.unregisterUser(100);
+
+        } catch (UserClientException e){
+            fail(e.getMessage());
+        }
     }
 }

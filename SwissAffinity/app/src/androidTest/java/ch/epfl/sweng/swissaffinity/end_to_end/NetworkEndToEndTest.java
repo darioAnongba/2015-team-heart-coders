@@ -14,8 +14,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -124,9 +122,49 @@ public class NetworkEndToEndTest {
             fail(e.getMessage());
         }
     }
+    @Test
+    public void alreadyRegistered() {
+        final int eventIdToRegister = 7;
+        final String userToRegister = "lio";
+        NetworkProvider networkProvider = new DefaultNetworkProvider();
+        UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
+        try{
+            if(getRegistrationId(userToRegister,eventIdToRegister,networkProvider) != null) {
+                fail("User: " + userToRegister + " cannot be registered to event (id) " + eventIdToRegister
+                        + "for this test.");
+            }
+        } catch (UserClientException e){
+           fail(e.getMessage());
+        }
+        try{
+            userClient.registerUser(userToRegister,eventIdToRegister);
+            userClient.registerUser(userToRegister,eventIdToRegister);
+        }catch (UserClientException e){
+            assertEquals("You are already registered to this event", e.getMessage().replace("\"","").replace("\n",""));
+        }
+        try {
+            Integer id = getRegistrationId(userToRegister, eventIdToRegister, networkProvider);
+            userClient.unregisterUser(id);
+        } catch (UserClientException e){
+            fail(e.getMessage());
+        }
+    }
+    @Test
+    public void testUnderAge() {
+        final int eventIdToRegister = 7;
+        final String userToRegister = "Admin";
+        NetworkProvider networkProvider = new DefaultNetworkProvider();
+        UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
+        try{
+            userClient.registerUser(userToRegister,eventIdToRegister);
+        } catch (UserClientException e){
+            assertEquals("You are not in the age range of this Event." +
+                    " The age range is: 26 - 46 and you are 22", e.getMessage().replace("\"","").replace("\n",""));
+        }
+    }
 
     @Test
-    public void postRegistrationToEvent() throws UserClientException {
+    public void postRegistrationToEvent() throws UserClientException{
         final int eventIdToRegister = 7;
         final String userToRegister = "lio";
         NetworkProvider networkProvider = new DefaultNetworkProvider();
@@ -135,15 +173,23 @@ public class NetworkEndToEndTest {
         try {
             userClient.registerUser(userToRegister, eventIdToRegister);
         } catch (UserClientException e) {
-            if (!e.getMessage().equals("You are already registered to this event")) {
-                fail(e.getMessage());
-            }
+            fail(e.getMessage());
         }
+        Integer testRegistrationId = getRegistrationId(userToRegister,eventIdToRegister,networkProvider);
+        assertTrue("Registration was not successful.", testRegistrationId != null);
+        try {
+            userClient.unregisterUser(testRegistrationId);
+        } catch (UserClientException e) {
+            fail(e.getMessage());
+        }
+    }
+    @Ignore
+    private Integer getRegistrationId(String username, int eventId, NetworkProvider networkProvider) throws UserClientException{
         String registrationsString;
         JSONArray registrations;
         try {
             registrationsString = networkProvider.getContent(
-                    "http://beecreative.ch/api/users/" + userToRegister + "/registrations");
+                    "http://beecreative.ch/api/users/" + username + "/registrations");
             registrations = new JSONArray(registrationsString);
         } catch (JSONException | IOException e) {
             throw new UserClientException(e);
@@ -160,21 +206,7 @@ public class NetworkEndToEndTest {
                 throw new UserClientException(e);
             }
         }
-        Integer testRegistrationId = eventToRegistration.get(eventIdToRegister);
-        assertTrue("Registration was not successful.", testRegistrationId != null);
-
-        URL url;
-        HttpURLConnection conn;
-        try {
-            url = new URL(
-                    "http://beecreative.ch/api/registrations/" + testRegistrationId.toString());
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("DELETE");
-            conn.getResponseCode();
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
-
+        return eventToRegistration.get(eventId);
     }
 
     //TODO: Server responses come sometimes in french other times in english.
@@ -184,7 +216,12 @@ public class NetworkEndToEndTest {
         UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
         JSONObject jsonUser = new JSONObject();
         try {
-            userClient.deleteUser("DumbUser666");
+            /**
+             Should first check if DumbUser666 exists, which SHOULD NOT
+             HAPPEN as this is a test only user.
+             Using userClient.deleteUser("DumbUser666"); if it doesn't
+             throws an exception and makes the test fail.
+            */
             jsonUser.put(EMAIL.get(), "dumbuser666@gmail.com");
             jsonUser.put(USERNAME.get(), "DumbUser666");
             jsonUser.put("firstName", "Dumb");
@@ -193,7 +230,7 @@ public class NetworkEndToEndTest {
             jsonUser.put("birthDate", "18-02-1993");//test incorrect bday format
             jsonUser.put("facebookId", "666");
             jsonUser.put("plainPassword", "dumbpassword");
-        } catch (JSONException | UserClientException e){
+        } catch (JSONException e){
             fail(e.getMessage());
         }
         try{
@@ -250,7 +287,12 @@ public class NetworkEndToEndTest {
         locationsOfInterest.add(new Location(8, "Bulle"));
         try {
             JSONObject jsonUser = new JSONObject();
-            userClient.deleteUser("DumbUser666");
+            /**
+             Should first check if DumbUser666 exists, which SHOULD NOT
+             HAPPEN as this is a test only user.
+             Using userClient.deleteUser("DumbUser666"); if it doesn't
+             throws an exception and makes the test fail.
+             */
             jsonUser.put(EMAIL.get(), "dumbuser666@gmail.com");
             jsonUser.put(USERNAME.get(), "DumbUser666");
             jsonUser.put("firstName", "Dumb");

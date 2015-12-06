@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
 import static java.net.HttpURLConnection.HTTP_OK;
 
@@ -42,7 +43,12 @@ public class DefaultNetworkProvider implements NetworkProvider {
         HttpURLConnection conn = getConnection(serverURL);
         conn.setDoInput(true);
         conn.setRequestMethod("GET");
-        return fetchContent(handleResponseCode(conn));
+
+        conn.connect();
+        if (conn.getResponseCode() != HTTP_OK) {
+            throw new ConnectException();
+        }
+        return fetchContent(conn.getInputStream());
     }
 
     @Override
@@ -96,8 +102,7 @@ public class DefaultNetworkProvider implements NetworkProvider {
     }
     /*
     This method has a single responsibility: to handle response codes according
-    to beecreative.ch/api/doc. The strings are extracted outside, so this piece
-    of code can be tested.
+    to beecreative.ch/api/doc.
      */
     private InputStream handleResponseCode(HttpURLConnection conn) throws IOException{
         InputStream stream;
@@ -107,6 +112,7 @@ public class DefaultNetworkProvider implements NetworkProvider {
                 stream = conn.getInputStream();
                 break;
             case HTTP_BAD_REQUEST:
+            case HTTP_NOT_FOUND:
                 stream = conn.getErrorStream();
                 break;
             default:
