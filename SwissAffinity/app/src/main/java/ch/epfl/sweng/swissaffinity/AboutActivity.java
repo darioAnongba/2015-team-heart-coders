@@ -48,6 +48,7 @@ import static com.facebook.AccessToken.getCurrentAccessToken;
  */
 public class AboutActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
+    private ProgressDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,12 @@ public class AboutActivity extends AppCompatActivity {
         updateUI();
 
         setLoginButton();
+    }
+
+    @Override
+    protected void onPause() {
+        mDialog = null;
+        super.onPause();
     }
 
     @Override
@@ -160,11 +167,11 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     private class ConnectionToServer extends AsyncTask<User, Void, User> {
-        private final ProgressDialog dialog = MainActivity.getLoadingDialog(AboutActivity.this);
 
         @Override
         protected void onPreExecute() {
-            dialog.show();
+            mDialog = MainActivity.getLoadingDialog(AboutActivity.this);
+            mDialog.show();
         }
 
         @Override
@@ -188,8 +195,8 @@ public class AboutActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             }
-            if (dialog.isShowing()) {
-                dialog.dismiss();
+            if (mDialog != null && mDialog.isShowing()) {
+                mDialog.dismiss();
             }
             finish();
         }
