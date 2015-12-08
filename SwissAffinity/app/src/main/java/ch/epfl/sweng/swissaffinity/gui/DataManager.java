@@ -185,6 +185,9 @@ public class DataManager {
      * @param user the user
      */
     public static void saveUser(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException();
+        }
         SharedPreferences preferences = MainActivity.getPreferences();
         Set<String> locations = preferences.getStringSet(
                 LOCATIONS_INTEREST.get(),
@@ -238,6 +241,13 @@ public class DataManager {
         return null;
     }
 
+    /**
+     * Getter for the events registered
+     *
+     * @param registrations the registrations
+     *
+     * @return the events registered
+     */
     private static List<Event> getMyEvents(List<Registration> registrations) {
         List<Event> result = new ArrayList<>();
         for (Registration registration : registrations) {
@@ -246,6 +256,13 @@ public class DataManager {
         return result;
     }
 
+    /**
+     * Getter for upcoming events from all events according locations
+     *
+     * @param allEvents all the events
+     *
+     * @return the upcoming events
+     */
     private static List<Event> filterEvents(List<Event> allEvents) {
         Set<String> myLocations = MainActivity.getPreferences()
                                               .getStringSet(LOCATIONS_INTEREST.get(), null);

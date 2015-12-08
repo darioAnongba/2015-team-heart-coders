@@ -4,8 +4,9 @@ import android.content.SharedPreferences;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,6 +21,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Lionel on 29.11.15.
@@ -43,7 +45,7 @@ public class MainActivityTest {
         assert preferences != null;
     }
 
-    @LargeTest
+    @Test
     public void testCanGreetUsers() {
 
         String userName = MainActivity.getPreferences().getString(ServerTags.USERNAME.get(), "");
@@ -55,13 +57,13 @@ public class MainActivityTest {
         onView(withId(R.id.mainWelcomeText)).check(matches(withText(welcomeText)));
     }
 
-    @LargeTest
+    @Test
     public void testAbout() {
         onView(withId(R.id.action_about)).perform(click());
         onView(withId(R.id.aboutSwissAffinityText)).check(matches(isDisplayed()));
     }
 
-    @LargeTest
+    @Test
     public void testSettings() {
         onView(withId(R.id.action_settings)).perform(click());
         pressBack();
@@ -72,5 +74,29 @@ public class MainActivityTest {
                 mActivityRule.getActivity().getString(R.string.welcome_registered_text),
                 userName);
         onView(withId(R.id.mainWelcomeText)).check(matches(withText(welcomeText)));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetLoadingDialogNullContext() {
+        MainActivity.getLoadingDialog(null);
+    }
+
+    @Test
+    public void testGetLoadingDialog() {
+        // Don't have a valid context to display on...
+    }
+
+    @Test
+    public void testListViewDisplayed() {
+        onView(withId(R.id.mainEventListView)).check(matches(isDisplayed()));
+        ExpandableListView listView = ((ExpandableListView) mActivityRule.getActivity()
+                                                                         .findViewById(R.id.mainEventListView));
+        ExpandableListAdapter adapter = listView.getExpandableListAdapter();
+        for (int i = 0; i < adapter.getGroupCount(); ++i) {
+            assertTrue(listView.isGroupExpanded(i));
+            for (int j = 0; j < adapter.getChildrenCount(i); ++j) {
+                assertTrue(adapter.getChildView(i,j, false, null, null).isClickable());
+            }
+        }
     }
 }

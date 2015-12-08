@@ -40,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static ProgressDialog getLoadingDialog(Context context) {
+        if (context == null ){
+            throw new IllegalArgumentException();
+        }
         ProgressDialog dialog = new ProgressDialog(context);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setMessage(context.getString(R.string.loading));

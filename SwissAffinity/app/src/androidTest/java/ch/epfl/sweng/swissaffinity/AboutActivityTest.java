@@ -36,13 +36,13 @@ public class AboutActivityTest {
     }
 
     @Test
-    public void testOnCreate() throws Exception {
-
-    }
-
-    @Test
-    public void testOnActivityResult() throws Exception {
-
+    public void testDisplayCorrectly() {
+        onView(withId(R.id.action_about)).perform(click());
+        onView(withId(R.id.aboutInfoText)).check(matches(withText(R.string.about_info_text)));
+        onView(withId(R.id.aboutLeaderText)).check(matches(withText(R.string.about_leader)));
+        onView(withId(R.id.aboutLinkText)).check(matches(withText(R.string.about_text_link)));
+        onView(withId(R.id.aboutSwissAffinityText)).check(matches(withText(R.string.app_name)));
+        onView(withId(R.id.aboutLogo)).check(matches(isDisplayed()));
     }
 
     @LargeTest
