@@ -13,16 +13,21 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
 import static java.net.HttpURLConnection.HTTP_OK;
 
 /**
- * The class that get the HTTP connection from the server URL.
+ * The class that gets the HTTP connection from the server URL
+ * and provides content access methods.
  */
 public class DefaultNetworkProvider implements NetworkProvider {
 
     @Override
     public HttpURLConnection getConnection(String serverURL) throws IOException {
+        if (serverURL == null) {
+            throw new IllegalArgumentException();
+        }
         URL url = new URL(serverURL);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setReadTimeout(10000 /* milliseconds */);
@@ -32,9 +37,13 @@ public class DefaultNetworkProvider implements NetworkProvider {
 
     @Override
     public String getContent(String serverURL) throws IOException {
+        if (serverURL == null) {
+            throw new IllegalArgumentException();
+        }
         HttpURLConnection conn = getConnection(serverURL);
         conn.setDoInput(true);
         conn.setRequestMethod("GET");
+
         conn.connect();
         if (conn.getResponseCode() != HTTP_OK) {
             throw new ConnectException();
@@ -44,6 +53,9 @@ public class DefaultNetworkProvider implements NetworkProvider {
 
     @Override
     public String postContent(String serverURL, JSONObject json) throws IOException {
+        if (serverURL == null || json == null) {
+            throw new IllegalArgumentException();
+        }
         HttpURLConnection conn = getConnection(serverURL);
         conn.setDoInput(true);
         conn.setDoOutput(true);
@@ -54,29 +66,19 @@ public class DefaultNetworkProvider implements NetworkProvider {
         out.write(json.toString());
         out.flush();
         out.close();
-
-        InputStream stream;
-        switch (conn.getResponseCode()) {
-            case HTTP_OK:
-            case HTTP_NO_CONTENT:
-                stream = conn.getInputStream();
-                break;
-            case HTTP_BAD_REQUEST:
-                stream = conn.getErrorStream();
-                break;
-            default:
-                throw new ConnectException();
-        }
-        return fetchContent(stream);
+        return fetchContent(handleResponseCode(conn));
     }
 
     @Override
-    public int deleteContent(String serverURL) throws IOException {
+    public String deleteContent(String serverURL) throws IOException {
+        if (serverURL == null) {
+            throw new IllegalArgumentException();
+        }
         HttpURLConnection conn = getConnection(serverURL);
         conn.setDoOutput(true);
         conn.setRequestMethod("DELETE");
         conn.connect();
-        return conn.getResponseCode();
+        return fetchContent(handleResponseCode(conn));
     }
 
     /**
@@ -97,5 +99,25 @@ public class DefaultNetworkProvider implements NetworkProvider {
                 reader.close();
             }
         }
+    }
+    /*
+    This method has a single responsibility: to handle response codes according
+    to beecreative.ch/api/doc.
+     */
+    private InputStream handleResponseCode(HttpURLConnection conn) throws IOException{
+        InputStream stream;
+        switch (conn.getResponseCode()) {
+            case HTTP_OK:
+            case HTTP_NO_CONTENT:
+                stream = conn.getInputStream();
+                break;
+            case HTTP_BAD_REQUEST:
+            case HTTP_NOT_FOUND:
+                stream = conn.getErrorStream();
+                break;
+            default:
+                throw new ConnectException();
+        }
+        return stream;
     }
 }

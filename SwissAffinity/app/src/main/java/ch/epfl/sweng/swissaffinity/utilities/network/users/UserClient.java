@@ -43,7 +43,7 @@ public interface UserClient {
      * @return the response code returned by the server
      * @throws UserClientException
      */
-    int deleteUser(String userName) throws UserClientException;
+    void deleteUser(String userName) throws UserClientException;
 
     /**
      * Register a user to an event.
@@ -53,7 +53,7 @@ public interface UserClient {
      * @return the response from server.
      * @throws UserClientException
      */
-    int registerUser(String username, int eventId) throws UserClientException;
+    void registerUser(String username, int eventId) throws UserClientException;
 
     /**
      * Unregister a user from an event
@@ -62,5 +62,5 @@ public interface UserClient {
      * @return the response code from the server
      * @throws UserClientException
      */
-    int unregisterUser(int registrationId) throws UserClientException;
+    void unregisterUser(int registrationId) throws UserClientException;
 }

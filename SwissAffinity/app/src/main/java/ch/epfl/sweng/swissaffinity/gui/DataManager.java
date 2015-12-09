@@ -73,6 +73,9 @@ public class DataManager {
      * @param eventClient the manually prepared event client
      */
     public static void setEventClient(EventClient eventClient) {
+        if (eventClient == null) {
+            throw new IllegalArgumentException();
+        }
         EVENT_CLIENT = eventClient;
     }
 
@@ -95,6 +98,9 @@ public class DataManager {
      * @param userClient the manually prepared user client
      */
     public static void setUserClient(UserClient userClient) {
+        if (userClient == null) {
+            throw new IllegalArgumentException();
+        }
         USER_CLIENT = userClient;
     }
 
@@ -106,48 +112,13 @@ public class DataManager {
     }
 
     /**
-     * @param context the activity context
-     * @return if there is connection to the internet
-     */
-    public static boolean isNetworkConnected(Context context) {
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo network = connectivityManager.getActiveNetworkInfo();
-        return network != null && network.isConnected();
-    }
-
-    /**
-     * Diplay an alert if there is no network
-     *
-     * @param context the activity context
-     */
-    public static void showNetworkAlert(final Context context) {
-        if (!isNetworkConnected(context)) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(context);
-            alert.setTitle(R.string.alert_no_internet)
-                 .setMessage(R.string.alert_message)
-                 .setPositiveButton(
-                         R.string.alert_positive, new DialogInterface.OnClickListener() {
-                             public void onClick(DialogInterface dialog, int which) {
-                                 showNetworkAlert(context);
-                                 dialog.dismiss();
-                             }
-                         })
-                 .setNegativeButton(
-                         R.string.alert_negative, new DialogInterface.OnClickListener() {
-                             public void onClick(DialogInterface dialog, int which) {
-                                 dialog.dismiss();
-                             }
-                         });
-            alert.show();
-        }
-    }
-
-    /**
      * Update the internal data of the manager<br>
      * Has to be used async.
      */
     public static void updateData(Context context) {
+        if (context == null) {
+            throw new IllegalArgumentException();
+        }
         if (isNetworkConnected(context)) {
             List<Event> allEvents = new ArrayList<>();
             List<Registration> registrations = new ArrayList<>();
@@ -163,6 +134,8 @@ public class DataManager {
             REGISTRATIONS.addAll(registrations);
             ALL_EVENTS.clear();
             ALL_EVENTS.addAll(allEvents);
+        } else {
+            showNetworkAlert(context);
         }
     }
 
@@ -172,6 +145,9 @@ public class DataManager {
      * @param listView the expandable list view
      */
     public static void displayData(ExpandableListView listView) {
+        if (listView == null) {
+            throw new IllegalArgumentException();
+        }
         if (hasData()) {
             List<Event> myEvents = getMyEvents(REGISTRATIONS);
             List<Event> upcomingEvents = filterEvents(ALL_EVENTS);
@@ -234,6 +210,7 @@ public class DataManager {
      * Find a registration given an event ID
      *
      * @param eventId the event ID
+     *
      * @return the registration ID
      */
     public static int getRegistrationId(int eventId) {
@@ -249,6 +226,7 @@ public class DataManager {
      * Return an event given its ID
      *
      * @param eventId the event ID
+     *
      * @return the event
      */
     public static Event getEvent(int eventId) {
@@ -282,5 +260,44 @@ public class DataManager {
             return result;
         }
         return allEvents;
+    }
+
+    /**
+     * @param context the activity context
+     *
+     * @return if there is connection to the internet
+     */
+    private static boolean isNetworkConnected(Context context) {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo network = connectivityManager.getActiveNetworkInfo();
+        return network != null && network.isConnected();
+    }
+
+    /**
+     * Diplay an alert if there is no network
+     *
+     * @param context the activity context
+     */
+    private static void showNetworkAlert(final Context context) {
+        if (!isNetworkConnected(context)) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+            alert.setTitle(R.string.alert_no_internet)
+                 .setMessage(R.string.alert_message)
+                 .setPositiveButton(
+                         R.string.alert_positive, new DialogInterface.OnClickListener() {
+                             public void onClick(DialogInterface dialog, int which) {
+                                 showNetworkAlert(context);
+                                 dialog.dismiss();
+                             }
+                         })
+                 .setNegativeButton(
+                         R.string.alert_negative, new DialogInterface.OnClickListener() {
+                             public void onClick(DialogInterface dialog, int which) {
+                                 dialog.dismiss();
+                             }
+                         });
+            alert.show();
+        }
     }
 }
