@@ -129,9 +129,21 @@ public class NetworkEndToEndTest {
         final String userToRegister = "lio";
         NetworkProvider networkProvider = new DefaultNetworkProvider();
         UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
-        try{
+        try {
+            int registrationId = getRegistrationId(
+                    userToRegister,
+                    eventIdToRegister,
+                    networkProvider);
+            if (registrationId > 0) {
+                userClient.unregisterUser(registrationId);
+            }
+        } catch (UserClientException e) {
+            // SUCCESS -> clean the registration for the test
+        }
+        try {
             if(getRegistrationId(userToRegister,eventIdToRegister,networkProvider) != null) {
-                fail("User: " + userToRegister + " cannot be registered to event (id) " + eventIdToRegister
+                fail("User: " + userToRegister + " cannot be registered to event (id) " +
+                        eventIdToRegister
                         + "for this test.");
             }
         } catch (UserClientException e){
@@ -141,7 +153,8 @@ public class NetworkEndToEndTest {
             userClient.registerUser(userToRegister,eventIdToRegister);
             userClient.registerUser(userToRegister,eventIdToRegister);
         }catch (UserClientException e){
-            assertEquals("You are already registered to this event", e.getMessage().replace("\"","").replace("\n",""));
+            assertEquals("You are already registered to this event",
+                    e.getMessage().replace("\"","").replace("\n",""));
         }
         try {
             Integer id = getRegistrationId(userToRegister, eventIdToRegister, networkProvider);
@@ -160,7 +173,8 @@ public class NetworkEndToEndTest {
             userClient.registerUser(userToRegister,eventIdToRegister);
         } catch (UserClientException e){
             assertEquals("You are not in the age range of this Event." +
-                    " The age range is: 26 - 46 and you are 22", e.getMessage().replace("\"","").replace("\n",""));
+                    " The age range is: 26 - 46 and you are 22",
+                    e.getMessage().replace("\"","").replace("\n",""));
         }
     }
 
@@ -170,7 +184,17 @@ public class NetworkEndToEndTest {
         final String userToRegister = "lio";
         NetworkProvider networkProvider = new DefaultNetworkProvider();
         UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
-
+        try {
+            int registrationId = getRegistrationId(
+                    userToRegister,
+                    eventIdToRegister,
+                    networkProvider);
+            if (registrationId > 0) {
+                userClient.unregisterUser(registrationId);
+            }
+        } catch (UserClientException e) {
+            // SUCCESS -> clean the registration for the test
+        }
         try {
             userClient.registerUser(userToRegister, eventIdToRegister);
         } catch (UserClientException e) {
@@ -185,7 +209,9 @@ public class NetworkEndToEndTest {
         }
     }
     @Ignore
-    private Integer getRegistrationId(String username, int eventId, NetworkProvider networkProvider) throws UserClientException{
+    private Integer getRegistrationId(String username, int eventId, NetworkProvider networkProvider)
+            throws UserClientException
+    {
         String registrationsString;
         JSONArray registrations;
         try {
@@ -196,17 +222,18 @@ public class NetworkEndToEndTest {
             throw new UserClientException(e);
         }
 
-        HashMap<Integer, Integer> eventToRegistration = new HashMap<>();
-        for (int i = 0; i < registrations.length(); i++) {
-            try {
+        try {
+            HashMap<Integer, Integer> eventToRegistration = new HashMap<>();
+            for (int i = 0; i < registrations.length(); i++) {
+
                 JSONObject jsonRegistration = registrations.getJSONObject(i);
                 JSONObject jsonEvent = jsonRegistration.getJSONObject("event");
                 eventToRegistration.put(jsonEvent.getInt("id"), jsonRegistration.getInt("id"));
-            } catch (JSONException e) {
-                throw new UserClientException(e);
             }
+            return eventToRegistration.get(eventId);
+        } catch (Exception e) {
+            return -1;
         }
-        return eventToRegistration.get(eventId);
     }
 
     @Test
