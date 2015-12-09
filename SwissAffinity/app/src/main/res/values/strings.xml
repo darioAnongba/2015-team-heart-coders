@@ -29,7 +29,6 @@
     <string name="event_register">Register</string>
     <string name="event_registration_success">You are now registered to this event!</string>
     <string name="event_unregister_success">You are no longer registered for this event</string>
-    <string name="event_registration_problem">Problem with registration, try again.</string>
 
     <string name="register_positive">You have been successfully registered.</string>
     <string name="register_text">Please fill in all the fields:</string>

@@ -46,31 +46,31 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.registerGender);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-                {
-                    @Override
-                    public void onCheckedChanged(RadioGroup group, int checkedId) {
-                        if (checkedId == R.id.registerFemale) {
-                            gender = "female";
-                        } else if (checkedId == R.id.registerMale) {
-                            gender = "male";
-                        }
+        radioGroup.setOnCheckedChangeListener(
+            new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    if (checkedId == R.id.registerFemale) {
+                        gender = "female";
+                    } else if (checkedId == R.id.registerMale) {
+                        gender = "male";
                     }
-                });
+                }
+            });
 
         fillData();
 
         Button registerButton = (Button) findViewById(R.id.userRegistration);
         registerButton.setOnClickListener(
-                new View.OnClickListener() {
-                    public void onClick(View v) {
-                        JSONObject json = createJson();
-                        if (json != null) {
-                            Log.v("UserJson", json.toString());
-                            new UploadUserTask().execute(json.toString());
-                        }
+            new View.OnClickListener() {
+                public void onClick(View v) {
+                    JSONObject json = createJson();
+                    if (json != null) {
+                        Log.v("UserJson", json.toString());
+                        new UploadUserTask().execute(json.toString());
                     }
-                });
+                }
+            });
     }
 
     @Override
@@ -80,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     * Fill the EditText with the info sended by facebook
+     * Fill the EditText with the info sent by facebook
      */
     private void fillData() {
 
@@ -99,7 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
             firstNameText.setText(user.getFirstName());
             emailText.setText(user.getEmail());
             SimpleDateFormat dateFormat =
-                    new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
             birthdayText.setText(dateFormat.format(user.getBirthDate()));
             lastNameText.setText(user.getLastName());
             gender = user.getGender().get();
@@ -128,48 +128,52 @@ public class RegisterActivity extends AppCompatActivity {
             !isValidEmail(emailText.getText().toString()))
         {
             Toast.makeText(
-                    RegisterActivity.this,
-                    R.string.toast_text_error_mail,
-                    Toast.LENGTH_SHORT).show();
-        } else if ((userNameText.getText().toString().isEmpty() ||
-                    userNameText.getText().toString().length() > 50))
+                RegisterActivity.this,
+                R.string.toast_text_error_mail,
+                Toast.LENGTH_SHORT).show();
+        } else if ((
+            userNameText.getText().toString().isEmpty() ||
+            userNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
-                    RegisterActivity.this, R.string.toast_text_error_username,
-                    Toast.LENGTH_SHORT).show();
-        } else if ((firstNameText.getText().toString().isEmpty() ||
-                    firstNameText.getText().toString().length() > 50))
+                RegisterActivity.this, R.string.toast_text_error_username,
+                Toast.LENGTH_SHORT).show();
+        } else if ((
+            firstNameText.getText().toString().isEmpty() ||
+            firstNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
-                    RegisterActivity.this, R.string.toast_text_error_firstname,
-                    Toast.LENGTH_SHORT).show();
-        } else if ((lastNameText.getText().toString().isEmpty() ||
-                    lastNameText.getText().toString().length() > 50))
+                RegisterActivity.this, R.string.toast_text_error_firstname,
+                Toast.LENGTH_SHORT).show();
+        } else if ((
+            lastNameText.getText().toString().isEmpty() ||
+            lastNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
-                    RegisterActivity.this, R.string.toast_text_error_lastname,
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this, R.string.toast_text_error_lastname,
+                Toast.LENGTH_SHORT).show();
         } else if (passwordText.getText().toString().isEmpty()) {
             Toast.makeText(
-                    RegisterActivity.this, R.string.toast_text_error_password,
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this, R.string.toast_text_error_password,
+                Toast.LENGTH_SHORT).show();
         } else if (!passwordText.getText().toString().equals(
-                passwordConfirmation.getText()
-                                    .toString()))
+            passwordConfirmation.getText()
+                                .toString()))
         {
             Toast.makeText(
-                    RegisterActivity.this, R.string.toast_text_error_passwordconfirmation,
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this, R.string.toast_text_error_passwordconfirmation,
+                Toast.LENGTH_SHORT).show();
         } else if (gender == null) {
             Toast.makeText(
-                    RegisterActivity.this, R.string.toast_text_error_gender,
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this, R.string.toast_text_error_gender,
+                Toast.LENGTH_SHORT).show();
         } else if (birthdayText.getText().toString().length() == 0 ||
-                   birthdayText.getText().toString().length() > 20 || !isThisDateValid(birthdayText.getText().toString(),"dd/MM/yyyy"))
+                   birthdayText.getText().toString().length() > 20 ||
+                   !isThisDateValid(birthdayText.getText().toString()))
         {
             Toast.makeText(
-                    RegisterActivity.this, R.string.toast_text_error_birthday,
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this, R.string.toast_text_error_birthday,
+                Toast.LENGTH_SHORT).show();
         } else {
             try {
                 jsonObject = new JSONObject();
@@ -192,33 +196,23 @@ public class RegisterActivity extends AppCompatActivity {
      * Check is the mail is a valid format
      *
      * @param target the sequence of character
-     *
      * @return true if it has the form of an email
      */
-    public static boolean isValidEmail(CharSequence target) {
+    private static boolean isValidEmail(CharSequence target) {
         return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
-    public static boolean isThisDateValid(String dateToValidate, String dateFromat){
-
-        if(dateToValidate == null){
+    private static boolean isThisDateValid(String dateToValidate) {
+        if (dateToValidate == null) {
             return false;
         }
-
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFromat);
-        sdf.setLenient(false);
-
         try {
             //if not valid, it will throw ParseException
-            java.util.Date date = sdf.parse(dateToValidate);
-            System.out.println(date);
-
+            new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(dateToValidate);
         } catch (ParseException e) {
-
-            e.printStackTrace();
+            Log.e("RegisterActivity", e.getMessage());
             return false;
         }
-
         return true;
     }
 
@@ -249,10 +243,10 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String response) {
-            if (mErrorMessage != null){
+            if (mErrorMessage != null) {
                 Toast.makeText(
-                        RegisterActivity.this, mErrorMessage.replace("\"",""),
-                        Toast.LENGTH_LONG).show();
+                    RegisterActivity.this, mErrorMessage.replace("\"", ""),
+                    Toast.LENGTH_LONG).show();
                 mErrorMessage = null;
                 return;
             }
@@ -260,10 +254,10 @@ public class RegisterActivity extends AppCompatActivity {
                 SafeJSONObject responseJson = new SafeJSONObject(response);
                 DataManager.saveUser(new UserParser().parse(responseJson));
                 Toast.makeText(
-                        RegisterActivity.this, R.string.register_positive,
-                        Toast.LENGTH_LONG).show();
+                    RegisterActivity.this, R.string.register_positive,
+                    Toast.LENGTH_LONG).show();
                 finish();
-            } catch (JSONException|ParserException e) {
+            } catch (JSONException | ParserException e) {
                 Log.e("UploadUserTask", e.getMessage());
             }
             if (mDialog != null && mDialog.isShowing()) {
