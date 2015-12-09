@@ -51,6 +51,7 @@ import static junit.framework.Assert.fail;
 
 /**
  * Created by Joel on 11/19/2015.
+ * Modified by Dario on 09.12.2015
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -70,19 +71,19 @@ public class NetworkEndToEndTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testNullNetworkProviderForUser() {
-        new NetworkUserClient("http://beecreative.ch", null);
+        new NetworkUserClient(NetworkProvider.SERVER_URL, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNullNetworkProviderForEvent() {
-        new NetworkEventClient("http://beecreative.ch", null);
+        new NetworkEventClient(NetworkProvider.SERVER_URL, null);
     }
 
     @Test
     public void testGetUser() {
         try {
             NetworkProvider networkProvider = new DefaultNetworkProvider();
-            UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
+            UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
             User user = userClient.fetchByFacebookID(Integer.toString(1271175799)); //Dario's fb id
             List<Location> locationsOfInterest = new ArrayList<>();
             locationsOfInterest.add(new Location(3, "Lausanne"));
@@ -115,7 +116,7 @@ public class NetworkEndToEndTest {
             assertTrue(
                     "Unexpected areas of interest",
                     new CollectionComparator<Location>().compare(
-                            new ArrayList<Location>(user.getAreasOfInterest()),
+                            new ArrayList<>(user.getAreasOfInterest()),
                             locationsOfInterest));
             assertTrue("Unexpected events attended", user.getEventsAttended().size() == 0);
         } catch (ParserException | UserClientException e) {
@@ -127,7 +128,7 @@ public class NetworkEndToEndTest {
         final int eventIdToRegister = 7;
         final String userToRegister = "lio";
         NetworkProvider networkProvider = new DefaultNetworkProvider();
-        UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
+        UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
         try{
             if(getRegistrationId(userToRegister,eventIdToRegister,networkProvider) != null) {
                 fail("User: " + userToRegister + " cannot be registered to event (id) " + eventIdToRegister
@@ -154,7 +155,7 @@ public class NetworkEndToEndTest {
         final int eventIdToRegister = 7;
         final String userToRegister = "Admin";
         NetworkProvider networkProvider = new DefaultNetworkProvider();
-        UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
+        UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
         try{
             userClient.registerUser(userToRegister,eventIdToRegister);
         } catch (UserClientException e){
@@ -168,7 +169,7 @@ public class NetworkEndToEndTest {
         final int eventIdToRegister = 7;
         final String userToRegister = "lio";
         NetworkProvider networkProvider = new DefaultNetworkProvider();
-        UserClient userClient = new NetworkUserClient("http://beecreative.ch", networkProvider);
+        UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
 
         try {
             userClient.registerUser(userToRegister, eventIdToRegister);
@@ -195,7 +196,6 @@ public class NetworkEndToEndTest {
             throw new UserClientException(e);
         }
 
-
         HashMap<Integer, Integer> eventToRegistration = new HashMap<>();
         for (int i = 0; i < registrations.length(); i++) {
             try {
@@ -209,7 +209,6 @@ public class NetworkEndToEndTest {
         return eventToRegistration.get(eventId);
     }
 
-    //TODO: Server responses come sometimes in french other times in english.
     @Test
     public void postUserMalformat() {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
@@ -236,12 +235,8 @@ public class NetworkEndToEndTest {
         try{
             userClient.postUser(jsonUser);
         } catch (UserClientException e){
-            StringBuilder expectedMessage= new StringBuilder();
-            expectedMessage.append("Validation Failed: ");
-            // make explicit the server response, it does not come with \s.
-            expectedMessage.append("Le choix du sexe n'est pas valide." + " ");
-            expectedMessage.append("This value is not valid." + " ");
-            assertEquals(expectedMessage.toString(),e.getMessage());
+            String expectedMessage = "Validation Failed: Choose a valid gender This value is not valid. ";
+            assertEquals(expectedMessage,e.getMessage());
         }
     }
 
@@ -265,12 +260,9 @@ public class NetworkEndToEndTest {
         try{
             userClient.postUser(jsonUser);
         } catch (UserClientException e){
-            StringBuilder expectedMessage= new StringBuilder();
-            expectedMessage.append("Validation Failed: ");
+            String expectedMessage = "Validation Failed: The email is already used The username is already used ";
             // make explicit the server response, it does not come with \s.
-            expectedMessage.append("The email is already used" + " ");
-            expectedMessage.append("The username is already used" + " ");
-            assertEquals(expectedMessage.toString(),e.getMessage());
+            assertEquals(expectedMessage,e.getMessage());
         }
     }
 
@@ -335,7 +327,7 @@ public class NetworkEndToEndTest {
     @Test
     public void testGetSpeedDatingEvent() throws EventClientException {
         NetworkProvider networkProvider = new DefaultNetworkProvider();
-        EventClient eventClient = new NetworkEventClient("http://beecreative.ch", networkProvider);
+        EventClient eventClient = new NetworkEventClient(NetworkProvider.SERVER_URL, networkProvider);
         SpeedDatingEvent event = (SpeedDatingEvent) eventClient.fetchBy(6);
         //Oktoberfest event at Zurich.
         Date beginDate;

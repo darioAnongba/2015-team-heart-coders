@@ -21,11 +21,13 @@ import static ch.epfl.sweng.swissaffinity.utilities.network.ServerTags.USERNAME;
 
 /**
  * Representation of a user client.
+ * Modified by Dario on 09.12.2015
  */
 public class NetworkUserClient implements UserClient {
 
     private static final String USERS = "/api/users";
     private static final String REGISTRATIONS = "/api/registrations";
+    private static final String EVENT_REGISTRATION = "/api/users/registrations";
 
     private final String mServerUrl;
     private final NetworkProvider mNetworkProvider;
@@ -58,7 +60,7 @@ public class NetworkUserClient implements UserClient {
 
     /**
      *
-     * @param jsonObject
+     * @param jsonObject The JSON object representing the new User.
      * @return User object formatted as json by the server.
      * @throws UserClientException when one of the Register fields does not have a correct format or other errors.
      * In the case, the cause for the exception is format all errors are appended to be displayed in the toast
@@ -84,7 +86,7 @@ public class NetworkUserClient implements UserClient {
         }
         StringBuilder error = new StringBuilder();
         try{
-            error.append(jsonResponse.get("message")+": ");
+            error.append(jsonResponse.get("message")).append(": ");
         } catch (JSONException e){
             return jsonResponse;
         }
@@ -92,42 +94,42 @@ public class NetworkUserClient implements UserClient {
         try{
             JSONObject errorsJSON = jsonResponse.getJSONObject("errors").getJSONObject("children");
             try {
-                error.append(errorsJSON.getJSONObject("email").getJSONArray("errors").getString(0) + " ");
+                error.append(errorsJSON.getJSONObject("email").getJSONArray("errors").getString(0)).append(" ");
             } catch (JSONException e){
                 Log.e(FIELD_SUBMIT_OK,"EMAIL");
             }
             try {
-                error.append(errorsJSON.getJSONObject("username").getJSONArray("errors").getString(0) + " ");
+                error.append(errorsJSON.getJSONObject("username").getJSONArray("errors").getString(0)).append(" ");
             } catch (JSONException e){
                 Log.e(FIELD_SUBMIT_OK,"USERNAME");
             }
             try {
-                error.append(errorsJSON.getJSONObject("firstName").getJSONArray("errors").getString(0)+ " ");
+                error.append(errorsJSON.getJSONObject("firstName").getJSONArray("errors").getString(0)).append(" ");
             } catch (JSONException e){
                 Log.e(FIELD_SUBMIT_OK,"FIRST_NAME");
             }
             try {
-                error.append(errorsJSON.getJSONObject("lastName").getJSONArray("errors").getString(0)+ " ");
+                error.append(errorsJSON.getJSONObject("lastName").getJSONArray("errors").getString(0)).append(" ");
             } catch (JSONException e){
                 Log.e(FIELD_SUBMIT_OK,"LAST_NAME");
             }
             try {
-                error.append(errorsJSON.getJSONObject("gender").getJSONArray("errors").getString(0)+ " ");
+                error.append(errorsJSON.getJSONObject("gender").getJSONArray("errors").getString(0)).append(" ");
             } catch (JSONException e){
                 Log.e(FIELD_SUBMIT_OK,"GENDER");
             }
             try {
-                error.append(errorsJSON.getJSONObject("birthDate").getJSONArray("errors").getString(0)+ " ");
+                error.append(errorsJSON.getJSONObject("birthDate").getJSONArray("errors").getString(0)).append(" ");
             } catch (JSONException e){
                 Log.e(FIELD_SUBMIT_OK,"BIRTH_DATE");
             }
             try {
-                error.append(errorsJSON.getJSONObject("facebookId").getJSONArray("errors").getString(0)+ " ");
+                error.append(errorsJSON.getJSONObject("facebookId").getJSONArray("errors").getString(0)).append(" ");
             } catch (JSONException e){
                 Log.e(FIELD_SUBMIT_OK,"FACEBOOK_ID");
             }
             try {
-                error.append(errorsJSON.getJSONObject("plainPassword").getJSONArray("errors").getString(0)+ " ");
+                error.append(errorsJSON.getJSONObject("plainPassword").getJSONArray("errors").getString(0)).append(" ");
             } catch (JSONException e){
                 Log.e(FIELD_SUBMIT_OK,"PASSWORD");
             }
@@ -175,7 +177,7 @@ public class NetworkUserClient implements UserClient {
             jsonRequest.put(REST_EVENT_REGISTRATION.get(), jsonObject);
             //An error log represents an exception for the service the UserClient is supposed to deliver.
             //This is not the case in the layer below e.g. NetworkProvider.
-            String response = mNetworkProvider.postContent(mServerUrl + REGISTRATIONS, jsonRequest);
+            String response = mNetworkProvider.postContent(mServerUrl + EVENT_REGISTRATION, jsonRequest);
             if(!response.equals("")){
                 throw new UserClientException(response);
             }
