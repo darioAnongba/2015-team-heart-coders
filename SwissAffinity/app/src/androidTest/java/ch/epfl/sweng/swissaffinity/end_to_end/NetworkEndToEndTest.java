@@ -141,7 +141,7 @@ public class NetworkEndToEndTest {
             // SUCCESS -> clean the registration for the test
         }
         try {
-            if(getRegistrationId(userToRegister,eventIdToRegister,networkProvider) != null) {
+            if(getRegistrationId(userToRegister,eventIdToRegister,networkProvider) > 0) {
                 fail("User: " + userToRegister + " cannot be registered to event (id) " +
                         eventIdToRegister
                         + "for this test.");
@@ -150,8 +150,8 @@ public class NetworkEndToEndTest {
             fail(e.getMessage());
         }
         try{
-            userClient.registerUser(userToRegister,eventIdToRegister);
-            userClient.registerUser(userToRegister,eventIdToRegister);
+            userClient.registerUser(userToRegister, eventIdToRegister);
+            userClient.registerUser(userToRegister, eventIdToRegister);
         }catch (UserClientException e){
             assertEquals("You are already registered to this event",
                     e.getMessage().replace("\"","").replace("\n",""));
@@ -201,7 +201,7 @@ public class NetworkEndToEndTest {
             fail(e.getMessage());
         }
         Integer testRegistrationId = getRegistrationId(userToRegister,eventIdToRegister,networkProvider);
-        assertTrue("Registration was not successful.", testRegistrationId != null);
+        assertTrue("Registration was not successful.", testRegistrationId > 0);
         try {
             userClient.unregisterUser(testRegistrationId);
         } catch (UserClientException e) {
@@ -209,7 +209,7 @@ public class NetworkEndToEndTest {
         }
     }
     @Ignore
-    private Integer getRegistrationId(String username, int eventId, NetworkProvider networkProvider)
+    private int getRegistrationId(String username, int eventId, NetworkProvider networkProvider)
             throws UserClientException
     {
         String registrationsString;
