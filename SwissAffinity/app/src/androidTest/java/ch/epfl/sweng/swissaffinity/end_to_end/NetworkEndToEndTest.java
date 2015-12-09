@@ -190,7 +190,7 @@ public class NetworkEndToEndTest {
         JSONArray registrations;
         try {
             registrationsString = networkProvider.getContent(
-                    "http://beecreative.ch/api/users/" + username + "/registrations");
+                    NetworkProvider.SERVER_URL + "/api/users/" + username + "/registrations");
             registrations = new JSONArray(registrationsString);
         } catch (JSONException | IOException e) {
             throw new UserClientException(e);
