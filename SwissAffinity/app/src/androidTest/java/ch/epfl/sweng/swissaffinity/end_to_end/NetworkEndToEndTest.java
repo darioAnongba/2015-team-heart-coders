@@ -123,6 +123,7 @@ public class NetworkEndToEndTest {
             fail(e.getMessage());
         }
     }
+
     @Test
     public void alreadyRegistered() {
         final int eventIdToRegister = 7;
@@ -163,6 +164,7 @@ public class NetworkEndToEndTest {
             fail(e.getMessage());
         }
     }
+
     @Test
     public void testUnderAge() {
         final int eventIdToRegister = 7;
@@ -208,6 +210,7 @@ public class NetworkEndToEndTest {
             fail(e.getMessage());
         }
     }
+
     @Ignore
     private int getRegistrationId(String username, int eventId, NetworkProvider networkProvider)
             throws UserClientException
