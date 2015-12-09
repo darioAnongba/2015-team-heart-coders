@@ -135,7 +135,7 @@ public class NetworkEndToEndTest {
                         + "for this test.");
             }
         } catch (UserClientException e){
-           fail(e.getMessage());
+            fail(e.getMessage());
         }
         try{
             userClient.registerUser(userToRegister,eventIdToRegister);
@@ -220,7 +220,7 @@ public class NetworkEndToEndTest {
              HAPPEN as this is a test only user.
              Using userClient.deleteUser("DumbUser666"); if it doesn't
              throws an exception and makes the test fail.
-            */
+             */
             jsonUser.put(EMAIL.get(), "dumbuser666@gmail.com");
             jsonUser.put(USERNAME.get(), "DumbUser666");
             jsonUser.put("firstName", "Dumb");
@@ -347,8 +347,8 @@ public class NetworkEndToEndTest {
         assertEquals(
                 event.getDescription(),
                 "Come and join us" +
-                " to celebrate the Oktoberfest , and use this occasion to meet new People . The event" +
-                " will take place to Forum , a bar in the center of Zürich.");
+                        " to celebrate the Oktoberfest , and use this occasion to meet new People . The event" +
+                        " will take place to Forum , a bar in the center of Zürich.");
         assertEquals(event.getImagePath(), "5647627162808.jpg");
         assertEquals(event.getMinAge(), 21);
         assertEquals(event.getMaxAge(), 32);
@@ -373,7 +373,7 @@ public class NetworkEndToEndTest {
                         SafeJSONObject.DEFAULT_STRING,
                         250,
                         SafeJSONObject.DEFAULT_STRING)
-                    );
+        );
     }
 
     @Ignore

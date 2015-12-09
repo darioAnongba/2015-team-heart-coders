@@ -60,16 +60,16 @@ public class EventExpandableListAdapter extends AbstractExpandableListAdapter<St
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.list_item, parent, false);
-            convertView.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(v.getContext(), EventActivity.class);
-                            intent.putExtra(MainActivity.EXTRA_EVENT, event.getId());
-                            v.getContext().startActivity(intent);
-                        }
-                    });
         }
+        convertView.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(v.getContext(), EventActivity.class);
+                        intent.putExtra(MainActivity.EXTRA_EVENT, event.getId());
+                        v.getContext().startActivity(intent);
+                    }
+                });
         String name = event.getName();
         String location = event.getLocation().getName();
         String dateBegin = DateParser.dateToString(event.getDateBegin());
