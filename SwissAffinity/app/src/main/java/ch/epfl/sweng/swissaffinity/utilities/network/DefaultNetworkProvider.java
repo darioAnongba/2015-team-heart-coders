@@ -102,7 +102,7 @@ public class DefaultNetworkProvider implements NetworkProvider {
     }
     /*
     This method has a single responsibility: to handle response codes according
-    to beecreative.ch/api/doc.
+    to the server URL.
      */
     private InputStream handleResponseCode(HttpURLConnection conn) throws IOException{
         InputStream stream;
