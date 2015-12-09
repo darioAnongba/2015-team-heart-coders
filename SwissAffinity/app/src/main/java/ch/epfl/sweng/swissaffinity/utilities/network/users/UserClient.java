@@ -40,7 +40,6 @@ public interface UserClient {
      * Delete a user from the server
      *
      * @param userName the user name
-     * @return the response code returned by the server
      * @throws UserClientException
      */
     void deleteUser(String userName) throws UserClientException;
@@ -50,7 +49,6 @@ public interface UserClient {
      *
      * @param username the name of the user.
      * @param eventId  the ID of the event.
-     * @return the response from server.
      * @throws UserClientException
      */
     void registerUser(String username, int eventId) throws UserClientException;
@@ -59,7 +57,6 @@ public interface UserClient {
      * Unregister a user from an event
      *
      * @param registrationId the registration ID {@link ch.epfl.sweng.swissaffinity.users.Registration}
-     * @return the response code from the server
      * @throws UserClientException
      */
     void unregisterUser(int registrationId) throws UserClientException;

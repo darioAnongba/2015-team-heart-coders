@@ -12,8 +12,6 @@ import java.net.URL;
  */
 public interface NetworkProvider {
     String SERVER_URL = "http://beecreative.ch";
-    int HTTP_SUCCESS_START = 200;
-    int HTTP_SUCCESS_END = 299;
 
     /**
      * Returns a new {@link HttpURLConnection} object for the given {@link URL}.
