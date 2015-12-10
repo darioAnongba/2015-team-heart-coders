@@ -12,6 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.sweng.swissaffinity.gui.DataManager;
 import ch.epfl.sweng.swissaffinity.utilities.network.ServerTags;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -22,6 +23,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertTrue;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by Lionel on 29.11.15.
@@ -99,4 +106,5 @@ public class MainActivityTest {
             }
         }
     }
+
 }
