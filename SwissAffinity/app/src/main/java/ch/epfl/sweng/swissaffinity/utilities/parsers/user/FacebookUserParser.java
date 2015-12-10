@@ -27,6 +27,9 @@ public class FacebookUserParser extends Parser<User> {
 
     @Override
     public User parse(SafeJSONObject jsonObject) throws ParserException {
+        if (jsonObject == null) {
+            throw new IllegalArgumentException();
+        }
         int id = 0;
         String facebookId = jsonObject.get(ID.get(), "");
         String userName = jsonObject.get(USERNAME.get(), "");
