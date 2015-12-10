@@ -15,6 +15,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -37,60 +38,68 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText passwordConfirmation;
     private String facebookId;
     private String gender;
+    private ProgressDialog mDialog;
+    private String mErrorMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        final RadioGroup.OnCheckedChangeListener radioChecker =
-                new RadioGroup.OnCheckedChangeListener() {
-
-                    @Override
-                    public void onCheckedChanged(RadioGroup group, int checkedId) {
-                        if (checkedId == R.id.registerFemale) {
-                            gender = "female";
-                        } else if (checkedId == R.id.registerMale) {
-                            gender = "male";
-                        }
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.registerGender);
+        radioGroup.setOnCheckedChangeListener(
+            new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    if (checkedId == R.id.registerFemale) {
+                        gender = "female";
+                    } else if (checkedId == R.id.registerMale) {
+                        gender = "male";
                     }
-                };
+                }
+            });
 
         fillData();
 
         Button registerButton = (Button) findViewById(R.id.userRegistration);
         registerButton.setOnClickListener(
-                new View.OnClickListener() {
-                    public void onClick(View v) {
-                        JSONObject json = createJson();
-                        if (json != null) {
-                            Log.v("UserJson", json.toString());
-                            new UploadUserTask().execute(json.toString());
-                        }
+            new View.OnClickListener() {
+                public void onClick(View v) {
+                    JSONObject json = createJson();
+                    if (json != null) {
+                        Log.v("UserJson", json.toString());
+                        new UploadUserTask().execute(json.toString());
                     }
-                });
+                }
+            });
+    }
+
+    @Override
+    protected void onPause() {
+        mDialog = null;
+        super.onPause();
     }
 
     /**
-     * Fill the EditText with the info sended by facebook
+     * Fill the EditText with the info sent by facebook
      */
     private void fillData() {
 
         User user = (User) getIntent().getSerializableExtra(MainActivity.EXTRA_USER);
 
-            userNameText = (EditText) findViewById(R.id.registerUserName);
-            firstNameText = (EditText) findViewById(R.id.registerFirstName);
-            lastNameText = (EditText) findViewById(R.id.registerLastName);
-            emailText = (EditText) findViewById(R.id.registerEmail);
-            birthdayText = (EditText) findViewById(R.id.registerBirthDay);
-            passwordText = (EditText) findViewById(R.id.registerPassword);
-            passwordConfirmation = (EditText) findViewById(R.id.registerPasswordConfirmation);
+        userNameText = (EditText) findViewById(R.id.registerUserName);
+        firstNameText = (EditText) findViewById(R.id.registerFirstName);
+        lastNameText = (EditText) findViewById(R.id.registerLastName);
+        emailText = (EditText) findViewById(R.id.registerEmail);
+        birthdayText = (EditText) findViewById(R.id.registerBirthDay);
+        passwordText = (EditText) findViewById(R.id.registerPassword);
+        passwordConfirmation = (EditText) findViewById(R.id.registerPasswordConfirmation);
 
         if (user != null) {
             userNameText.setText(user.getUsername());
             firstNameText.setText(user.getFirstName());
             emailText.setText(user.getEmail());
             SimpleDateFormat dateFormat =
-                    new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
             birthdayText.setText(dateFormat.format(user.getBirthDate()));
             lastNameText.setText(user.getLastName());
             gender = user.getGender().get();
@@ -119,48 +128,52 @@ public class RegisterActivity extends AppCompatActivity {
             !isValidEmail(emailText.getText().toString()))
         {
             Toast.makeText(
-                    RegisterActivity.this,
-                    R.string.toast_text_error_mail,
-                    Toast.LENGTH_SHORT).show();
-        } else if ((userNameText.getText().toString().isEmpty() ||
-                    userNameText.getText().toString().length() > 50))
+                RegisterActivity.this,
+                R.string.toast_text_error_mail,
+                Toast.LENGTH_SHORT).show();
+        } else if ((
+            userNameText.getText().toString().isEmpty() ||
+            userNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
-                    RegisterActivity.this, R.string.toast_text_error_username,
-                    Toast.LENGTH_SHORT).show();
-        } else if ((firstNameText.getText().toString().isEmpty() ||
-                    firstNameText.getText().toString().length() > 50))
+                RegisterActivity.this, R.string.toast_text_error_username,
+                Toast.LENGTH_SHORT).show();
+        } else if ((
+            firstNameText.getText().toString().isEmpty() ||
+            firstNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
-                    RegisterActivity.this, R.string.toast_text_error_firstname,
-                    Toast.LENGTH_SHORT).show();
-        } else if ((lastNameText.getText().toString().isEmpty() ||
-                    lastNameText.getText().toString().length() > 50))
+                RegisterActivity.this, R.string.toast_text_error_firstname,
+                Toast.LENGTH_SHORT).show();
+        } else if ((
+            lastNameText.getText().toString().isEmpty() ||
+            lastNameText.getText().toString().length() > 50))
         {
             Toast.makeText(
-                    RegisterActivity.this, R.string.toast_text_error_lastname,
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this, R.string.toast_text_error_lastname,
+                Toast.LENGTH_SHORT).show();
         } else if (passwordText.getText().toString().isEmpty()) {
             Toast.makeText(
-                    RegisterActivity.this, R.string.toast_text_error_password,
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this, R.string.toast_text_error_password,
+                Toast.LENGTH_SHORT).show();
         } else if (!passwordText.getText().toString().equals(
-                passwordConfirmation.getText()
-                                    .toString()))
+            passwordConfirmation.getText()
+                                .toString()))
         {
             Toast.makeText(
-                    RegisterActivity.this, R.string.toast_text_error_passwordconfirmation,
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this, R.string.toast_text_error_passwordconfirmation,
+                Toast.LENGTH_SHORT).show();
         } else if (gender == null) {
             Toast.makeText(
-                    RegisterActivity.this, R.string.toast_text_error_gender,
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this, R.string.toast_text_error_gender,
+                Toast.LENGTH_SHORT).show();
         } else if (birthdayText.getText().toString().length() == 0 ||
-                   birthdayText.getText().toString().length() > 20)
+                   birthdayText.getText().toString().length() > 20 ||
+                   !isThisDateValid(birthdayText.getText().toString()))
         {
             Toast.makeText(
-                    RegisterActivity.this, R.string.toast_text_error_birthday,
-                    Toast.LENGTH_SHORT).show();
+                RegisterActivity.this, R.string.toast_text_error_birthday,
+                Toast.LENGTH_SHORT).show();
         } else {
             try {
                 jsonObject = new JSONObject();
@@ -185,8 +198,22 @@ public class RegisterActivity extends AppCompatActivity {
      * @param target the sequence of character
      * @return true if it has the form of an email
      */
-    public static boolean isValidEmail(CharSequence target) {
+    private static boolean isValidEmail(CharSequence target) {
         return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+    }
+
+    private static boolean isThisDateValid(String dateToValidate) {
+        if (dateToValidate == null) {
+            return false;
+        }
+        try {
+            //if not valid, it will throw ParseException
+            new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(dateToValidate);
+        } catch (ParseException e) {
+            Log.e("RegisterActivity", e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -194,11 +221,10 @@ public class RegisterActivity extends AppCompatActivity {
      */
     private class UploadUserTask extends AsyncTask<String, Void, String> {
 
-        private final ProgressDialog dialog = MainActivity.getLoadingDialog(RegisterActivity.this);
-
         @Override
         protected void onPreExecute() {
-            dialog.show();
+            mDialog = MainActivity.getLoadingDialog(RegisterActivity.this);
+            mDialog.show();
         }
 
         @Override
@@ -209,28 +235,33 @@ public class RegisterActivity extends AppCompatActivity {
                 response = DataManager.getUserClient().postUser(jsonObject);
             } catch (JSONException e) {
                 Log.e("UploadUserTask", e.getMessage());
-            } catch (UserClientException e){
-                return e.getMessage();
+            } catch (UserClientException e) {
+                mErrorMessage = e.getMessage();
             }
             return response.toString();
         }
 
         @Override
         protected void onPostExecute(String response) {
-            dialog.dismiss();
+            if (mErrorMessage != null) {
+                Toast.makeText(
+                    RegisterActivity.this, mErrorMessage.replace("\"", ""),
+                    Toast.LENGTH_LONG).show();
+                mErrorMessage = null;
+                return;
+            }
             try {
                 SafeJSONObject responseJson = new SafeJSONObject(response);
                 DataManager.saveUser(new UserParser().parse(responseJson));
                 Toast.makeText(
-                        RegisterActivity.this, R.string.register_positive,
-                        Toast.LENGTH_LONG).show();
+                    RegisterActivity.this, R.string.register_positive,
+                    Toast.LENGTH_LONG).show();
                 finish();
-            } catch (JSONException e) {
-                Toast.makeText(
-                        RegisterActivity.this, response,
-                        Toast.LENGTH_LONG).show();
-            } catch (ParserException e){
+            } catch (JSONException | ParserException e) {
                 Log.e("UploadUserTask", e.getMessage());
+            }
+            if (mDialog != null && mDialog.isShowing()) {
+                mDialog.dismiss();
             }
         }
     }

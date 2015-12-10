@@ -12,8 +12,6 @@ import java.net.URL;
  */
 public interface NetworkProvider {
     String SERVER_URL = "http://beecreative.ch";
-    int HTTP_SUCCESS_START = 200;
-    int HTTP_SUCCESS_END = 299;
 
     /**
      * Returns a new {@link HttpURLConnection} object for the given {@link URL}.
@@ -52,5 +50,5 @@ public interface NetworkProvider {
      * @return the response code from the server
      * @throws IOException if no success with the request.
      */
-    int deleteContent(String serverURL) throws IOException;
+    String deleteContent(String serverURL) throws IOException;
 }

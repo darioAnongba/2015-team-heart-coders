@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private static SharedPreferences SHARED_PREFERENCES;
 
     private ExpandableListView mListView;
+    private ProgressDialog mDialog;
 
     public static SharedPreferences getPreferences() {
         if (SHARED_PREFERENCES == null) {
@@ -39,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static ProgressDialog getLoadingDialog(Context context) {
+        if (context == null ){
+            throw new IllegalArgumentException();
+        }
         ProgressDialog dialog = new ProgressDialog(context);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setMessage(context.getString(R.string.loading));
@@ -80,38 +84,40 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onPause() {
+        mDialog = null;
+        super.onPause();
+    }
+
     private void updateUI() {
         String welcome = getString(R.string.welcome_registered_text);
         String userName = SHARED_PREFERENCES.getString(USERNAME.get(), "");
         TextView textView = (TextView) findViewById(R.id.mainWelcomeText);
         textView.setText(String.format(welcome, userName));
 
-        boolean withDialog = true;
-        if (DataManager.hasData()) {
-            DataManager.displayData(mListView);
-            withDialog = false;
-        }
-        if (DataManager.isNetworkConnected(this)) {
-            new DataManagerTask().execute(withDialog);
-        } else {
-            DataManager.showNetworkAlert(this);
-        }
+        new DataManagerTask(!DataManager.hasData()).execute();
     }
 
-    private final class DataManagerTask extends AsyncTask<Boolean, Boolean, Void> {
-        private final ProgressDialog dialog = getLoadingDialog(MainActivity.this);
+    private final class DataManagerTask extends AsyncTask<Void, Void, Void> {
+        private final boolean mWithDialog;
 
-        @Override
-        protected void onProgressUpdate(Boolean... values) {
-            if (values[0].equals(Boolean.TRUE)) {
-                dialog.show();
-            }
-            super.onProgressUpdate(values);
+        DataManagerTask(boolean withDialog) {
+            mWithDialog = withDialog;
         }
 
         @Override
-        protected Void doInBackground(Boolean... params) {
-            publishProgress(params[0]);
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (mWithDialog) {
+                mDialog = getLoadingDialog(MainActivity.this);
+                mDialog.show();
+            }
+            DataManager.displayData(mListView);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
             DataManager.updateData(MainActivity.this);
             return null;
         }
@@ -119,8 +125,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             DataManager.displayData(mListView);
-            if (dialog.isShowing()) {
-                dialog.dismiss();
+            if (mDialog != null && mDialog.isShowing()) {
+                mDialog.dismiss();
             }
             super.onPostExecute(aVoid);
         }
