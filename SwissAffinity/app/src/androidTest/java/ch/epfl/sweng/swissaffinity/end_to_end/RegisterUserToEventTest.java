@@ -7,6 +7,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -49,8 +50,8 @@ import static junit.framework.Assert.fail;
 public class RegisterUserToEventTest {
     private UserClient mUserClient;
     private NetworkProvider mNetworkProvider;
-    //private String mYoungerUserName;
-    //private String mOlderUserName;
+    private String mYoungerUserName;
+    private String mOlderUserName;
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
@@ -61,20 +62,18 @@ public class RegisterUserToEventTest {
         mActivityRule.getActivity();
         mNetworkProvider = new DefaultNetworkProvider();
         mUserClient = new NetworkUserClient(NetworkProvider.SERVER_URL, mNetworkProvider);
-        /**
         try {
             mYoungerUserName = makeTestUserOnServer("Younger").getString(USERNAME.get());
             mOlderUserName = makeTestUserOnServer("Older").getString(USERNAME.get());
         }catch (IllegalArgumentException | JSONException e){
             throw new RuntimeException(e);
         }
-         **/
     }
 
     @Test
     public void alreadyRegistered() {
         final int eventIdToRegister = 7;
-        final String userToRegister = "lio";
+        final String userToRegister = mOlderUserName;
         NetworkProvider networkProvider = new DefaultNetworkProvider();
         UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
         try {
@@ -114,7 +113,7 @@ public class RegisterUserToEventTest {
     @Test
     public void testUnderAge() {
         final int eventIdToRegister = 7;//Christmas event is for older Users
-        final String userToRegister = "Admin";
+        final String userToRegister = mYoungerUserName;
         try{
             mUserClient.registerUser(userToRegister, eventIdToRegister);
         } catch (UserClientException e){
@@ -127,7 +126,7 @@ public class RegisterUserToEventTest {
     @Test
     public void postRegistrationToEvent() throws UserClientException{
         final int eventIdToRegister = 7;
-        final String userToRegister = "lio";
+        final String userToRegister = mOlderUserName;
 
         try {
             int registrationId = getRegistrationId(
@@ -152,14 +151,14 @@ public class RegisterUserToEventTest {
             fail(e.getMessage());
         }
     }
-    /**
+
     @After
     public void tearDown() throws UserClientException{
 
         mUserClient.deleteUser(String.format("TestRegisterUser%s", "Younger"));
         mUserClient.deleteUser(String.format("TestRegisterUser%s", "Older"));
     }
-    **/
+
     @Ignore
     private int getRegistrationId(String username, int eventId)
             throws UserClientException
