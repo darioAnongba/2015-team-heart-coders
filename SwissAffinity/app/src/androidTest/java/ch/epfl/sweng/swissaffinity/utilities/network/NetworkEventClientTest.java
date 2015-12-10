@@ -14,7 +14,6 @@ import java.util.List;
 import ch.epfl.sweng.swissaffinity.DataForTesting;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
-import ch.epfl.sweng.swissaffinity.users.Registration;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClientException;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.NetworkEventClient;
@@ -31,6 +30,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
+@SuppressWarnings("unchecked")
 public class NetworkEventClientTest {
 
     private Collection<Location> testLocations;
@@ -168,8 +168,7 @@ public class NetworkEventClientTest {
 
     @Test
     public void testFetchForUser() throws EventClientException {
-        List<Registration> events = networkEventClient.fetchForUser("dumb");
-        assertTrue(events.isEmpty());
+        networkEventClient.fetchForUser("lio");
     }
 
     @Test
@@ -189,10 +188,16 @@ public class NetworkEventClientTest {
     }
 
     @Test
-    public void testIOException() throws IOException, EventClientException {
+    public void testFetchAllException() throws IOException, EventClientException {
         when(mockNetworkProvider.getConnection(anyString())).thenThrow(IOException.class);
-        List<Event> events= networkEventClient.fetchAll();
+        List<Event> events = networkEventClient.fetchAll();
         assertTrue(events.isEmpty());
+    }
+
+    @Test(expected = EventClientException.class)
+    public void testFetchByException2() throws IOException, EventClientException {
+        when(mockNetworkProvider.getConnection(anyString())).thenThrow(IOException.class);
+        networkEventClient.fetchBy(4);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -202,6 +207,12 @@ public class NetworkEventClientTest {
 
     @Test
     public void testImageFor() throws EventClientException {
+        networkEventClient.imageFor(testAllEventList.get(0).getImagePath());
+    }
+
+    @Test(expected = EventClientException.class)
+    public void testImageForException() throws IOException, EventClientException {
+        when(mockNetworkProvider.getConnection(anyString())).thenThrow(IOException.class);
         networkEventClient.imageFor(testAllEventList.get(0).getImagePath());
     }
 }

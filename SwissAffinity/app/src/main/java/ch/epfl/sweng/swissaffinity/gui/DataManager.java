@@ -134,8 +134,6 @@ public class DataManager {
             REGISTRATIONS.addAll(registrations);
             ALL_EVENTS.clear();
             ALL_EVENTS.addAll(allEvents);
-        } else {
-            showNetworkAlert(context);
         }
     }
 
