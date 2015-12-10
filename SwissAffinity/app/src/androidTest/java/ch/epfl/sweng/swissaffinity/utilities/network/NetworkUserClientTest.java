@@ -256,4 +256,22 @@ public class NetworkUserClientTest {
             fail(e.getMessage());
         }
     }
+
+    @Test
+    public void testUnregisterUser2() throws UserClientException, IOException {
+        try {
+            networkUserClient.unregisterUser(100);
+        } catch (UserClientException e) {
+            //SUCCESS
+        }
+    }
+
+    @Test
+    public void testDeleteUser2() throws UserClientException, IOException {
+        try {
+            networkUserClient.deleteUser("jeSuisPasLa");
+        } catch (UserClientException e) {
+            //SUCCESS
+        }
+    }
 }
