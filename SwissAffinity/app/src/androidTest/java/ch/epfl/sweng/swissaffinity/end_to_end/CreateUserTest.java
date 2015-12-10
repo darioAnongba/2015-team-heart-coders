@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +45,7 @@ import static junit.framework.Assert.fail;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class CreateUserTest {
-
+    private UserClient mUserClient;
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
             MainActivity.class);
@@ -52,33 +53,22 @@ public class CreateUserTest {
     @Before
     public void setUp() {
         mActivityRule.getActivity();
+        NetworkProvider networkProvider = new DefaultNetworkProvider();
+        mUserClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
     }
 
     @Test
     public void postMalformedUser() {
-        NetworkProvider networkProvider = new DefaultNetworkProvider();
-        UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
         JSONObject jsonUser = new JSONObject();
         try {
-            /**
-             Should first check if DumbUser666 exists, which SHOULD NOT
-             HAPPEN as this is a test only user.
-             Using userClient.deleteUser("DumbUser666"); if it doesn't
-             throws an exception and makes the test fail.
-             */
-            jsonUser.put(EMAIL.get(), "dumbuser666@gmail.com");
-            jsonUser.put(USERNAME.get(), "DumbUser666");
-            jsonUser.put("firstName", "Dumb");
-            jsonUser.put("lastName", "User");
+            jsonUser = prefilledJSon();
             jsonUser.put(GENDER.get(), "maleo");//test incorrect gender format
             jsonUser.put("birthDate", "18-02-1993");//test incorrect bday format
-            jsonUser.put("facebookId", "666");
-            jsonUser.put("plainPassword", "dumbpassword");
         } catch (JSONException e){
             fail(e.getMessage());
         }
         try{
-            userClient.postUser(jsonUser);
+            mUserClient.postUser(jsonUser);
         } catch (UserClientException e){
             String expectedMessage = "Validation Failed: Choose a valid gender This value is not valid. ";
             assertEquals(expectedMessage,e.getMessage());
@@ -86,35 +76,26 @@ public class CreateUserTest {
     }
 
     @Test
-    public void usernameEmailTaken() {
-        NetworkProvider networkProvider = new DefaultNetworkProvider();
-        UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
+    public void userNameEmailTaken() {
         JSONObject jsonUser = new JSONObject();
         try {
+            jsonUser = prefilledJSon();
             jsonUser.put(EMAIL.get(), "dario.anongba@epfl.ch");//email should be taken
             jsonUser.put(USERNAME.get(), "Admin"); //username should be taken
-            jsonUser.put("firstName", "SomeFirstName");
-            jsonUser.put("lastName", "SomeLastName");
-            jsonUser.put(GENDER.get(), "male");//test incorrect gender format
-            jsonUser.put("birthDate", "18/02/1993");//test incorrect bday format
-            jsonUser.put("facebookId", "666");
-            jsonUser.put("plainPassword", "dumbpassword");
         } catch (JSONException e){
             fail(e.getMessage());
         }
         try{
-            userClient.postUser(jsonUser);
+            mUserClient.postUser(jsonUser);
         } catch (UserClientException e){
             String expectedMessage = "Validation Failed: The email is already used The username is already used ";
             // make explicit the server response, it does not come with \s.
-            assertEquals(expectedMessage,e.getMessage());
+            assertEquals(expectedMessage, e.getMessage());
         }
     }
 
     @Test
     public void postUserTest() {
-        NetworkProvider networkProvider = new DefaultNetworkProvider();
-        UserClient userClient = new NetworkUserClient(NetworkProvider.SERVER_URL, networkProvider);
         List<Location> locationsOfInterest = new ArrayList<>();
         locationsOfInterest.add(new Location(2, "Genève"));
         locationsOfInterest.add(new Location(3, "Lausanne"));
@@ -123,22 +104,9 @@ public class CreateUserTest {
         locationsOfInterest.add(new Location(7, "Berne"));
         locationsOfInterest.add(new Location(8, "Bulle"));
         try {
-            JSONObject jsonUser = new JSONObject();
-            /**
-             Should first check if DumbUser666 exists, which SHOULD NOT
-             HAPPEN as this is a test only user.
-             Using userClient.deleteUser("DumbUser666"); if it doesn't
-             throws an exception and makes the test fail.
-             */
-            jsonUser.put(EMAIL.get(), "dumbuser666@gmail.com");
-            jsonUser.put(USERNAME.get(), "DumbUser666");
-            jsonUser.put("firstName", "Dumb");
-            jsonUser.put("lastName", "User");
-            jsonUser.put(GENDER.get(), "male");
-            jsonUser.put("birthDate", "18/02/1993");
-            jsonUser.put("facebookId", "666");
-            jsonUser.put("plainPassword", "dumbpassword");
-            JSONObject responseJSON = userClient.postUser(jsonUser);
+            JSONObject jsonUser = prefilledJSon();
+            JSONObject responseJSON = mUserClient.postUser(jsonUser);
+
             List<Location> areasOfInterest = new ArrayList<>();
             JSONArray areas = responseJSON.getJSONArray("locations_of_interest");
             for (int i = 0; i < areas.length(); i++) {
@@ -147,10 +115,10 @@ public class CreateUserTest {
                 areasOfInterest.add(location);
             }
             String fb_id = responseJSON.getString("facebook_id");
-            assertEquals(responseJSON.getString(EMAIL.get()), "dumbuser666@gmail.com");
-            assertEquals(responseJSON.getString(USERNAME.get()), "DumbUser666");
-            assertEquals(responseJSON.getString(FIRST_NAME.get()), "Dumb");
-            assertEquals(responseJSON.getString(LAST_NAME.get()), "User");
+            assertEquals(responseJSON.getString(EMAIL.get()), "testpostuser@gmail.com");
+            assertEquals(responseJSON.getString(USERNAME.get()), "TestPostUser");
+            assertEquals(responseJSON.getString(FIRST_NAME.get()), "Test");
+            assertEquals(responseJSON.getString(LAST_NAME.get()), "Post");
             assertEquals(responseJSON.getString(GENDER.get()), "male");
             assertEquals(
                     responseJSON.getString("birth_date"),
@@ -163,9 +131,22 @@ public class CreateUserTest {
                     new GetUserTest.CollectionComparator<Location>().compare(
                             locationsOfInterest,
                             areasOfInterest));
-            userClient.deleteUser("DumbUser666");
+            mUserClient.deleteUser("TestPostUser");
         } catch (UserClientException | ParserException | JSONException e) {
             fail(e.getMessage());
         }
+    }
+    @Ignore
+    private JSONObject prefilledJSon() throws JSONException{
+        JSONObject jsonUser = new JSONObject();
+        jsonUser.put(EMAIL.get(), "testpostuser@gmail.com");
+        jsonUser.put(USERNAME.get(), "TestPostUser");
+        jsonUser.put("firstName", "Test");
+        jsonUser.put("lastName", "Post");
+        jsonUser.put(GENDER.get(), "male");
+        jsonUser.put("birthDate", "18/02/1993");
+        jsonUser.put("facebookId", "666");
+        jsonUser.put("plainPassword", "testpassword");
+        return jsonUser;
     }
 }
