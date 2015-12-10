@@ -23,6 +23,7 @@ import static java.net.HttpURLConnection.HTTP_OK;
  */
 public class DefaultNetworkProvider implements NetworkProvider {
 
+
     @Override
     public HttpURLConnection getConnection(String serverURL) throws IOException {
         if (serverURL == null) {
