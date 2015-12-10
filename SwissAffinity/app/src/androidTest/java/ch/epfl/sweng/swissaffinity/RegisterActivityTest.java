@@ -192,8 +192,4 @@ public void testDateNotGood() {
         onView(withText(R.string.toast_text_error_birthday)).inRoot(withDecorView(not(is(getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
 
         }
-
-
-
-
-        }
+}
