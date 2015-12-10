@@ -106,6 +106,7 @@ public class NetworkEventClient implements EventClient {
         }
         try {
             String content = mNetworkProvider.getContent(mServerUrl + EVENTS + "/" + id);
+            content = content == null ? "" : content;
             SafeJSONObject jsonObject = new SafeJSONObject(content);
             Parser<? extends Event> parser = ParserFactory.parserFor(jsonObject);
             return parser.parse(jsonObject);

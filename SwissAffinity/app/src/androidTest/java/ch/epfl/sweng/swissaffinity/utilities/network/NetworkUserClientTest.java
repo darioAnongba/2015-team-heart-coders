@@ -174,10 +174,19 @@ public class NetworkUserClientTest {
     }
 
     @Test
-    public void testPostUser() throws UserClientException, IllegalArgumentException, IOException, JSONException, ParserException {
-        when(mockNetworkProvider.postContent(anyString(), any(JSONObject.class))).thenReturn(DataForTesting.userJSONcontent);
+    public void testPostUser() throws
+        UserClientException,
+        IllegalArgumentException,
+        IOException,
+        JSONException,
+        ParserException
+    {
+        when(mockNetworkProvider.postContent(anyString(), any(JSONObject.class))).thenReturn(
+            DataForTesting.userJSONcontent);
 
-        String s = networkUserClient.postUser(new JSONObject(DataForTesting.userJSONcontent)).toString();
+        String
+            s =
+            networkUserClient.postUser(new JSONObject(DataForTesting.userJSONcontent)).toString();
         returnedUser = userParser.parse(new SafeJSONObject(s));
 
         assertEquals(testUser.getId(), returnedUser.getId());
@@ -218,9 +227,9 @@ public class NetworkUserClientTest {
     @Test
     public void testDeleteUser() throws UserClientException, IOException {
         when(mockNetworkProvider.deleteContent(anyString())).thenReturn("");
-        try{
+        try {
             networkUserClient.deleteUser("testUsername");
-        } catch (UserClientException e){
+        } catch (UserClientException e) {
             fail(e.getMessage());
         }
     }
@@ -228,10 +237,10 @@ public class NetworkUserClientTest {
     @Test
     public void testRegisterUser() throws UserClientException, IOException {
         when(mockNetworkProvider.postContent(anyString(), any(JSONObject.class)))
-                .thenReturn("");
-        try{
+            .thenReturn("");
+        try {
             networkUserClient.registerUser("testUsername", 100);
-        } catch (UserClientException e){
+        } catch (UserClientException e) {
             fail(e.getMessage());
         }
     }
@@ -240,11 +249,29 @@ public class NetworkUserClientTest {
     public void testUnregisterUser() throws UserClientException, IOException {
         //Server sends empty String by default when successful
         when(mockNetworkProvider.deleteContent(anyString())).thenReturn("");
-        try{
+        try {
             networkUserClient.unregisterUser(100);
 
-        } catch (UserClientException e){
+        } catch (UserClientException e) {
             fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testUnregisterUser2() throws UserClientException, IOException {
+        try {
+            networkUserClient.unregisterUser(100);
+        } catch (UserClientException e) {
+            //SUCCESS
+        }
+    }
+
+    @Test
+    public void testDeleteUser2() throws UserClientException, IOException {
+        try {
+            networkUserClient.deleteUser("jeSuisPasLa");
+        } catch (UserClientException e) {
+            //SUCCESS
         }
     }
 }
