@@ -83,7 +83,7 @@ public class DataForTesting {
         }
     }
 
-    public static List<Address> ADRESSES = new ArrayList<>(
+    public static List<Address> ADDRESSES = new ArrayList<>(
             Arrays.asList(
                     new Address("Suisse", 1200, "Geneve", "GE", 1, "Place du Cirque"),
                     new Address("Suisse", 1200, "Geneve", "GE", 16, "Rue du Port Franc"),
@@ -97,7 +97,7 @@ public class DataForTesting {
                             1,
                             "Cafe Cuba",
                             Establishment.Type.BAR,
-                            ADRESSES.get(0),
+                            ADDRESSES.get(0),
                             "phoneTest",
                             "testDescription",
                             "",
@@ -107,7 +107,7 @@ public class DataForTesting {
                             2,
                             "King Size Pub",
                             Establishment.Type.BAR,
-                            ADRESSES.get(1),
+                            ADDRESSES.get(1),
                             "phoneTest",
                             "testDescription",
                             "",
@@ -117,7 +117,7 @@ public class DataForTesting {
                             3,
                             "Lapart",
                             Establishment.Type.BAR,
-                            ADRESSES.get(2),
+                            ADDRESSES.get(2),
                             "phoneTest",
                             "testDescription",
                             "",
@@ -127,7 +127,7 @@ public class DataForTesting {
                             4,
                             "Widder Bar",
                             Establishment.Type.BAR,
-                            ADRESSES.get(3),
+                            ADDRESSES.get(3),
                             "phoneTest",
                             "testDescription",
                             "",

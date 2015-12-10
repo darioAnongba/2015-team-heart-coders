@@ -20,8 +20,8 @@ public class AddressTest {
 
     @Before
     public void setUp() {
-        addresses = DataForTesting.ADRESSES;
-        addresses4comparison = DataForTesting.ADRESSES;
+        addresses = DataForTesting.ADDRESSES;
+        addresses4comparison = DataForTesting.ADDRESSES;
     }
 
     @Test(expected = IllegalArgumentException.class)
