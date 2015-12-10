@@ -15,7 +15,7 @@
     <string name="about_leader">Leader de l\'organisation événementielle pour célibataires en Suisse romande</string>
     <string name="about_text_link">http://swiss-affinity.ch</string>
     <string name="about_info_text">Pour de plus amples informations:</string>
-    <string name="about_logged">You\'re loged in as %s</string>
+    <string name="about_logged">You\'re logged in as %s</string>
 
     <string name="event_name">Event Name</string>
     <string name="event_location">Location</string>
