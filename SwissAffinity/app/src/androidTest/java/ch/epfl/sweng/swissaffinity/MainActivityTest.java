@@ -32,7 +32,7 @@ public class MainActivityTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule
-            = new ActivityTestRule<>(MainActivity.class);
+        = new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void setUp() {
@@ -51,9 +51,9 @@ public class MainActivityTest {
         String userName = MainActivity.getPreferences().getString(ServerTags.USERNAME.get(), "");
 
         String welcomeText =
-                String.format(
-                        mActivityRule.getActivity()
-                                     .getString(R.string.welcome_registered_text), userName);
+            String.format(
+                mActivityRule.getActivity()
+                             .getString(R.string.welcome_registered_text), userName);
         onView(withId(R.id.mainWelcomeText)).check(matches(withText(welcomeText)));
     }
 
@@ -71,8 +71,8 @@ public class MainActivityTest {
         String userName = MainActivity.getPreferences().getString(ServerTags.USERNAME.get(), "");
 
         String welcomeText = String.format(
-                mActivityRule.getActivity().getString(R.string.welcome_registered_text),
-                userName);
+            mActivityRule.getActivity().getString(R.string.welcome_registered_text),
+            userName);
         onView(withId(R.id.mainWelcomeText)).check(matches(withText(welcomeText)));
     }
 
@@ -89,14 +89,20 @@ public class MainActivityTest {
     @Test
     public void testListViewDisplayed() {
         onView(withId(R.id.mainEventListView)).check(matches(isDisplayed()));
-        ExpandableListView listView = ((ExpandableListView) mActivityRule.getActivity()
-                                                                         .findViewById(R.id.mainEventListView));
+        ExpandableListView listView = (
+            (ExpandableListView) mActivityRule.getActivity()
+                                              .findViewById(R.id.mainEventListView));
         ExpandableListAdapter adapter = listView.getExpandableListAdapter();
         for (int i = 0; i < adapter.getGroupCount(); ++i) {
             assertTrue(listView.isGroupExpanded(i));
             for (int j = 0; j < adapter.getChildrenCount(i); ++j) {
-                assertTrue(adapter.getChildView(i,j, false, null, null).isClickable());
+                assertTrue(adapter.getChildView(i, j, false, null, null).isClickable());
             }
         }
+    }
+
+    @Test
+    public void testOnEventClick() {
+        onView(withText("Speed dating")).perform(click());
     }
 }
