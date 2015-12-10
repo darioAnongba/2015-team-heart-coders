@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -67,15 +68,17 @@ public class NetworkEventClient implements EventClient {
         try {
             String url = mServerUrl + USERS + userName + REGISTRATIONS;
             String content = mNetworkProvider.getContent(url);
-            JSONArray jsonRegistrations = new JSONArray(content);
-            for (int i = 0; i < jsonRegistrations.length(); ++i) {
-                JSONObject jsonObject = jsonRegistrations.getJSONObject(i);
-                int id = jsonObject.getInt(ID.get());
-                SafeJSONObject jsonEvent =
-                    new SafeJSONObject(jsonObject.getJSONObject(EVENT.get()));
-                Parser<? extends Event> parser = ParserFactory.parserFor(jsonEvent);
-                Event event = parser.parse(jsonEvent);
-                registrations.add(new Registration(id, event));
+            if (content != null) {
+                JSONArray jsonRegistrations = new JSONArray(content);
+                for (int i = 0; i < jsonRegistrations.length(); ++i) {
+                    JSONObject jsonObject = jsonRegistrations.getJSONObject(i);
+                    int id = jsonObject.getInt(ID.get());
+                    SafeJSONObject jsonEvent =
+                        new SafeJSONObject(jsonObject.getJSONObject(EVENT.get()));
+                    Parser<? extends Event> parser = ParserFactory.parserFor(jsonEvent);
+                    Event event = parser.parse(jsonEvent);
+                    registrations.add(new Registration(id, event));
+                }
             }
         } catch (JSONException | IOException | ParserException e) {
             throw new EventClientException(e);
@@ -116,12 +119,13 @@ public class NetworkEventClient implements EventClient {
         if (imagePath == null) {
             throw new IllegalArgumentException();
         }
-        Bitmap image;
+        Bitmap image = null;
         try {
-            image =
-                BitmapFactory.decodeStream(
-                    mNetworkProvider.getConnection(mServerUrl + IMAGES + imagePath)
-                                    .getInputStream());
+            HttpURLConnection connection =
+                mNetworkProvider.getConnection(mServerUrl + IMAGES + imagePath);
+            if (connection != null) {
+                image = BitmapFactory.decodeStream(connection.getInputStream());
+            }
         } catch (IOException e) {
             throw new EventClientException(e);
         }
@@ -131,12 +135,14 @@ public class NetworkEventClient implements EventClient {
     private void fetchEvents(List<Event> events, String apiUrl) throws EventClientException {
         try {
             String content = mNetworkProvider.getContent(mServerUrl + apiUrl);
-            JSONArray jsonEvents = new JSONArray(content);
-            for (int i = 0; i < jsonEvents.length(); ++i) {
-                SafeJSONObject jsonObject = new SafeJSONObject(jsonEvents.getJSONObject(i));
-                Parser<? extends Event> parser = ParserFactory.parserFor(jsonObject);
-                Event event = parser.parse(jsonObject);
-                events.add(event);
+            if (content != null) {
+                JSONArray jsonEvents = new JSONArray(content);
+                for (int i = 0; i < jsonEvents.length(); ++i) {
+                    SafeJSONObject jsonObject = new SafeJSONObject(jsonEvents.getJSONObject(i));
+                    Parser<? extends Event> parser = ParserFactory.parserFor(jsonObject);
+                    Event event = parser.parse(jsonObject);
+                    events.add(event);
+                }
             }
         } catch (ParserException | JSONException | IOException e) {
             throw new EventClientException(e);

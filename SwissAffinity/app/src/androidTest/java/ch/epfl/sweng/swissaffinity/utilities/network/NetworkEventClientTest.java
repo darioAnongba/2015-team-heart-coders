@@ -14,6 +14,7 @@ import java.util.List;
 import ch.epfl.sweng.swissaffinity.DataForTesting;
 import ch.epfl.sweng.swissaffinity.events.Event;
 import ch.epfl.sweng.swissaffinity.events.SpeedDatingEvent;
+import ch.epfl.sweng.swissaffinity.users.Registration;
 import ch.epfl.sweng.swissaffinity.utilities.Location;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.EventClientException;
 import ch.epfl.sweng.swissaffinity.utilities.network.events.NetworkEventClient;
@@ -24,6 +25,7 @@ import ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject;
 import ch.epfl.sweng.swissaffinity.utilities.parsers.events.SpeedDatingEventParser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -70,7 +72,7 @@ public class NetworkEventClientTest {
             testAllEventList.add(event);
         }
 
-        testEventByLocationList = new ArrayList<Event>();
+        testEventByLocationList = new ArrayList<>();
         jsonEvents = new JSONArray(eventsByLocation);
         for (int i = 0; i < jsonEvents.length(); ++i) {
             SafeJSONObject jsonObject = new SafeJSONObject(jsonEvents.getJSONObject(i));
@@ -115,13 +117,20 @@ public class NetworkEventClientTest {
 
         for (int i = 0; i < eventList.size(); i++) {
             assertEquals(testAllEventList.get(i).getName(), eventList.get(i).getName());
-            assertEquals(testAllEventList.get(i).getDescription(), eventList.get(i).getDescription());
+            assertEquals(
+                testAllEventList.get(i).getDescription(),
+                eventList.get(i).getDescription());
             assertEquals(testAllEventList.get(i).getImagePath(), eventList.get(i).getImagePath());
-            assertEquals(testAllEventList.get(i).getBasePrice(), eventList.get(i).getBasePrice(), 0.009);
+            assertEquals(
+                testAllEventList.get(i).getBasePrice(),
+                eventList.get(i).getBasePrice(),
+                0.009);
             assertEquals(testAllEventList.get(i).getDateBegin(), eventList.get(i).getDateBegin());
             assertEquals(testAllEventList.get(i).getDateEnd(), eventList.get(i).getDateEnd());
             assertEquals(testAllEventList.get(i).getMaxPeople(), eventList.get(i).getMaxPeople());
-            assertEquals(testAllEventList.get(i).getLocation().getId(), eventList.get(i).getLocation().getId());
+            assertEquals(
+                testAllEventList.get(i).getLocation().getId(),
+                eventList.get(i).getLocation().getId());
         }
     }
 
@@ -132,14 +141,35 @@ public class NetworkEventClientTest {
 
         for (int i = 0; i < eventList.size(); i++) {
             assertEquals(testEventByLocationList.get(i).getName(), eventList.get(i).getName());
-            assertEquals(testEventByLocationList.get(i).getDescription(), eventList.get(i).getDescription());
-            assertEquals(testEventByLocationList.get(i).getImagePath(), eventList.get(i).getImagePath());
-            assertEquals(testEventByLocationList.get(i).getBasePrice(), eventList.get(i).getBasePrice(), 0.009);
-            assertEquals(testEventByLocationList.get(i).getDateBegin(), eventList.get(i).getDateBegin());
-            assertEquals(testEventByLocationList.get(i).getDateEnd(), eventList.get(i).getDateEnd());
-            assertEquals(testEventByLocationList.get(i).getMaxPeople(), eventList.get(i).getMaxPeople());
-            assertEquals(testEventByLocationList.get(i).getLocation().getId(), eventList.get(i).getLocation().getId());
+            assertEquals(
+                testEventByLocationList.get(i).getDescription(),
+                eventList.get(i).getDescription());
+            assertEquals(
+                testEventByLocationList.get(i).getImagePath(),
+                eventList.get(i).getImagePath());
+            assertEquals(
+                testEventByLocationList.get(i).getBasePrice(),
+                eventList.get(i).getBasePrice(),
+                0.009);
+            assertEquals(
+                testEventByLocationList.get(i).getDateBegin(),
+                eventList.get(i).getDateBegin());
+            assertEquals(
+                testEventByLocationList.get(i).getDateEnd(),
+                eventList.get(i).getDateEnd());
+            assertEquals(
+                testEventByLocationList.get(i).getMaxPeople(),
+                eventList.get(i).getMaxPeople());
+            assertEquals(
+                testEventByLocationList.get(i).getLocation().getId(),
+                eventList.get(i).getLocation().getId());
         }
+    }
+
+    @Test
+    public void testFetchForUser() throws EventClientException {
+        List<Registration> events = networkEventClient.fetchForUser("dumb");
+        assertTrue(events.isEmpty());
     }
 
     @Test
@@ -159,8 +189,19 @@ public class NetworkEventClientTest {
     }
 
     @Test
-    public void testImageFor() throws EventClientException, IOException {
+    public void testIOException() throws IOException, EventClientException {
+        when(mockNetworkProvider.getConnection(anyString())).thenThrow(IOException.class);
+        List<Event> events= networkEventClient.fetchAll();
+        assertTrue(events.isEmpty());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testImageForNull() throws EventClientException, IOException {
+        networkEventClient.imageFor(null);
+    }
 
+    @Test
+    public void testImageFor() throws EventClientException {
+        networkEventClient.imageFor(testAllEventList.get(0).getImagePath());
+    }
 }
