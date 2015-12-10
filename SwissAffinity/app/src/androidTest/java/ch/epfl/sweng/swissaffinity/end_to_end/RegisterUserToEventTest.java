@@ -49,8 +49,8 @@ import static junit.framework.Assert.fail;
 public class RegisterUserToEventTest {
     private UserClient mUserClient;
     private NetworkProvider mNetworkProvider;
-    private String mYoungerUserName;
-    private String mOlderUserName;
+    //private String mYoungerUserName;
+    //private String mOlderUserName;
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
@@ -61,12 +61,14 @@ public class RegisterUserToEventTest {
         mActivityRule.getActivity();
         mNetworkProvider = new DefaultNetworkProvider();
         mUserClient = new NetworkUserClient(NetworkProvider.SERVER_URL, mNetworkProvider);
+        /**
         try {
             mYoungerUserName = makeTestUserOnServer("Younger").getString(USERNAME.get());
             mOlderUserName = makeTestUserOnServer("Older").getString(USERNAME.get());
         }catch (IllegalArgumentException | JSONException e){
             throw new RuntimeException(e);
         }
+         **/
     }
 
     @Test
