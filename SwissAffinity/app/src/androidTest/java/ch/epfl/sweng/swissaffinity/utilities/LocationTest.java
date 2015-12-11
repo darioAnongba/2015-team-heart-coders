@@ -8,6 +8,7 @@ import java.util.List;
 import ch.epfl.sweng.swissaffinity.DataForTesting;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Created by sahinfurkan on 10/12/15.
@@ -71,4 +72,9 @@ public class LocationTest {
         assertEquals(testLocation.getName(), testName);
     }
 
+    @Test
+    public void testEqualsNull() {
+        Location testLocation = new Location(testId, testName);
+        assertNotEquals(testLocation, null);
+    }
 }

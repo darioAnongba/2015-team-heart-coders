@@ -168,7 +168,7 @@ public class NetworkEventClientTest {
 
     @Test
     public void testFetchForUser() throws EventClientException {
-        networkEventClient.fetchForUser("Lionel Fleury");
+        networkEventClient.fetchForUser("lio");
     }
 
     @Test

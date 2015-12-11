@@ -5,36 +5,39 @@ import org.junit.Test;
 
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-
 /**
  * Created by sahinfurkan on 18/11/15.
  */
 public class DateParserTest {
+
     Date testDate;
+
     @Before
     public void setUp() throws ParserException {
-
-        testDate = DateParser.parseFromString("2014-06-09T10:11:12+0100", DateParser.SERVER_DATE_FORMAT);//GMT + 1 time in Switzlerand.
+        testDate =
+            DateParser.parseFromString(
+                "2014-06-09T10:11:12+0100",
+                DateParser.SERVER_DATE_FORMAT); //GMT + 1 time in Switzerland.
     }
 
-    //TODO: Fix for correct behaviour... US vs Locale see Jenkins console output
-//    @Test
-//    public void dateFromStringTest(){
-//
-//        String str = DateParser.dateToString(testDate);
-//        assertEquals("09 June 2014 - 11:11", str);
-//    }
-
-    @Test (expected = ParserException.class)
+    @Test(expected = ParserException.class)
     public void dateExceptionTest() throws ParserException {
-        testDate = DateParser.parseFromString("2014-06-09A10:11:12+0100", DateParser.SERVER_DATE_FORMAT);
+        testDate =
+            DateParser.parseFromString("2014-06-09A10:11:12+0100", DateParser.SERVER_DATE_FORMAT);
     }
-
 
     @Test(expected = IllegalArgumentException.class)
-    public void dateNullTest(){
-        String str = DateParser.dateToString(null);
+    public void dateNullTest() {
+        DateParser.dateToString(null);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testParseFromStringNullString() throws ParserException {
+        DateParser.parseFromString(null, DateParser.FACEBOOK_DATE_FORMAT);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testParseFromStringNullFormat() throws ParserException {
+        DateParser.parseFromString("", null);
+    }
 }
