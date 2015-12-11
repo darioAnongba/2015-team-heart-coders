@@ -61,8 +61,8 @@ public class DataManager {
     public static EventClient getEventClient() {
         if (EVENT_CLIENT == null) {
             EVENT_CLIENT = new NetworkEventClient(
-                    NetworkProvider.SERVER_URL,
-                    new DefaultNetworkProvider());
+                NetworkProvider.SERVER_URL,
+                new DefaultNetworkProvider());
         }
         return EVENT_CLIENT;
     }
@@ -87,7 +87,7 @@ public class DataManager {
     public static UserClient getUserClient() {
         if (USER_CLIENT == null) {
             USER_CLIENT =
-                    new NetworkUserClient(NetworkProvider.SERVER_URL, new DefaultNetworkProvider());
+                new NetworkUserClient(NetworkProvider.SERVER_URL, new DefaultNetworkProvider());
         }
         return USER_CLIENT;
     }
@@ -102,6 +102,33 @@ public class DataManager {
             throw new IllegalArgumentException();
         }
         USER_CLIENT = userClient;
+    }
+
+    /**
+     * Display an alert if there is no network
+     *
+     * @param context the activity context
+     */
+    public static void verifyNetworkConnection(final Context context) {
+        if (!isNetworkConnected(context)) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+            alert.setTitle(R.string.alert_no_internet)
+                 .setMessage(R.string.alert_message)
+                 .setPositiveButton(
+                     R.string.alert_positive, new DialogInterface.OnClickListener() {
+                         public void onClick(DialogInterface dialog, int which) {
+                             verifyNetworkConnection(context);
+                             dialog.dismiss();
+                         }
+                     })
+                 .setNegativeButton(
+                     R.string.alert_negative, new DialogInterface.OnClickListener() {
+                         public void onClick(DialogInterface dialog, int which) {
+                             dialog.dismiss();
+                         }
+                     });
+            alert.show();
+        }
     }
 
     /**
@@ -151,7 +178,7 @@ public class DataManager {
             List<Event> upcomingEvents = filterEvents(ALL_EVENTS);
             upcomingEvents.removeAll(myEvents);
             EventExpandableListAdapter adapter =
-                    (EventExpandableListAdapter) listView.getExpandableListAdapter();
+                (EventExpandableListAdapter) listView.getExpandableListAdapter();
             adapter.setData(Arrays.asList(myEvents, upcomingEvents));
             for (int i = 0; i < adapter.getGroupCount(); ++i) {
                 listView.expandGroup(i);
@@ -188,8 +215,8 @@ public class DataManager {
         }
         SharedPreferences preferences = MainActivity.getPreferences();
         Set<String> locations = preferences.getStringSet(
-                LOCATIONS_INTEREST.get(),
-                new HashSet<String>());
+            LOCATIONS_INTEREST.get(),
+            new HashSet<String>());
         if (locations.isEmpty()) {
             for (Location location : user.getAreasOfInterest()) {
                 locations.add(location.getName());
@@ -211,7 +238,6 @@ public class DataManager {
      * Find a registration given an event ID
      *
      * @param eventId the event ID
-     *
      * @return the registration ID
      */
     public static int getRegistrationId(int eventId) {
@@ -227,7 +253,6 @@ public class DataManager {
      * Return an event given its ID
      *
      * @param eventId the event ID
-     *
      * @return the event
      */
     public static Event getEvent(int eventId) {
@@ -243,7 +268,6 @@ public class DataManager {
      * Getter for the events registered
      *
      * @param registrations the registrations
-     *
      * @return the events registered
      */
     private static List<Event> getMyEvents(List<Registration> registrations) {
@@ -258,7 +282,6 @@ public class DataManager {
      * Getter for upcoming events from all events according locations
      *
      * @param allEvents all the events
-     *
      * @return the upcoming events
      */
     private static List<Event> filterEvents(List<Event> allEvents) {
@@ -279,40 +302,12 @@ public class DataManager {
 
     /**
      * @param context the activity context
-     *
      * @return if there is connection to the internet
      */
     private static boolean isNetworkConnected(Context context) {
         ConnectivityManager connectivityManager =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo network = connectivityManager.getActiveNetworkInfo();
         return network != null && network.isConnected();
-    }
-
-    /**
-     * Diplay an alert if there is no network
-     *
-     * @param context the activity context
-     */
-    private static void showNetworkAlert(final Context context) {
-        if (!isNetworkConnected(context)) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(context);
-            alert.setTitle(R.string.alert_no_internet)
-                 .setMessage(R.string.alert_message)
-                 .setPositiveButton(
-                         R.string.alert_positive, new DialogInterface.OnClickListener() {
-                             public void onClick(DialogInterface dialog, int which) {
-                                 showNetworkAlert(context);
-                                 dialog.dismiss();
-                             }
-                         })
-                 .setNegativeButton(
-                         R.string.alert_negative, new DialogInterface.OnClickListener() {
-                             public void onClick(DialogInterface dialog, int which) {
-                                 dialog.dismiss();
-                             }
-                         });
-            alert.show();
-        }
     }
 }
