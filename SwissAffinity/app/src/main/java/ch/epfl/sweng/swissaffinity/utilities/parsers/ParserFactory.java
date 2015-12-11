@@ -12,6 +12,9 @@ import static ch.epfl.sweng.swissaffinity.utilities.parsers.SafeJSONObject.DEFAU
  */
 public class ParserFactory {
 
+    private ParserFactory() {
+    }
+
     public static Parser<? extends Event> parserFor(SafeJSONObject jsonObject)
         throws ParserException
     {

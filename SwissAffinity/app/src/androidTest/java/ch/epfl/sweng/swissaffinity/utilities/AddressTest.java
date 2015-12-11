@@ -142,7 +142,7 @@ public class AddressTest {
     @Test
     public void testEquals() {
         Address address1 = new Address("CH", 1, "Ville", "VD", 2, "Rue");
-        Address address2 = new Address("CH", 1, "Ville", "VD", 2, "Rue");
-        assertEquals(address1, address2);
+        Address address2 = new Address("CH", 3, "Ville", "VD", 4, "Rue");
+        assertNotEquals(address1, address2);
     }
 }
