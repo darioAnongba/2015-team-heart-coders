@@ -102,7 +102,9 @@ public class MainActivityTest {
     }
 
     @Test
-    public void testOnEventClick() {
+    public void testOnEventClickSequence() {
         onView(withText("Speed dating")).perform(click());
+        onView(withId(R.id.eventRegistration)).perform(click());
+        pressBack();
     }
 }

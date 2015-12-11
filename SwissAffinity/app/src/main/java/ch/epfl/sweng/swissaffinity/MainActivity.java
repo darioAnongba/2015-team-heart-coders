@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         String userName = SHARED_PREFERENCES.getString(USERNAME.get(), "");
         TextView textView = (TextView) findViewById(R.id.mainWelcomeText);
         textView.setText(String.format(welcome, userName));
-
+        DataManager.verifyNetworkConnection(this);
         new DataManagerTask(!DataManager.hasData()).execute();
     }
 
